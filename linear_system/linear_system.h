@@ -1,6 +1,6 @@
 #ifndef LINEAR_SYSTEM_HEADER
 #define LINEAR_SYSTEM_HEADER
-
+#include "../common/common.h"
 // Max value of the generated Linear System coefficients
 #define COEFFICIENT_LIMIT 32.0
 
