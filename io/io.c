@@ -42,7 +42,7 @@ int getOptions(int argc, char **argv, int *n, int *iterationsLimit, char **outpu
                 *n = atoi(optarg);
                 break;
             default:
-                fprintf(stderr, "Opção inválida ou argumento faltando: `%c'\n", optopt) ;
+                fprintf(stderr, "Invalid option or missing argument: `%c'\n", optopt) ;
                 return -1;
         }
     }
