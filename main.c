@@ -38,18 +38,7 @@ int main(int argc, char *argv[]) {
     A[2][2] = 1;
 
     RealNumber **U = allocateLinearSystem(size, PointerToPointer)->A;
-    RealNumber **B = (allocateLinearSystem(size, PointerToPointer))->A;
-
-    // Filling B with the Identity matrix
-    for (int i = 0; i < size; ++i) {
-        for (int j = 0; j < size; ++j) {
-            if (i == j) {
-                B[i][j] = 1;
-            } else {
-                B[i][j] = 0;
-            }
-        }
-    }
+    RealNumber **B = getIdentityMatrix(size);
     RealNumber **L = generateMatrixL(A, B, U, size);
 
     // Printing the multiplier's matrix L

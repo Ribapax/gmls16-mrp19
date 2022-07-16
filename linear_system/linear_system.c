@@ -169,3 +169,37 @@ void copyMatrix(RealNumber **A, RealNumber **B, int n) {
     }
 }
 
+RealNumber **multiplyMatrix(RealNumber **A, RealNumber **B, int n) {
+    RealNumber **Result = allocateLinearSystem(n, PointerToPointer)->A;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            Result[i][j] += A[i][j] * B[j][i];
+        }
+    }
+    return Result;
+}
+
+RealNumber **subtractMatrix(RealNumber **A, RealNumber **B, int n) {
+    RealNumber **Result = allocateLinearSystem(n, PointerToPointer)->A;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            Result[i][j] = A[i][j] - B[i][j];
+        }
+    }
+    return Result;
+}
+
+RealNumber **getIdentityMatrix(int n) {
+    RealNumber **I = allocateLinearSystem(n, PointerToPointer)->A;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (i == j) {
+                I[i][j] = 1;
+            } else {
+                I[i][j] = 0;
+            }
+        }
+    }
+    return I;
+}
+

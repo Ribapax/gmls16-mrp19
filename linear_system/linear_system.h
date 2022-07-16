@@ -40,5 +40,14 @@ void printArray(RealNumber *arr, unsigned int n);
 // copyMatrix copies A into B
 void copyMatrix(RealNumber **A, RealNumber **B, int n);
 
+// multiplyMatrix returns the result of A x B
+RealNumber **multiplyMatrix(RealNumber **A, RealNumber **B, int n);
+
+// subtractMatrix returns the result of A - B
+RealNumber **subtractMatrix(RealNumber **A, RealNumber **B, int n);
+
+// getIdentityMatrix returns an identity matrix of size n
+RealNumber **getIdentityMatrix(int n);
+
 #endif
 

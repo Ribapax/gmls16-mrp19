@@ -69,5 +69,14 @@ RealNumber **InvertMatrix(RealNumber **A, int n) {
 }
 
 RealNumber CalculateResidue(RealNumber **A, RealNumber **invertedA, int n) {
-    // TODO
+    RealNumber **multiplication = multiplyMatrix(A, invertedA, n);
+    RealNumber **identityMatrix = getIdentityMatrix(n);
+    RealNumber **R = subtractMatrix(identityMatrix, multiplication, n);
+    RealNumber sum = 0.;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            sum += pow(R[i][j], 2);
+        }
+    }
+    return sqrt(sum);
 }
