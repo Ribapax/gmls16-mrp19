@@ -70,9 +70,7 @@ RealNumber **InvertMatrix(
     Time *averageLinearSystemTime,
     Time *LUTime
 ) {
-    *averageLinearSystemTime = 0;
     Time time; // Stores the time of solving the linear systems
-    Time averageTime = 0; // Stores the average time for solving the linear system
     RealNumber **invertedMatrix = allocateLinearSystem(n, PointerToPointer)->A;
 
     // 1) Get L and U by solving -> L = generateMatrixL(A, B, U, n);
@@ -83,6 +81,7 @@ RealNumber **InvertMatrix(
     *LUTime = timestamp() - *LUTime;
 
     // 2) Get the y arrays by solving -> Ly = b;
+    *averageLinearSystemTime = 0;
     for (int i = 0; i < n; ++i) {
         time = timestamp();
         // TODO: solve Ly = b here
