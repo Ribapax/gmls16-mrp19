@@ -161,3 +161,11 @@ void printArray(RealNumber *arr, unsigned int n) {
     printf ("\n\n");
 }
 
+void copyMatrix(RealNumber **A, RealNumber **B, int n) {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            B[i][j] = A[i][j];
+        }
+    }
+}
+

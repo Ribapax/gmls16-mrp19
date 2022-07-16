@@ -21,4 +21,15 @@ RealNumber **generateMatrixL(RealNumber **A, RealNumber **B, RealNumber **U, int
 // L2Norm = sqrt(sum(R[i][j]^2)), ∀ 1 <= i, j <= n
 RealNumber CalculateResidue(RealNumber **A, RealNumber **invertedA, int n);
 
+// finPivotIndex finds the line index of the pivot element of the given columnIndex
+unsigned int findPivotIndex(double** Matrix, unsigned int columnIndex, unsigned int systemSize);
+
+// replaceLines replaces the line of index 'index' with the line of index 'pivotIndex', and vice versa.
+void replaceLines(
+    double **Matrix,
+    double **identityMatrix,
+    unsigned int index,
+    unsigned int pivotIndex
+);
+
 #endif
