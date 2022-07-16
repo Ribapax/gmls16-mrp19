@@ -37,5 +37,8 @@ LinearSystem *readLinearSystem();
 void printLinearSystem(LinearSystem *SL);
 void printArray(RealNumber *arr, unsigned int n);
 
+// copyMatrix copies A into B
+void copyMatrix(RealNumber **A, RealNumber **B, int n);
+
 #endif
 
