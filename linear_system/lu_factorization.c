@@ -65,7 +65,20 @@ RealNumber **generateMatrixL(RealNumber **A, RealNumber **B, RealNumber **U, int
 }
 
 RealNumber **InvertMatrix(RealNumber **A, int n) {
-    // TODO
+    // 1) Get L and U by solving -> L = generateMatrixL(A, B, U, n);
+    RealNumber **invertedMatrix = allocateLinearSystem(n, PointerToPointer)->A;
+    RealNumber **B = getIdentityMatrix(n);
+    RealNumber **U = allocateLinearSystem(n, PointerToPointer)->A;
+    RealNumber **L = generateMatrixL(A, B, U, n);
+
+    // 2) Get the y arrays by solving -> Ly = b;
+        // TODO
+
+    // 3) Get the inverted matrix x by solving -> Ux = y for each y.
+        // TODO
+
+    // 4) Return x.
+    return invertedMatrix;
 }
 
 RealNumber CalculateResidue(RealNumber **A, RealNumber **invertedA, int n) {

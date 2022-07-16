@@ -7,7 +7,7 @@
 // 1) Get L and U by solving -> L = generateMatrixL(A, B, U, n);
 // 2) Get the y arrays by solving -> Ly = b;
 // 3) Get the inverted matrix x by solving -> Ux = y for each y.
-// 4) Returns x.
+// 4) Return x.
 RealNumber **InvertMatrix(RealNumber **A, int n);
 
 // generateMatrixL returns the multiplier's matrix L of a matrix A of size n
