@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "io/io.h"
+#include "common/common.h"
+#include "linear_system/linear_system.h"
+#include "linear_system/lu_factorization.h"
 
 int main(int argc, char *argv[]) {
     srand(20221);
@@ -19,6 +22,45 @@ int main(int argc, char *argv[]) {
     printf("outputFilePath: %s\n", outputFilePath);
     printf("inputFilePath: %s\n", inputFilePath);
 
-    printf("Hello, World!\n");
+    // #### Generate L matrix test ####
+    int size = 3;
+
+    // Matrix A to be inverted
+    RealNumber **A = allocateLinearSystem(size, PointerToPointer)->A;
+    A[0][0] = 25;
+    A[0][1] = 5;
+    A[0][2] = 1;
+    A[1][0] = 64;
+    A[1][1] = 8;
+    A[1][2] = 1;
+    A[2][0] = 144;
+    A[2][1] = 12;
+    A[2][2] = 1;
+
+    RealNumber **U = allocateLinearSystem(size, PointerToPointer)->A;
+    RealNumber **B = (allocateLinearSystem(size, PointerToPointer))->A;
+
+    // Filling B with the Identity matrix
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            if (i == j) {
+                B[i][j] = 1;
+            } else {
+                B[i][j] = 0;
+            }
+        }
+    }
+    RealNumber **L = generateMatrixL(A, B, U, size);
+
+    // Printing the multiplier's matrix L
+    printf("\n L matrix: \n");
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            printf("%.15g ", L[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+
     return 0;
 }
