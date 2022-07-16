@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include "../common/common.h"
 
 void showHelp(char *name) {
     fprintf(stderr, "\
@@ -48,4 +49,13 @@ int getOptions(int argc, char **argv, int *n, int *iterationsLimit, char **outpu
     }
 
     return 0;
+}
+
+void printMatrix(RealNumber **A, int n) {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            printf("%.15g ", A[i][j]);
+        }
+        printf("\n");
+    }
 }

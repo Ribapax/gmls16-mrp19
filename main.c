@@ -44,12 +44,7 @@ int main(int argc, char *argv[]) {
 
     // Printing the multiplier's matrix L
     printf("\n L matrix: \n");
-    for (int i = 0; i < size; ++i) {
-        for (int j = 0; j < size; ++j) {
-            printf("%.15g ", L[i][j]);
-        }
-        printf("\n");
-    }
+    printMatrix(L, size);
     printf("\n");
 
     // #### Final Code Algorithm ####
