@@ -23,6 +23,7 @@ int main(int argc, char *argv[]) {
     printf("inputFilePath: %s\n", inputFilePath);
 
     // #### Generate L matrix test ####
+
     int size = 3;
 
     // Matrix A to be inverted
@@ -50,6 +51,16 @@ int main(int argc, char *argv[]) {
         printf("\n");
     }
     printf("\n");
+
+    // #### Final Code Algorithm ####
+
+    // Read input
+
+    // For each matrix
+    // 1) invert the matrix
+    // 2) calculate and print Residue L2 Norm
+    // 3) print times
+    // 4) print size and inverted matrix
 
     return 0;
 }

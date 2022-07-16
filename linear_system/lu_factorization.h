@@ -3,12 +3,14 @@
 
 #include "../common/common.h"
 
-// invertMatrix returns the inverted matrix of the matrix A of size n
+// invertMatrix returns the inverted matrix of the matrix A of size n.
+//  - It also stores the average time of solving the Linear Systems
+//    Ly = b and Ux = y inside averageLinearSystemSolvingTime
 // 1) Get L and U by solving -> L = generateMatrixL(A, B, U, n);
 // 2) Get the y arrays by solving -> Ly = b;
 // 3) Get the inverted matrix x by solving -> Ux = y for each y.
 // 4) Return x.
-RealNumber **InvertMatrix(RealNumber **A, int n);
+RealNumber **InvertMatrix(RealNumber **A, int n, const Time *averageLinearSystemSolvingTime);
 
 // generateMatrixL returns the multiplier's matrix L of a matrix A of size n
 // using Gauss Elimination with partial pivoting. The partial pivoting should
