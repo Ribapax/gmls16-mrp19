@@ -100,7 +100,22 @@ RealNumber **InvertMatrix(
     *averageLinearSystemTime /= (n + n);
 
     // 4) Return x.
-    return invertedMatrix;
+    //return invertedMatrix;
+
+    // TODO: remove it later
+    RealNumber **stubMatrix = allocateLinearSystem(n, PointerToPointer)->A;
+    stubMatrix[0][0] = 25;
+    stubMatrix[0][1] = 5;
+    stubMatrix[0][2] = 1;
+
+    stubMatrix[1][0] = 64;
+    stubMatrix[1][1] = 8;
+    stubMatrix[1][2] = 1;
+
+    stubMatrix[2][0] = 144;
+    stubMatrix[2][1] = 12;
+    stubMatrix[2][2] = 1;
+    return stubMatrix;
 }
 
 RealNumber CalculateResidue(RealNumber **A, RealNumber **invertedA, int n) {

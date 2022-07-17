@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include <string.h>
+#include <dirent.h>
 #include "../common/common.h"
+#include "../linear_system/linear_system.h"
 
 void showHelp(char *name) {
     fprintf(stderr, "\
@@ -47,7 +50,6 @@ int getOptions(int argc, char **argv, int *n, int *iterationsLimit, char **outpu
                 return -1;
         }
     }
-
     return 0;
 }
 
@@ -58,4 +60,26 @@ void printMatrix(RealNumber **A, int n) {
         }
         printf("\n");
     }
+}
+
+RealNumber **readMatrix(char *fileName, int *size) {
+    FILE *file = stdin;
+    if (strlen(fileName) != 0) {
+        file = fopen(fileName, "r");
+    }
+    if (!file) {
+        perror("could not open file");
+        exit(1);
+    }
+    int n;
+    fscanf(file, "%d", &n);
+    *size = n;
+    RealNumber **A = allocateLinearSystem(n, PointerToPointer)->A;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            fscanf(file, "%lf", &A[i][j]);
+        }
+    }
+    fclose(file);
+    return A;
 }
