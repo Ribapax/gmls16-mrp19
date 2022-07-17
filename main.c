@@ -6,7 +6,7 @@
 #include "linear_system/lu_factorization.h"
 
 int main(int argc, char *argv[]) {
-    srand(20221);
+    srand(S_RAND_CONST);
     if (argc < 2) {
         ShowHelp(argv[0]);
     }

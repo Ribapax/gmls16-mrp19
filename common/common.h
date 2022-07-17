@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define S_RAND_CONST 20221
+
 // Absolute value of a number, alternative solution to fabs()
 #define ABS(num)  ((num) < 0.0 ? -(num) : (num))
 
