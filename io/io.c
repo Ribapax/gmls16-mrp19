@@ -53,23 +53,23 @@ int GetOptions(int argc, char **argv, int *n, int *iterationsLimit, char **outpu
     return 0;
 }
 
-void printMatrix(RealNumber **A, int n) {
+void PrintMatrix(FILE *outputFile, RealNumber **A, int n) {
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            printf("%.15g ", A[i][j]);
+            fprintf(outputFile, "%.15g ", A[i][j]);
         }
-        printf("\n");
+        fprintf(outputFile, "\n");
     }
 }
 
 RealNumber **ReadMatrix(char *fileName, int *size) {
     FILE *file = stdin;
-    if (strlen(fileName) != 0) {
+    if (fileName) {
         file = fopen(fileName, "r");
-    }
-    if (!file) {
-        perror("could not open file");
-        exit(1);
+        if (!file) {
+            fprintf(stderr, "could not open file %s", fileName);
+            exit(1);
+        }
     }
     int n;
     fscanf(file, "%d", &n);
