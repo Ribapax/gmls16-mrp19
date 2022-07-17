@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, "could not open file %s", outputFilePath);
             exit(1);
         }
-        printf("\nResultados armazenados no arquivo \"%s\".\n", outputFilePath);
+        printf("\nResults stored in the file \"%s\".\n", outputFilePath);
     }
 
     // Read input
