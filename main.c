@@ -15,8 +15,6 @@ int main(int argc, char *argv[]) {
     char *outputFilePath, *inputFilePath;
     getOptions(argc, argv, &randomMatrixSize, &iterationsLimit, &outputFilePath, &inputFilePath);
 
-    // #### Final Code Algorithm ####
-
     // Read input
     int size;
     RealNumber **A;
