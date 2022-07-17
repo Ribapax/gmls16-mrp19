@@ -8,23 +8,23 @@
 int main(int argc, char *argv[]) {
     srand(20221);
     if (argc < 2) {
-        showHelp(argv[0]);
+        ShowHelp(argv[0]);
     }
     int randomMatrixSize = 0;
     int iterationsLimit;
     char *outputFilePath, *inputFilePath;
-    getOptions(argc, argv, &randomMatrixSize, &iterationsLimit, &outputFilePath, &inputFilePath);
+    GetOptions(argc, argv, &randomMatrixSize, &iterationsLimit, &outputFilePath, &inputFilePath);
 
     // Read input
     int size;
     RealNumber **A;
     if (randomMatrixSize) {
-        LinearSystem *LS = allocateLinearSystem(randomMatrixSize, PointerToPointer);
-        fillLinearSystem(LS, GenericMatrix, COEFFICIENT_LIMIT);
+        LinearSystem *LS = AllocateLinearSystem(randomMatrixSize, PointerToPointer);
+        FillLinearSystem(LS, GenericMatrix, COEFFICIENT_LIMIT);
         A = LS->A;
         size = randomMatrixSize;
     } else {
-        A = readMatrix(inputFilePath, &size);
+        A = ReadMatrix(inputFilePath, &size);
     }
 
     printf("#\n");

@@ -6,7 +6,7 @@
 #include "../common/common.h"
 #include "../linear_system/linear_system.h"
 
-void showHelp(char *name) {
+void ShowHelp(char *name) {
     fprintf(stderr, "\
         [usage] %s <options>\n\
         -e STRING   OPTIONAL  input file path.\n\
@@ -19,7 +19,7 @@ void showHelp(char *name) {
     exit(-1);
 }
 
-int getOptions(int argc, char **argv, int *n, int *iterationsLimit, char **outputFilePath, char **inputFilePath) {
+int GetOptions(int argc, char **argv, int *n, int *iterationsLimit, char **outputFilePath, char **inputFilePath) {
     const struct option options[] = {
             {"e", optional_argument,  0, 'e'},
             {"s", optional_argument,  0, 's'},
@@ -31,7 +31,7 @@ int getOptions(int argc, char **argv, int *n, int *iterationsLimit, char **outpu
     while ((opt = getopt_long(argc, argv, "he:s:i:r:", options, NULL)) > 0) {
         switch (opt) {
             case 'h':
-                showHelp(argv[0]);
+                ShowHelp(argv[0]);
                 break;
             case 'e':
                 *inputFilePath = optarg;
@@ -62,7 +62,7 @@ void printMatrix(RealNumber **A, int n) {
     }
 }
 
-RealNumber **readMatrix(char *fileName, int *size) {
+RealNumber **ReadMatrix(char *fileName, int *size) {
     FILE *file = stdin;
     if (strlen(fileName) != 0) {
         file = fopen(fileName, "r");
@@ -74,7 +74,7 @@ RealNumber **readMatrix(char *fileName, int *size) {
     int n;
     fscanf(file, "%d", &n);
     *size = n;
-    RealNumber **A = allocateLinearSystem(n, PointerToPointer)->A;
+    RealNumber **A = AllocateLinearSystem(n, PointerToPointer)->A;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             fscanf(file, "%lf", &A[i][j]);

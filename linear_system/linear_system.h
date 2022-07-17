@@ -32,9 +32,9 @@ typedef enum {
 } MatrixType;
 
 
-LinearSystem* allocateLinearSystem(unsigned int n, MatrixAllocationType type);
+LinearSystem* AllocateLinearSystem(unsigned int n, MatrixAllocationType type);
 void freeLinearSystem(LinearSystem *SL);
-void fillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientLimit);
+void FillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientLimit);
 
 LinearSystem *readLinearSystem();
 void printLinearSystem(LinearSystem *SL);

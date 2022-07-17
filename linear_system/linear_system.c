@@ -5,7 +5,7 @@
 #include "linear_system.h"
 
 // TODO: error handling
-LinearSystem* allocateLinearSystem(unsigned int n, MatrixAllocationType type) {
+LinearSystem* AllocateLinearSystem(unsigned int n, MatrixAllocationType type) {
     LinearSystem *SL = (LinearSystem *) malloc(sizeof(LinearSystem));
     if (!SL) {
         return SL;
@@ -67,7 +67,7 @@ void freeLinearSystem(LinearSystem *SL) {
   \param type
   \param coefficientLimit
 */
-void fillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientLimit) {
+void FillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientLimit) {
     unsigned int n = SL->n;
     RealNumber invRandMax = ((RealNumber) coefficientLimit / (RealNumber) RAND_MAX);
     for (unsigned int i=0; i<n; ++i) {
@@ -126,7 +126,7 @@ LinearSystem *readLinearSystem(MatrixAllocationType type) {
     unsigned int n;
     LinearSystem *SL;
     scanf("%d", &n);
-    SL = allocateLinearSystem(n, type);
+    SL = AllocateLinearSystem(n, type);
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             scanf("%lg", &SL->A[i][j]);
@@ -170,7 +170,7 @@ void copyMatrix(RealNumber **A, RealNumber **B, int n) {
 }
 
 RealNumber **multiplyMatrix(RealNumber **A, RealNumber **B, int n) {
-    RealNumber **Result = allocateLinearSystem(n, PointerToPointer)->A;
+    RealNumber **Result = AllocateLinearSystem(n, PointerToPointer)->A;
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             Result[i][j] += A[i][j] * B[j][i];
@@ -180,7 +180,7 @@ RealNumber **multiplyMatrix(RealNumber **A, RealNumber **B, int n) {
 }
 
 RealNumber **subtractMatrix(RealNumber **A, RealNumber **B, int n) {
-    RealNumber **Result = allocateLinearSystem(n, PointerToPointer)->A;
+    RealNumber **Result = AllocateLinearSystem(n, PointerToPointer)->A;
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             Result[i][j] = A[i][j] - B[i][j];
@@ -190,7 +190,7 @@ RealNumber **subtractMatrix(RealNumber **A, RealNumber **B, int n) {
 }
 
 RealNumber **getIdentityMatrix(int n) {
-    RealNumber **I = allocateLinearSystem(n, PointerToPointer)->A;
+    RealNumber **I = AllocateLinearSystem(n, PointerToPointer)->A;
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             if (i == j) {

@@ -32,7 +32,7 @@ void replaceLines(
 }
 
 RealNumber **generateMatrixL(RealNumber **A, RealNumber **B, RealNumber **U, int n) {
-    RealNumber **L = allocateLinearSystem(n, PointerToPointer)->A;
+    RealNumber **L = AllocateLinearSystem(n, PointerToPointer)->A;
     copyMatrix(A, U, n);
     for (int i = 0; i < n; i++) {
         L[i][i] = 1;
@@ -71,11 +71,11 @@ RealNumber **InvertMatrix(
     Time *LUTime
 ) {
     Time time; // Stores the time of solving the linear systems
-    RealNumber **invertedMatrix = allocateLinearSystem(n, PointerToPointer)->A;
+    RealNumber **invertedMatrix = AllocateLinearSystem(n, PointerToPointer)->A;
 
     // 1) Get L and U by solving -> L = generateMatrixL(A, B, U, n);
     RealNumber **B = getIdentityMatrix(n);
-    RealNumber **U = allocateLinearSystem(n, PointerToPointer)->A;
+    RealNumber **U = AllocateLinearSystem(n, PointerToPointer)->A;
     *LUTime = timestamp();
     RealNumber **L = generateMatrixL(A, B, U, n);
     *LUTime = timestamp() - *LUTime;
@@ -103,7 +103,7 @@ RealNumber **InvertMatrix(
     //return invertedMatrix;
 
     // TODO: remove it later
-    RealNumber **stubMatrix = allocateLinearSystem(n, PointerToPointer)->A;
+    RealNumber **stubMatrix = AllocateLinearSystem(n, PointerToPointer)->A;
     stubMatrix[0][0] = 25;
     stubMatrix[0][1] = 5;
     stubMatrix[0][2] = 1;

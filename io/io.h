@@ -3,9 +3,9 @@
 
 #include "../common/common.h"
 
-void showHelp(char *name);
-int getOptions(int argc, char **argv, int *n, int *iterationsLimit, char **outputFilePath, char **inputFilePath);
+void ShowHelp(char *name);
+int GetOptions(int argc, char **argv, int *n, int *iterationsLimit, char **outputFilePath, char **inputFilePath);
 void printMatrix(RealNumber **A, int n);
-RealNumber **readMatrix(char *fileName, int *size);
+RealNumber **ReadMatrix(char *fileName, int *size);
 
 #endif
