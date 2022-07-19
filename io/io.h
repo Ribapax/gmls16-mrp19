@@ -2,6 +2,7 @@
 #define IO_HEADER
 
 #include "../common/common.h"
+#include <stdio.h>
 
 void ShowHelp(char *name);
 int GetOptions(int argc, char **argv, int *n, int *iterationsLimit, char **outputFilePath, char **inputFilePath);
