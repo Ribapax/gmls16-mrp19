@@ -13,7 +13,7 @@ LinearSystem* AllocateLinearSystem(unsigned int n, MatrixAllocationType type) {
 
     SL->n = n;
     SL->matrixAllocationType = type;
-    SL->A = (RealNumber **) malloc(n * sizeof(RealNumber *));
+    SL->A = (RealNumber **) calloc(n, sizeof(RealNumber *));
     SL->b = (RealNumber *) malloc(n * sizeof(RealNumber));
     if (!(SL->A) || !(SL->b)) {
         freeLinearSystem(SL);
@@ -31,7 +31,7 @@ LinearSystem* AllocateLinearSystem(unsigned int n, MatrixAllocationType type) {
         }
     } else if (type == PointerToPointer) {
         for (int i=0; i < n; ++i) {
-            SL->A[i] = (RealNumber *) malloc(n * sizeof(RealNumber));
+            SL->A[i] = (RealNumber *) calloc(n, sizeof(RealNumber));
         }
     }
 

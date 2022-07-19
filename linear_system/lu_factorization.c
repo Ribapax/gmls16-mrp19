@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <math.h>
+
+
 #include "lu_factorization.h"
 #include "linear_system.h"
 
@@ -38,10 +40,10 @@ RealNumber **generateMatrixL(RealNumber **A, RealNumber **B, RealNumber **U, int
         L[i][i] = 1;
 
         // Partial pivoting
-        unsigned int pivotIndex = findPivotIndex(U, i, n);
+        /* unsigned int pivotIndex = findPivotIndex(U, i, n);
         if (i != pivotIndex) {
             replaceLines(U, B, i, pivotIndex);
-        }
+        } */
 
         // Gauss Elimination
         for (int k = i + 1; k < n; k++) {
@@ -75,16 +77,32 @@ RealNumber **InvertMatrix(
 
     // 1) Get L and U by solving -> L = generateMatrixL(A, B, U, n);
     RealNumber **B = getIdentityMatrix(n);
+    RealNumber **Y = AllocateLinearSystem(n, PointerToPointer)->A;
+    RealNumber **X = AllocateLinearSystem(n, PointerToPointer)->A;
     RealNumber **U = AllocateLinearSystem(n, PointerToPointer)->A;
-    *LUTime = timestamp();
+    *LUTime        = timestamp();
     RealNumber **L = generateMatrixL(A, B, U, n);
-    *LUTime = timestamp() - *LUTime;
+    *LUTime        = timestamp() - *LUTime;
 
     // 2) Get the y arrays by solving -> Ly = b;
     *averageLinearSystemTime = 0;
     for (int i = 0; i < n; ++i) {
         time = timestamp();
-        // TODO: solve Ly = b here
+        for ( int k=0;k<n;k++){ // Laço de repetição para percorrer as colunas de y
+          for ( int line = 0; line < n; line++ ) {
+            if(line == 0){
+              Y[line][k] = B[line][k];
+            }
+            else {
+              RealNumber sum = 0.0;
+              for(int j = 0; j< line; j++){
+                sum += Y[j][k] * L[line][j];
+              }
+              Y[line][k] = B[line][k] - sum;
+            } 
+          }
+        }
+        
         time = timestamp() - time;
         *averageLinearSystemTime += time;
     }
@@ -92,30 +110,29 @@ RealNumber **InvertMatrix(
     // 3) Get the inverted matrix x by solving -> Ux = y for each y.
     for (int i = 0; i < n; ++i) {
         time = timestamp();
-        // TODO: solve Ux = y here
+        
+        for ( int k=n-1;k>=0;k--){ // Laço de repetição para percorrer as colunas de x
+          
+          RealNumber retro;
+          for(int i = n-1; i >= 0 ; --i){
+            retro=0;
+            for(int j = i+1; j<n;j++){
+              retro += U[i][j]*X[j][k];
+            }
+            X[i][k] = (Y[i][k] - retro)/U[i][i];
+            
+          }
+
+        }
         time = timestamp() - time;
         *averageLinearSystemTime += time;
     }
+          
 
     *averageLinearSystemTime /= (n + n);
-
     // 4) Return x.
-    //return invertedMatrix;
-
-    // TODO: remove it later
-    RealNumber **stubMatrix = AllocateLinearSystem(n, PointerToPointer)->A;
-    stubMatrix[0][0] = 25;
-    stubMatrix[0][1] = 5;
-    stubMatrix[0][2] = 1;
-
-    stubMatrix[1][0] = 64;
-    stubMatrix[1][1] = 8;
-    stubMatrix[1][2] = 1;
-
-    stubMatrix[2][0] = 144;
-    stubMatrix[2][1] = 12;
-    stubMatrix[2][2] = 1;
-    return stubMatrix;
+    //return invertedMatrix the X matrix;
+    return X;
 }
 
 RealNumber CalculateResidue(RealNumber **A, RealNumber **invertedA, int n) {
