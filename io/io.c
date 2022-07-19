@@ -6,7 +6,7 @@
 #include "../common/common.h"
 #include "../linear_system/linear_system.h"
 
-void ShowHelp(char *name) {
+int ShowHelp(char *name) {
     fprintf(stderr, "\
         [usage] %s <options>\n\
         -e STRING   OPTIONAL  input file path.\n\
@@ -16,10 +16,17 @@ void ShowHelp(char *name) {
         ",
         name
     );
-    exit(-1);
+    return -1;
 }
 
-int GetOptions(int argc, char **argv, int *n, int *iterationsLimit, char **outputFilePath, char **inputFilePath) {
+int GetOptions(
+    int argc,
+    char **argv,
+    int *n,
+    int *iterationsLimit,
+    char **outputFilePath,
+    char **inputFilePath
+) {
     const struct option options[] = {
             {"e", optional_argument,  0, 'e'},
             {"s", optional_argument,  0, 's'},
@@ -46,7 +53,6 @@ int GetOptions(int argc, char **argv, int *n, int *iterationsLimit, char **outpu
                 *n = atoi(optarg);
                 break;
             default:
-                fprintf(stderr, "Invalid option or missing argument: `%c'\n", optopt) ;
                 return -1;
         }
     }
@@ -67,14 +73,18 @@ RealNumber **ReadMatrix(char *fileName, int *size) {
     if (fileName) {
         file = fopen(fileName, "r");
         if (!file) {
-            fprintf(stderr, "could not open file %s", fileName);
-            exit(1);
+            fprintf(stderr, "could not open file %s\n", fileName);
+            return NULL;
         }
     }
     int n;
     fscanf(file, "%d", &n);
     *size = n;
     RealNumber **A = AllocateLinearSystem(n, PointerToPointer)->A;
+    if (A == NULL) {
+        fprintf(stderr, "could not allocate matrix\n");
+        return NULL;
+    }
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             fscanf(file, "%lf", &A[i][j]);

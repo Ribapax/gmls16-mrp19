@@ -33,6 +33,9 @@ void replaceLines(
 
 RealNumber **generateMatrixL(RealNumber **A, RealNumber **B, RealNumber **U, int n) {
     RealNumber **L = AllocateLinearSystem(n, PointerToPointer)->A;
+    if (L == NULL) {
+        return NULL;
+    }
     copyMatrix(A, U, n);
     for (int i = 0; i < n; i++) {
         L[i][i] = 1;
@@ -47,7 +50,7 @@ RealNumber **generateMatrixL(RealNumber **A, RealNumber **B, RealNumber **U, int
         for (int k = i + 1; k < n; k++) {
             if (U[k][k] == 0) {
                 fprintf(stderr, "%s\n", "gaussian elimination error: division by zero");
-                return NULL; // TODO: return error codes
+                return NULL;
             }
             double m = U[k][i] / U[i][i];
 
@@ -64,6 +67,7 @@ RealNumber **generateMatrixL(RealNumber **A, RealNumber **B, RealNumber **U, int
     return L;
 }
 
+// TODO: handle errors
 RealNumber **InvertMatrix(
     RealNumber **A,
     int n,
@@ -72,12 +76,28 @@ RealNumber **InvertMatrix(
 ) {
     Time time; // Stores the time of solving the linear systems
     RealNumber **invertedMatrix = AllocateLinearSystem(n, PointerToPointer)->A;
+    if (invertedMatrix == NULL) {
+        fprintf(stderr, "could not allocate inverted matrix\n");
+        return NULL;
+    }
 
     // 1) Get L and U by solving -> L = generateMatrixL(A, B, U, n);
     RealNumber **B = getIdentityMatrix(n);
+    if (B == NULL) {
+        fprintf(stderr, "could not allocate identity matrix\n");
+        return NULL;
+    }
     RealNumber **U = AllocateLinearSystem(n, PointerToPointer)->A;
+    if (U == NULL) {
+        fprintf(stderr, "could not allocate \"U\" matrix\n");
+        return NULL;
+    }
     *LUTime = timestamp();
     RealNumber **L = generateMatrixL(A, B, U, n);
+    if (L == NULL) {
+        fprintf(stderr, "could not generate \"L\" matrix\n");
+        return NULL;
+    }
     *LUTime = timestamp() - *LUTime;
 
     // 2) Get the y arrays by solving -> Ly = b;
@@ -121,6 +141,10 @@ RealNumber **InvertMatrix(
 RealNumber CalculateResidue(RealNumber **A, RealNumber **invertedA, int n) {
     RealNumber **multiplication = multiplyMatrix(A, invertedA, n);
     RealNumber **identityMatrix = getIdentityMatrix(n);
+    if (identityMatrix == NULL) {
+        fprintf(stderr, "could not calculate residue: could not allocate identity matrix\n");
+        exit(-1);
+    }
     RealNumber **R = subtractMatrix(identityMatrix, multiplication, n);
     RealNumber sum = 0.;
     for (int i = 0; i < n; ++i) {

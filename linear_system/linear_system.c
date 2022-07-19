@@ -67,7 +67,7 @@ void freeLinearSystem(LinearSystem *SL) {
   \param type
   \param coefficientLimit
 */
-void FillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientLimit) {
+int FillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientLimit) {
     unsigned int n = SL->n;
     RealNumber invRandMax = ((RealNumber) coefficientLimit / (RealNumber) RAND_MAX);
     for (unsigned int i=0; i<n; ++i) {
@@ -79,7 +79,7 @@ void FillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientL
                 SL->A[i][j] = 1.0 / (RealNumber)(i + j + 1);
             }
         }
-        return;
+        return 0;
     }
     for (unsigned int i = 0; i < n; ++i) {
         for (unsigned int j = 0; j < n; ++j)  {
@@ -116,9 +116,9 @@ void FillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientL
             SL->A[i][i] += soma;
         }
     } else {
-        // TODO: handle error
-        return;
+        return -1;
     }
+    return 0;
 }
 
 
@@ -191,6 +191,9 @@ RealNumber **subtractMatrix(RealNumber **A, RealNumber **B, int n) {
 
 RealNumber **getIdentityMatrix(int n) {
     RealNumber **I = AllocateLinearSystem(n, PointerToPointer)->A;
+    if (I == NULL) {
+        return NULL;
+    }
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             if (i == j) {
