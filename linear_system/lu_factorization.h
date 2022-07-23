@@ -3,7 +3,7 @@
 
 #include "../common/common.h"
 
-#define RESIDUE_THRESHOLD 0.00003
+#define RESIDUE_THRESHOLD 0.00000000000000001
 
 // invertMatrix returns the inverted matrix of the matrix A of size n.
 //  - It also stores the average time of solving the Linear Systems
