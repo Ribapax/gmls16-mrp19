@@ -206,3 +206,14 @@ RealNumber **getIdentityMatrix(int n) {
     return I;
 }
 
+int MatrixIsInvertible(RealNumber **A, int n) {
+    RealNumber acc = 1;
+    for (int i = 0; i < n; ++i) {
+        acc *= A[i][i];
+    }
+    if (acc == 0) {
+        return 0;
+    }
+    return 1;
+}
+

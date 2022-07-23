@@ -65,13 +65,20 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    if (!MatrixIsInvertible(A, size)) {
+        fprintf(stderr, "matrix is not invertible");
+        exit(-1);
+    }
+
     fprintf(outputFile, "#\n");
     RealNumber **invertedA;
     Time residueTime;
     Time avgLSTime = 0, LUTime = 0;
-    RealNumber residueL2Norm = 9999;
+    RealNumber residueL2Norm = 9999; // TODO: fix this gambiarra
     int iteration = 1;
-    while (hasNotReachedStoppingCriteria(iteration, iterationsLimit, residueL2Norm)) {
+    // TODO: test stopping criteria
+    while (iteration <= iterationsLimit) {
+    //while (hasNotReachedStoppingCriteria(iteration, iterationsLimit, residueL2Norm)) {
         // 1) invert the matrix
         invertedA = InvertMatrix(A, size, &avgLSTime, &LUTime);
         if (invertedA == NULL) {

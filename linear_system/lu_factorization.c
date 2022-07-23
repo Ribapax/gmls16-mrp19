@@ -43,10 +43,10 @@ RealNumber **generateMatrixL(RealNumber **A, RealNumber **B, RealNumber **U, int
         L[i][i] = 1;
 
         // Partial pivoting
-        /* unsigned int pivotIndex = findPivotIndex(U, i, n);
+        unsigned int pivotIndex = findPivotIndex(U, i, n);
         if (i != pivotIndex) {
             replaceLines(U, B, i, pivotIndex);
-        } */
+        }
 
         // Gauss Elimination
         for (int k = i + 1; k < n; k++) {
@@ -69,7 +69,6 @@ RealNumber **generateMatrixL(RealNumber **A, RealNumber **B, RealNumber **U, int
     return L;
 }
 
-// TODO: handle errors
 RealNumber **InvertMatrix(
     RealNumber **A,
     int n,
@@ -97,7 +96,7 @@ RealNumber **InvertMatrix(
     }
     RealNumber **B = getIdentityMatrix(n);
     if (B == NULL) {
-        fprintf(stderr, "could not allocate identity matrix\n");
+        fprintf(stderr, "could not allocate identity matrix B\n");
         return NULL;
     }
     RealNumber **U = AllocateLinearSystem(n, PointerToPointer)->A;

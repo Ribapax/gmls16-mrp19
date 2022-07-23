@@ -52,5 +52,8 @@ RealNumber **subtractMatrix(RealNumber **A, RealNumber **B, int n);
 // getIdentityMatrix returns an identity matrix of size n
 RealNumber **getIdentityMatrix(int n);
 
+// MatrixIsInvertible returns 1 if the matrix is invertible and 0 if not
+int MatrixIsInvertible(RealNumber **A, int n);
+
 #endif
 
