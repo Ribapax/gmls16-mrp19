@@ -43,17 +43,23 @@ void printArray(RealNumber *arr, unsigned int n);
 // copyMatrix copies A into B
 void copyMatrix(RealNumber **A, RealNumber **B, int n);
 
-// multiplyMatrix returns the result of A x B
-RealNumber **multiplyMatrix(RealNumber **A, RealNumber **B, int n);
+// multiplyMatrixOfEqualSize returns the result of A x B
+RealNumber **multiplyMatrixOfEqualSize(RealNumber **A, RealNumber **B, int n);
+
+RealNumber *multiplyMatrixWithArray(RealNumber **A, const RealNumber *B, int n);
 
 // subtractMatrix returns the result of A - B
 RealNumber **subtractMatrix(RealNumber **A, RealNumber **B, int n);
 
-// getIdentityMatrix returns an identity matrix of size n
-RealNumber **getIdentityMatrix(int n);
+RealNumber *subtractArrays(const RealNumber *A, const RealNumber *B, int n);
+
+// GetIdentityMatrix returns an identity matrix of size n
+RealNumber **GetIdentityMatrix(int n);
 
 // MatrixIsInvertible returns 1 if the matrix is invertible and 0 if not
 int MatrixIsInvertible(RealNumber **A, int n);
+
+RealNumber *GaussElimination(RealNumber **A, RealNumber *B, int n);
 
 #endif
 

@@ -169,11 +169,13 @@ void copyMatrix(RealNumber **A, RealNumber **B, int n) {
     }
 }
 
-RealNumber **multiplyMatrix(RealNumber **A, RealNumber **B, int n) {
+RealNumber **multiplyMatrixOfEqualSize(RealNumber **A, RealNumber **B, int n) {
     RealNumber **Result = AllocateLinearSystem(n, PointerToPointer)->A;
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            Result[i][j] += A[i][j] * B[j][i];
+            for (int k = 0; k < n; ++k) {
+                Result[i][j] += A[i][k] * B[k][j];
+            }
         }
     }
     return Result;
@@ -189,7 +191,15 @@ RealNumber **subtractMatrix(RealNumber **A, RealNumber **B, int n) {
     return Result;
 }
 
-RealNumber **getIdentityMatrix(int n) {
+RealNumber *subtractArrays(const RealNumber *A, const RealNumber *B, int n) {
+    RealNumber *result = malloc(sizeof(RealNumber)*n);
+    for (int i = 0; i < n; ++i){
+        result[i]= A[i] - B[i];
+    }
+    return result;
+}
+
+RealNumber **GetIdentityMatrix(int n) {
     RealNumber **I = AllocateLinearSystem(n, PointerToPointer)->A;
     if (I == NULL) {
         return NULL;
@@ -217,3 +227,46 @@ int MatrixIsInvertible(RealNumber **A, int n) {
     return 1;
 }
 
+void forwardSubstitution(RealNumber **A, const RealNumber *b, RealNumber *x, unsigned int n) {
+    for (int i = n - 1; i >= 0; i--) {
+        x[i] = b[i];
+        for (unsigned int j = i + 1; j < n; j++) {
+            x[i] -= A[i][j] * x[j];
+        }
+        x[i] /= A[i][i];
+    }
+}
+
+RealNumber *GaussElimination(RealNumber **A, RealNumber *B, int n) {
+    for (int i = 0; i < n; i++) {
+        for (int k = i + 1; k < n; k++) {
+            if (A[k][k] == 0) {
+                fprintf(stderr, "%s\n", "gaussian elimination error: division by zero");
+                exit(-1);
+            }
+            double m = A[k][i] / A[i][i];
+            A[k][i] = 0.0;
+            for (int j = i + 1; j < n; j++) {
+                A[k][j] -= A[i][j] * m;
+            }
+            B[k] -= B[i] * m;
+        }
+    }
+    RealNumber *x = malloc(sizeof(RealNumber)*n);
+    forwardSubstitution(A, B, x, n);
+    return x;
+}
+
+
+RealNumber *multiplyMatrixWithArray(RealNumber **A, const RealNumber *B, int n) {
+    RealNumber *solution = malloc(sizeof(RealNumber)*n);
+    RealNumber sum = 0.;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            sum += A[i][j] * B[j];
+        }
+        solution[i] = sum;
+        sum = 0.;
+    }
+    return solution;
+}

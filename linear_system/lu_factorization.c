@@ -43,10 +43,10 @@ RealNumber **generateMatrixL(RealNumber **A, RealNumber **B, RealNumber **U, int
         L[i][i] = 1;
 
         // Partial pivoting
-        unsigned int pivotIndex = findPivotIndex(U, i, n);
-        if (i != pivotIndex) {
-            replaceLines(U, B, i, pivotIndex);
-        }
+//        unsigned int pivotIndex = findPivotIndex(U, i, n);
+//        if (i != pivotIndex) {
+//            replaceLines(U, B, i, pivotIndex);
+//        }
 
         // Gauss Elimination
         for (int k = i + 1; k < n; k++) {
@@ -94,7 +94,7 @@ RealNumber **InvertMatrix(
         fprintf(stderr, "could not allocate \"X\" matrix\n");
         return NULL;
     }
-    RealNumber **B = getIdentityMatrix(n);
+    RealNumber **B = GetIdentityMatrix(n);
     if (B == NULL) {
         fprintf(stderr, "could not allocate identity matrix B\n");
         return NULL;
@@ -163,8 +163,8 @@ RealNumber **InvertMatrix(
 }
 
 RealNumber CalculateResidue(RealNumber **A, RealNumber **invertedA, int n) {
-    RealNumber **multiplication = multiplyMatrix(A, invertedA, n);
-    RealNumber **identityMatrix = getIdentityMatrix(n);
+    RealNumber **multiplication = multiplyMatrixOfEqualSize(A, invertedA, n);
+    RealNumber **identityMatrix = GetIdentityMatrix(n);
     if (identityMatrix == NULL) {
         fprintf(stderr, "could not calculate residue: could not allocate identity matrix\n");
         exit(-1);

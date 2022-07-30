@@ -6,6 +6,25 @@
 #include "linear_system/linear_system.h"
 #include "linear_system/lu_factorization.h"
 
+RealNumber **refineSolution(RealNumber **A, RealNumber **invertedMatrix, int n) {
+    RealNumber *Ax;
+    RealNumber *B;
+    RealNumber **refinedSolution = AllocateLinearSystem(n, PointerToPointer)->A;
+    RealNumber **identityMatrix = GetIdentityMatrix(n);
+    RealNumber *currentColumn = malloc(sizeof(RealNumber) * n);
+    RealNumber *currentIdentityColumn = malloc(sizeof(RealNumber) * n);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; ++j) {
+            currentColumn[j] = invertedMatrix[j][i];
+            currentIdentityColumn[j] = identityMatrix[j][i];
+        }
+        Ax = multiplyMatrixWithArray(A, currentColumn, n);
+        B = subtractArrays(currentIdentityColumn, Ax, n);
+        refinedSolution[i] = GaussElimination(A, B, n);
+    }
+    return refinedSolution;
+}
+
 int main(int argc, char *argv[]) {
     srand(S_RAND_CONST);
     int err = 0;
@@ -72,24 +91,29 @@ int main(int argc, char *argv[]) {
 
     fprintf(outputFile, "#\n");
     RealNumber **invertedA;
-    Time residueTime;
+    Time residueTime = 0.;
+    Time residueTimeTemp;
     Time avgLSTime = 0, LUTime = 0;
-    RealNumber residueL2Norm = 9999; // TODO: fix this gambiarra
+    RealNumber residueL2Norm = 1 + RESIDUE_THRESHOLD;
+
+    invertedA = InvertMatrix(A, size, &avgLSTime, &LUTime);
+    if (invertedA == NULL) {
+        fprintf(stderr, "could not invert matrix\n");
+        exit(-1);
+    }
+    residueTimeTemp = timestamp();
+    residueL2Norm = CalculateResidue(A, invertedA, size);
+    residueTime += timestamp() - residueTimeTemp;
     int iteration = 1;
-    // TODO: test stopping criteria
-    while (iteration <= iterationsLimit) {
-    //while (hasNotReachedStoppingCriteria(iteration, iterationsLimit, residueL2Norm)) {
-        // 1) invert the matrix
-        invertedA = InvertMatrix(A, size, &avgLSTime, &LUTime);
-        if (invertedA == NULL) {
-            fprintf(stderr, "could not invert matrix\n");
-            exit(-1);
-        }
-        // 2) calculate and print Residue L2 Norm
-        residueTime = timestamp();
+    while (hasNotReachedStoppingCriteria(iteration, iterationsLimit, residueL2Norm)) {
+    // 1) Refine Solution
+        invertedA = refineSolution(A, invertedA, size);
+    // 2) Calculate Residue L2 Norm
+        residueTimeTemp = timestamp();
         residueL2Norm = CalculateResidue(A, invertedA, size);
-        residueTime = timestamp() - residueTime;
+        residueTime += timestamp() - residueTimeTemp;
         fprintf(outputFile, "# iter %d: %.15g\n", iteration, residueL2Norm);
+    // 3) Test against stopping criteria (again)
         iteration++;
     }
 
