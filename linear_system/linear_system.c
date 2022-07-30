@@ -252,7 +252,7 @@ RealNumber *GaussElimination(RealNumber **A, RealNumber *B, int n) {
             B[k] -= B[i] * m;
         }
     }
-    RealNumber *x = malloc(sizeof(RealNumber)*n);
+    RealNumber *x = malloc(sizeof(RealNumber) * n);
     forwardSubstitution(A, B, x, n);
     return x;
 }

@@ -14,5 +14,6 @@ called `handleError(int err)` that reads the enum, print the correct message to 
 and `exit`;
 
 ## IMPORTANT
-- [ ] See if multiplyMatrixOfEqualSize() is correct. I think it is not.
-- [ ] Check our CalculateResidue() function, maybe we should calculate many times, similar to the refinement. 
+- [ ] The solution is changing when the turn on the Partial Pivoting. It should not change;
+- [ ] Residue is not getting smaller with the iterations;
+- [ ] Program does not return the correct result when doing more than 0 iterations.

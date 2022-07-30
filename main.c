@@ -113,7 +113,6 @@ int main(int argc, char *argv[]) {
         residueL2Norm = CalculateResidue(A, invertedA, size);
         residueTime += timestamp() - residueTimeTemp;
         fprintf(outputFile, "# iter %d: %.15g\n", iteration, residueL2Norm);
-    // 3) Test against stopping criteria (again)
         iteration++;
     }
 
