@@ -59,5 +59,14 @@ int MatrixIsInvertible(RealNumber **A, int n);
 
 RealNumber *GaussElimination(RealNumber **A, RealNumber *B, int n);
 
+RealNumber **refineSolution(RealNumber **A, RealNumber **invertedMatrix, int n);
+
+int hasNotReachedStoppingCriteria(
+    int iteration,
+    int iterationsLimit,
+    RealNumber currentResidueL2Norm,
+    RealNumber lastResidueL2Norm
+);
+
 #endif
 

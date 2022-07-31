@@ -6,50 +6,6 @@
 #include "linear_system/linear_system.h"
 #include "linear_system/lu_factorization.h"
 
-RealNumber **refineSolution(RealNumber **A, RealNumber **invertedMatrix, int n) {
-    RealNumber **refinedSolutionCOLUMNS = AllocateLinearSystem(n, PointerToPointer)->A;
-    RealNumber **partialRefinedSolution = AllocateLinearSystem(n, PointerToPointer)->A;
-    RealNumber **refinedSolution = AllocateLinearSystem(n, PointerToPointer)->A;
-    RealNumber **identityMatrix = GetIdentityMatrix(n);
-    RealNumber **residue;
-    residue = multiplyMatrixOfEqualSize(A, invertedMatrix, n);
-    residue = subtractMatrix(identityMatrix, residue, n);
-    for (int i = 0; i < n; ++i) {
-        refinedSolutionCOLUMNS[i] = GaussElimination(A, residue[i], n);
-        for (int j = 0; j < n; ++j) {
-            partialRefinedSolution[j][i] = refinedSolutionCOLUMNS[i][j];
-        }
-    }
-    // TODO: sum matrix function
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            refinedSolution[i][j] = partialRefinedSolution[i][j] + invertedMatrix[i][j];
-        }
-    }
-    return refinedSolution;
-}
-
-int hasNotReachedStoppingCriteria(
-    int iteration,
-    int iterationsLimit,
-    RealNumber currentResidueL2Norm,
-    RealNumber lastResidueL2Norm
-) {
-    if (
-        lastResidueL2Norm != 1 + RESIDUE_THRESHOLD &&
-        (currentResidueL2Norm - lastResidueL2Norm) > RESIDUE_THRESHOLD
-    ) {
-        fprintf(
-            stderr,
-            "\nerror: residue increasing, solution does not converge, stopping. Try to decrease the number of iterations.\n"
-        );
-        return 0;
-    }
-    if (iteration <= iterationsLimit && currentResidueL2Norm > RESIDUE_THRESHOLD) {
-        return 1;
-    }
-    return 0;
-}
 
 int main(int argc, char *argv[]) {
     srand(S_RAND_CONST);
