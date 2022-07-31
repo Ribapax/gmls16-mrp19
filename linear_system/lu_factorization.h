@@ -3,7 +3,7 @@
 
 #include "../common/common.h"
 
-#define RESIDUE_THRESHOLD 0.0000000000000001
+#define RESIDUE_THRESHOLD 0.00000000000001
 
 // invertMatrix returns the inverted matrix of the matrix A of size n.
 //  - It also stores the average time of solving the Linear Systems
@@ -34,8 +34,8 @@ RealNumber CalculateResidue(RealNumber **A, RealNumber **invertedA, int n);
 // finPivotIndex finds the line index of the pivot element of the given columnIndex
 unsigned int findPivotIndex(double** Matrix, unsigned int columnIndex, unsigned int systemSize);
 
-// replaceLines replaces the line of index 'index' with the line of index 'pivotIndex', and vice versa.
-void replaceLines(
+// replaceLinesWithIdentityMatrix replaces the line of index 'index' with the line of index 'pivotIndex', and vice versa.
+void replaceLinesWithIdentityMatrix(
     double **Matrix,
     double **identityMatrix,
     unsigned int index,

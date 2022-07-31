@@ -237,8 +237,28 @@ void forwardSubstitution(RealNumber **A, const RealNumber *b, RealNumber *x, uns
     }
 }
 
+void replaceLines(
+    double **Matrix,
+    double *independentTerms,
+    unsigned int index,
+    unsigned int pivotIndex
+) {
+    RealNumber *lineToBeReplaced = Matrix[index];
+    Matrix[index] = Matrix[pivotIndex];
+    Matrix[pivotIndex] = lineToBeReplaced;
+
+    RealNumber termToBeReplaced = independentTerms[index];
+    independentTerms[index] = independentTerms[pivotIndex];
+    independentTerms[pivotIndex] = termToBeReplaced;
+}
+
 RealNumber *GaussElimination(RealNumber **A, RealNumber *B, int n) {
     for (int i = 0; i < n; i++) {
+        // Partial Pivoting
+//        unsigned int pivotIndex = findPivotIndex(A, i, n);
+//        if (i != pivotIndex) {
+//            replaceLines(A, B, i, pivotIndex);
+//        }
         for (int k = i + 1; k < n; k++) {
             if (A[k][k] == 0) {
                 fprintf(stderr, "%s\n", "gaussian elimination error: division by zero");

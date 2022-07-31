@@ -7,22 +7,48 @@
 #include "linear_system/lu_factorization.h"
 
 RealNumber **refineSolution(RealNumber **A, RealNumber **invertedMatrix, int n) {
-    RealNumber *Ax;
-    RealNumber *B;
+    RealNumber **refinedSolutionCOLUMNS = AllocateLinearSystem(n, PointerToPointer)->A;
+    RealNumber **partialRefinedSolution = AllocateLinearSystem(n, PointerToPointer)->A;
     RealNumber **refinedSolution = AllocateLinearSystem(n, PointerToPointer)->A;
     RealNumber **identityMatrix = GetIdentityMatrix(n);
-    RealNumber *currentColumn = malloc(sizeof(RealNumber) * n);
-    RealNumber *currentIdentityColumn = malloc(sizeof(RealNumber) * n);
-    for (int i = 0; i < n; i++) {
+    RealNumber **residue;
+    residue = multiplyMatrixOfEqualSize(A, invertedMatrix, n);
+    residue = subtractMatrix(identityMatrix, residue, n);
+    for (int i = 0; i < n; ++i) {
+        refinedSolutionCOLUMNS[i] = GaussElimination(A, residue[i], n);
         for (int j = 0; j < n; ++j) {
-            currentColumn[j] = invertedMatrix[j][i];
-            currentIdentityColumn[j] = identityMatrix[j][i];
+            partialRefinedSolution[j][i] = refinedSolutionCOLUMNS[i][j];
         }
-        Ax = multiplyMatrixWithArray(A, currentColumn, n);
-        B = subtractArrays(currentIdentityColumn, Ax, n);
-        refinedSolution[i] = GaussElimination(A, B, n);
+    }
+    // TODO: sum matrix function
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            refinedSolution[i][j] = partialRefinedSolution[i][j] + invertedMatrix[i][j];
+        }
     }
     return refinedSolution;
+}
+
+int hasNotReachedStoppingCriteria(
+    int iteration,
+    int iterationsLimit,
+    RealNumber currentResidueL2Norm,
+    RealNumber lastResidueL2Norm
+) {
+    if (
+        lastResidueL2Norm != 1 + RESIDUE_THRESHOLD &&
+        (currentResidueL2Norm - lastResidueL2Norm) > RESIDUE_THRESHOLD
+    ) {
+        fprintf(
+            stderr,
+            "\nerror: residue increasing, solution does not converge, stopping. Try to decrease the number of iterations.\n"
+        );
+        return 0;
+    }
+    if (iteration <= iterationsLimit && currentResidueL2Norm > RESIDUE_THRESHOLD) {
+        return 1;
+    }
+    return 0;
 }
 
 int main(int argc, char *argv[]) {
@@ -94,34 +120,35 @@ int main(int argc, char *argv[]) {
     Time residueTime = 0.;
     Time residueTimeTemp;
     Time avgLSTime = 0, LUTime = 0;
-    RealNumber residueL2Norm = 1 + RESIDUE_THRESHOLD;
+    RealNumber currentResidueL2Norm = 1 + RESIDUE_THRESHOLD;
 
     invertedA = InvertMatrix(A, size, &avgLSTime, &LUTime);
     if (invertedA == NULL) {
         fprintf(stderr, "could not invert matrix\n");
         exit(-1);
     }
-    residueTimeTemp = timestamp();
-    residueL2Norm = CalculateResidue(A, invertedA, size);
-    residueTime += timestamp() - residueTimeTemp;
+//    residueTimeTemp = timestamp();
+//    currentResidueL2Norm = CalculateResidue(A, invertedA, size);
+//    residueTime += timestamp() - residueTimeTemp;
+    RealNumber **ACopy = AllocateLinearSystem(size, PointerToPointer)->A;
+    copyMatrix(A, ACopy, size);
+    RealNumber lastResidueL2Norm = 1 + RESIDUE_THRESHOLD;
+    currentResidueL2Norm = 1 + RESIDUE_THRESHOLD;
     int iteration = 1;
-    while (hasNotReachedStoppingCriteria(iteration, iterationsLimit, residueL2Norm)) {
-    // 1) Refine Solution
+    while (hasNotReachedStoppingCriteria(iteration, iterationsLimit, currentResidueL2Norm, lastResidueL2Norm)) {
+        lastResidueL2Norm = currentResidueL2Norm;
+        copyMatrix(ACopy, A, size);
         invertedA = refineSolution(A, invertedA, size);
-    // 2) Calculate Residue L2 Norm
         residueTimeTemp = timestamp();
-        residueL2Norm = CalculateResidue(A, invertedA, size);
+        currentResidueL2Norm = CalculateResidue(A, invertedA, size);
         residueTime += timestamp() - residueTimeTemp;
-        fprintf(outputFile, "# iter %d: %.15g\n", iteration, residueL2Norm);
+        fprintf(outputFile, "# iter %d: %.15g\n", iteration, currentResidueL2Norm);
         iteration++;
     }
-
-    // 3) print times
     fprintf(outputFile, "# Tempo LU: %.15g\n", LUTime);
     fprintf(outputFile, "# Tempo iter: %.15g\n", avgLSTime);
     fprintf(outputFile, "# Tempo residuo: %.15g\n", residueTime);
     fprintf(outputFile, "#\n");
-    // 4) print size and inverted matrix
     fprintf(outputFile, "%d\n", size);
     PrintMatrix(outputFile, invertedA, size);
 

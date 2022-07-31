@@ -18,7 +18,7 @@ unsigned int findPivotIndex(double** Matrix, unsigned int columnIndex, unsigned 
     return pivotIndex;
 }
 
-void replaceLines(
+void replaceLinesWithIdentityMatrix(
     double **Matrix,
     double **identityMatrix,
     unsigned int index,
@@ -45,7 +45,7 @@ RealNumber **generateMatrixL(RealNumber **A, RealNumber **B, RealNumber **U, int
         // Partial pivoting
 //        unsigned int pivotIndex = findPivotIndex(U, i, n);
 //        if (i != pivotIndex) {
-//            replaceLines(U, B, i, pivotIndex);
+//            replaceLinesWithIdentityMatrix(U, B, i, pivotIndex);
 //        }
 
         // Gauss Elimination
