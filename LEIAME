@@ -45,6 +45,9 @@ com matrizes e vetores.
 
 ## Outros esclarecimentos ##
 
+0) Ao executar o programa sem nenhuma "flag", ele imprime um tutorial de como utilizar, seguindo a especificação
+do trabalho.
+
 1) Percebemos que o primeiro resíduo calculado (antes do primeiro refinamento) é sempre menor do que o resíduo
 calculado depois do primeiro refinamento. Não sabemos o motivo ainda, então ignoramos o primeiro resíduo e imprimimos
 a partir do primeiro resíduo calculado a partir do primeiro refinamento;
@@ -61,5 +64,7 @@ por enquanto;
 AW = B - A x A^-1, mas não utilizamos fatoração LU. Pretendíamos utilizar, porém não tivemos tempo o suficiente para implementar
 uma solução genérica o suficiente para que pudesse ser reutilizada também durante a inversão da matriz.
 
-5) Preferimos escrever o código e os comentários em inglês por ser a língua da ciência da computação, mas podemos
+5) O diretório "tests" possui alguns tipos de matrizes que utilizamos durante nossos testes;
+
+6) Preferimos escrever o código e os comentários em inglês por ser a língua da ciência da computação, mas podemos
 traduzir se requisitado.

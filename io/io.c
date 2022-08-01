@@ -15,10 +15,10 @@
 int ShowHelp(char *name) {
     fprintf(stderr, "\
         [usage] %s <options>\n\
-        -e STRING   OPTIONAL  input file path.\n\
-        -s STRING   OPTIONAL  output file.\n\
-        -r INTEGER  OPTIONAL  matrix dimension.\n\
-        -i INTEGER  REQUIRED  iterations limit (i > 0).\n\
+        -e STRING   OPTIONAL  input file path. Default: stdin. \n\
+        -s STRING   OPTIONAL  output file path. Default: stdout. \n\
+        -r INTEGER  OPTIONAL  random matrix dimension. If present, ignores any input. \n\
+        -i INTEGER  REQUIRED  refinement iterations limit (i >= 0).\n\
         ",
         name
     );
@@ -54,6 +54,10 @@ int GetOptions(
                 break;
             case 'i':
                 *iterationsLimit = atoi(optarg);
+                if (*iterationsLimit < 0) {
+                    fprintf(stderr, "iterations limit should be greater or equal zero\n");
+                    return -1;
+                }
                 break;
             case 'r':
                 *n = atoi(optarg);
