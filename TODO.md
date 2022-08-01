@@ -5,8 +5,8 @@
 - [x] Return error when the matrix cannot be inverted (determinant = 0). After calculating `U`, we need
     to test if the determinant is zero; just multiply all elements of the main diagonal of the matrix; if its zero, return an error.
 - [x] Refinement.
-- [ ] Write `LEIAME` file;
-- [ ] Fix stopping criteria;
+- [x] Write `LEIAME` file;
+- [x] Fix stopping criteria;
 - [ ] Test the code against giant matrices;
 - [ ] Test the code against non-reversible matrices;
 - [ ] Nice to have: we can create enums for all the errors and write a function
@@ -15,5 +15,8 @@ and `exit`;
 
 ## IMPORTANT
 - [ ] The solution is changing when the turn on the Partial Pivoting. It should not change;
-- [ ] Residue is not getting smaller with the iterations;
-- [ ] Program does not return the correct result when doing more than 0 iterations.
+- [x] Residue is not getting smaller with the iterations;
+- [x] Program does not return the correct result when doing more than 0 iterations;
+- [ ] Correctly comment all functions, structs and types;
+- [ ] Correctly comment the algorithms;
+- [ ] Debug Refinement to see if it is correct.
