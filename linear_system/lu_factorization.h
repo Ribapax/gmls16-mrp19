@@ -1,3 +1,9 @@
+/*
+ * Authors:
+ *  Guilherme Morais Lopes dos Santos - GRR20163043
+ *  Mateus Ribamar - GRR
+ */
+
 #ifndef LU_FACTORIZATION_HEADER
 #define LU_FACTORIZATION_HEADER
 

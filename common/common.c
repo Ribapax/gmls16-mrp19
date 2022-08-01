@@ -1,3 +1,9 @@
+/*
+ * Authors:
+ *  Guilherme Morais Lopes dos Santos - GRR20163043
+ *  Mateus Ribamar - GRR
+ */
+
 #include <stdio.h>
 #include <string.h>
 

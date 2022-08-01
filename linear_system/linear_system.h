@@ -1,3 +1,9 @@
+/*
+ * Authors:
+ *  Guilherme Morais Lopes dos Santos - GRR20163043
+ *  Mateus Ribamar - GRR
+ */
+
 #ifndef LINEAR_SYSTEM_HEADER
 #define LINEAR_SYSTEM_HEADER
 #include "../common/common.h"

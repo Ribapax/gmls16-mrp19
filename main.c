@@ -1,3 +1,9 @@
+/*
+ * Authors:
+ *  Guilherme Morais Lopes dos Santos - GRR20163043
+ *  Mateus Ribamar - GRR
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -83,9 +89,12 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "could not invert matrix\n");
         exit(-1);
     }
+
 //    residueTimeTemp = timestamp();
 //    currentResidueL2Norm = CalculateResidue(A, invertedA, size);
 //    residueTime += timestamp() - residueTimeTemp;
+//    fprintf(outputFile, "# iter 0: %.15g\n", currentResidueL2Norm);
+
     RealNumber **ACopy = AllocateLinearSystem(size, PointerToPointer)->A;
     copyMatrix(A, ACopy, size);
     RealNumber lastResidueL2Norm = 1 + RESIDUE_THRESHOLD;

@@ -1,3 +1,9 @@
+/*
+ * Authors:
+ *  Guilherme Morais Lopes dos Santos - GRR20163043
+ *  Mateus Ribamar - GRR
+ */
+
 #ifndef COMMON_HEADER
 #define COMMON_HEADER
 

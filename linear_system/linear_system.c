@@ -1,3 +1,9 @@
+/*
+ * Authors:
+ *  Guilherme Morais Lopes dos Santos - GRR20163043
+ *  Mateus Ribamar - GRR
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -71,19 +77,19 @@ void freeLinearSystem(LinearSystem *SL) {
 int FillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientLimit) {
     unsigned int n = SL->n;
     RealNumber invRandMax = ((RealNumber) coefficientLimit / (RealNumber) RAND_MAX);
-    for (unsigned int i=0; i<n; ++i) {
+    for (unsigned int i = 0; i < n; ++i) {
         SL->b[i] = (RealNumber) rand() * invRandMax;
     }
     if (type == HilbertMatrix) {
         for (unsigned int i = 0; i < n; ++i) {
-            for (unsigned int j = 0; j < n; ++j)  {
-                SL->A[i][j] = 1.0 / (RealNumber)(i + j + 1);
+            for (unsigned int j = 0; j < n; ++j) {
+                SL->A[i][j] = 1.0 / (RealNumber) (i + j + 1);
             }
         }
         return 0;
     }
     for (unsigned int i = 0; i < n; ++i) {
-        for (unsigned int j = 0; j < n; ++j)  {
+        for (unsigned int j = 0; j < n; ++j) {
             SL->A[i][j] = (RealNumber) rand() * invRandMax;
         }
     }
@@ -93,6 +99,7 @@ int FillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientLi
             SL->A[nula][j] = 0.0;
         }
         SL->b[nula] = 0.0;
+        return 0;
     } else if (type == ProportionalEquation) {
         unsigned int propDst = rand() % n;
         unsigned int propSrc = (propDst + 1) % n;
@@ -101,6 +108,7 @@ int FillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientLi
             SL->A[propDst][j] = SL->A[propSrc][j] * mult;
         }
         SL->b[propDst] = SL->b[propSrc] * mult;
+        return 0;
     } else if (type == LinearCombinationEquation) {
         unsigned int combDst = rand() % n;
         unsigned int combSrc1 = (combDst + 1) % n;
@@ -109,6 +117,7 @@ int FillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientLi
             SL->A[combDst][j] = SL->A[combSrc1][j] + SL->A[combSrc2][j];
         }
         SL->b[combDst] = SL->b[combSrc1] + SL->b[combSrc2];
+        return 0;
     } else if (type == DominantDiagonal) {
         for (unsigned int i = 0; i < n; ++i) {
             RealNumber soma = 0.0;
@@ -116,10 +125,12 @@ int FillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientLi
             for (unsigned int j = i + 1; j < n; ++j) soma += SL->A[i][j];
             SL->A[i][i] += soma;
         }
+        return 0;
+    } else if (type == GenericMatrix) {
+        return 0;
     } else {
         return -1;
     }
-    return 0;
 }
 
 

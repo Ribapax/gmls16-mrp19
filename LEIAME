@@ -1,0 +1,65 @@
+ ## Matrix Inverter ##
+
+ Trabalho de Introdução à Computação Científica
+
+ Universidade Federal do Paraná
+
+ Julho de 2022
+
+ Alunos:
+ - Guilherme Morais Lopes dos Santos, GRR20163043
+ - Mateus Ribamar, GRR
+
+---------------------------------------------------
+
+## Documentação das estruturas de dados ##
+
+1) RealNumber: representa um número real no programa. Definido como "double", mas pode ser facilmente alterado
+para funcionar com outros tipos de representação em ponto flutuante.
+
+2) MatrixAllocationType: enumerador que define os tipos de alocação de matriz disponíveis. Neste programa utilizamos
+sempre "PointerToPointer".
+
+3) LinearSystem: representa um Sistema Linear, com a matriz de coeficientes, os termos independentes, o tamanho e
+o tipo de alocação da matriz. Neste programa utilizamos apenas a matriz dos sistemas, como sugerido pelo professor.
+
+4) MatrixType: enumerador que define os tipos possíveis de matrizes aleatórias que podem ser geradas.
+Neste programa, utilizamos apenas "GenericMatrix", que é uma matriz genérica.
+
+
+
+
+## Descrição dos módulos ##
+
+1) common: abarca funcionalidades que são comuns à todos os outros módulos;
+
+2) io: responsável por fazer toda a comunicação entrada e saída do programa (in / out);
+
+3) linear_system: responsável por alocar sistemas lineares (para que possamos usar suas matrizes) e por fazer operações
+com matrizes e vetores.
+
+4) lu_factorization: módulo responsável pela funcionalidade de inverter matrizes usando a Fatoração LU.
+
+
+
+
+## Outros esclarecimentos ##
+
+1) Percebemos que o primeiro resíduo calculado (antes do primeiro refinamento) é sempre menor do que o resíduo
+calculado depois do primeiro refinamento. Não sabemos o motivo ainda, então ignoramos o primeiro resíduo e imprimimos
+a partir do primeiro resíduo calculado a partir do primeiro refinamento;
+
+2)  Percebemos que ao utilizar muitas iterações (ex.: 50), o resultado se afasta do que seria correto, e o resíduo aumenta
+progressivamente; decidimos parar as iterações e imprimir um erro em stderr toda vez que o resíduo começa a aumentar em
+relação ao resíduo da iteração anterior;
+
+3) Percebemos que ao usar o pivoteamento parcial, o programa não encontra a solução correta. Provavelment é algum
+problema de implementação, mas que não conseguimos encontrar à tempo da entrega, por isso apenas desligamos o pivoteamento parcial
+por enquanto;
+
+4) No processo de refinamento, usamos a Eliminação de Gauss para resolver os sistemas lineares resultantes do cálculo de
+AW = B - A x A^-1, mas não utilizamos fatoração LU. Pretendíamos utilizar, porém não tivemos tempo o suficiente para implementar
+uma solução genérica o suficiente para que pudesse ser reutilizada também durante a inversão da matriz.
+
+5) Preferimos escrever o código e os comentários em inglês por ser a língua da ciência da computação, mas podemos
+traduzir se requisitado.
