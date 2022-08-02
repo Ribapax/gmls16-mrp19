@@ -270,15 +270,19 @@ RealNumber **refineSolution(RealNumber **A, RealNumber **invertedMatrix, int n) 
     RealNumber **refinedSolution = AllocateLinearSystem(n, PointerToPointer)->A;
     RealNumber **identityMatrix = GetIdentityMatrix(n);
     RealNumber **residue;
+    // 1) A x A^-1
     residue = multiplyMatrixOfEqualSize(A, invertedMatrix, n);
+    // 2) B - (A x A^-1)
     residue = subtractMatrix(identityMatrix, residue, n);
+    // 3) AW = B - (A x A^-1) -> for each W column
     for (int i = 0; i < n; ++i) {
         refinedSolutionCOLUMNS[i] = GaussElimination(A, residue[i], n);
+        // Converting lines into columns
         for (int j = 0; j < n; ++j) {
             partialRefinedSolution[j][i] = refinedSolutionCOLUMNS[i][j];
         }
     }
-    // TODO: sum matrix function
+    // TODO: remove this into a function that returns the sum of two matrices
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             refinedSolution[i][j] = partialRefinedSolution[i][j] + invertedMatrix[i][j];
