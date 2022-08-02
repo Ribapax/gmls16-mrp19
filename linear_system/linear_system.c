@@ -66,13 +66,6 @@ void freeLinearSystem(LinearSystem *SL) {
     free(SL);
 }
 
-
-/*!
-  \brief Generate coefficients and independent terms
-  \param SL
-  \param type
-  \param coefficientLimit
-*/
 int FillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientLimit) {
     unsigned int n = SL->n;
     RealNumber invRandMax = ((RealNumber) coefficientLimit / (RealNumber) RAND_MAX);
