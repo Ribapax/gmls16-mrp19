@@ -15,6 +15,7 @@
 //  - It also stores the average time of solving the Linear Systems
 //    Ly = b and Ux = y inside `averageLinearSystemTime`;
 //  - And stores the L and U matrix calculation time inside `LUTime`.
+//  - `B` is the identity matrix, that may be changed by the partial pivoting.
 // Algorithm:
 // 1) Get L and U by solving -> L = generateMatrixL(A, B, U, n);
 // 2) Get the y arrays by solving -> Ly = b;
@@ -22,6 +23,7 @@
 // 4) Return x.
 RealNumber **InvertMatrix(
     RealNumber **A,
+    RealNumber **B,
     int n,
     Time *averageLinearSystemTime,
     Time *LUTime
@@ -38,9 +40,10 @@ RealNumber **generateMatrixL(RealNumber **A, RealNumber **B, RealNumber **U, int
 // L2Norm = sqrt(sum(R[i][j]^2)), ∀ 1 <= i, j <= n
 // Params:
 // - A: matrix to be inverted;
+// - B: identity matrix;
 // - invertedA: matrix A inverted;
 // - n: matrix dimension.
-RealNumber CalculateResidue(RealNumber **A, RealNumber **invertedA, int n);
+RealNumber CalculateResidue(RealNumber **A, RealNumber **B, RealNumber **invertedA, int n);
 
 // Finds the line index of the pivot element of the given column index.
 // Params:

@@ -264,19 +264,21 @@ RealNumber *multiplyMatrixWithArray(RealNumber **A, const RealNumber *B, int n) 
     return solution;
 }
 
-RealNumber **refineSolution(RealNumber **A, RealNumber **invertedMatrix, int n) {
+RealNumber **refineSolution(RealNumber **A, RealNumber **B, RealNumber **invertedMatrix, int n) {
     RealNumber **refinedSolutionCOLUMNS = AllocateLinearSystem(n, PointerToPointer)->A;
     RealNumber **partialRefinedSolution = AllocateLinearSystem(n, PointerToPointer)->A;
     RealNumber **refinedSolution = AllocateLinearSystem(n, PointerToPointer)->A;
-    RealNumber **identityMatrix = GetIdentityMatrix(n);
     RealNumber **residue;
     // 1) A x A^-1
     residue = multiplyMatrixOfEqualSize(A, invertedMatrix, n);
     // 2) B - (A x A^-1)
-    residue = subtractMatrix(identityMatrix, residue, n);
+    residue = subtractMatrix(B, residue, n);
     // 3) AW = B - (A x A^-1) -> for each W column
+    RealNumber **ACopy = AllocateLinearSystem(n, PointerToPointer)->A;
+    copyMatrix(A, ACopy, n);
     for (int i = 0; i < n; ++i) {
         refinedSolutionCOLUMNS[i] = GaussElimination(A, residue[i], n);
+        copyMatrix(ACopy, A, n);
         // Converting lines into columns
         for (int j = 0; j < n; ++j) {
             partialRefinedSolution[j][i] = refinedSolutionCOLUMNS[i][j];

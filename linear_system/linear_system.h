@@ -113,11 +113,12 @@ RealNumber *GaussElimination(RealNumber **A, RealNumber *B, int n);
  * Given a first solution, returns a more refined solution.
  * Params:
  *  - A: matrix to be inverted;
+ *  - B: identity matrix;
  *  - invertedMatrix: first solution, inverted A;
  *  - n: matrix dimension;
  * Returns a matrix of dimension `n` with the refined solution.
  */
-RealNumber **refineSolution(RealNumber **A, RealNumber **invertedMatrix, int n);
+RealNumber **refineSolution(RealNumber **A, RealNumber **B, RealNumber **invertedMatrix, int n);
 
 /*
  * Asserts if the solution has reached the stopping criteria.

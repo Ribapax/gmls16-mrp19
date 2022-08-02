@@ -49,12 +49,12 @@ RealNumber **generateMatrixL(RealNumber **A, RealNumber **B, RealNumber **U, int
         L[i][i] = 1;
 
         // Partial pivoting
-//        unsigned int pivotIndex = findPivotIndex(U, i, n);
-//        if (i != pivotIndex) {
-//            replaceLinesWithIdentityMatrix(U, B, i, pivotIndex);
-//        }
+        unsigned int pivotIndex = findPivotIndex(U, i, n);
+        if (i != pivotIndex) {
+            replaceLinesWithIdentityMatrix(U, B, i, pivotIndex);
+        }
 
-        // Gauss Elimination
+        // Triangularization
         for (int k = i + 1; k < n; k++) {
             if (U[k][k] == 0) {
                 fprintf(stderr, "%s\n", "gaussian elimination error: division by zero");
@@ -77,6 +77,7 @@ RealNumber **generateMatrixL(RealNumber **A, RealNumber **B, RealNumber **U, int
 
 RealNumber **InvertMatrix(
     RealNumber **A,
+    RealNumber **B,
     int n,
     Time *averageLinearSystemTime,
     Time *LUTime
@@ -100,11 +101,6 @@ RealNumber **InvertMatrix(
         fprintf(stderr, "could not allocate \"X\" matrix\n");
         return NULL;
     }
-    RealNumber **B = GetIdentityMatrix(n);
-    if (B == NULL) {
-        fprintf(stderr, "could not allocate identity matrix B\n");
-        return NULL;
-    }
     RealNumber **U = AllocateLinearSystem(n, PointerToPointer)->A;
     if (U == NULL) {
         fprintf(stderr, "could not allocate \"U\" matrix\n");
@@ -122,21 +118,19 @@ RealNumber **InvertMatrix(
     *averageLinearSystemTime = 0;
     for (int i = 0; i < n; ++i) {
         time = timestamp();
-        for ( int k=0;k<n;k++){ // Laço de repetição para percorrer as colunas de y
-          for ( int line = 0; line < n; line++ ) {
-            if(line == 0){
-              Y[line][k] = B[line][k];
+        for (int k = 0; k < n; k++) { // Iterate over Y columns
+            for (int line = 0; line < n; line++ ) {
+                if (line == 0) {
+                    Y[line][k] = B[line][k];
+                } else {
+                    RealNumber sum = 0.0;
+                    for (int j = 0; j < line; j++) {
+                        sum += Y[j][k] * L[line][j];
+                    }
+                    Y[line][k] = B[line][k] - sum;
+                }
             }
-            else {
-              RealNumber sum = 0.0;
-              for(int j = 0; j< line; j++){
-                sum += Y[j][k] * L[line][j];
-              }
-              Y[line][k] = B[line][k] - sum;
-            } 
-          }
         }
-        
         time = timestamp() - time;
         *averageLinearSystemTime += time;
     }
@@ -144,38 +138,28 @@ RealNumber **InvertMatrix(
     // 3) Get the inverted matrix x by solving -> Ux = y for each y.
     for (int i = 0; i < n; ++i) {
         time = timestamp();
-        
-        for ( int k=n-1;k>=0;k--){ // Laço de repetição para percorrer as colunas de x
-          
-          RealNumber retro;
-          for(int i = n-1; i >= 0 ; --i){
-            retro=0;
-            for(int j = i+1; j<n;j++){
-              retro += U[i][j]*X[j][k];
+        for (int k = n - 1; k >= 0; k--) { // iterates over X columns
+            RealNumber retro;
+            for (int i = n - 1; i >= 0 ; --i) {
+                retro = 0;
+                for (int j = i + 1; j < n; j++) {
+                    retro += U[i][j] * X[j][k];
+                }
+                X[i][k] = (Y[i][k] - retro) / U[i][i];
             }
-            X[i][k] = (Y[i][k] - retro)/U[i][i];
-            
-          }
-
         }
         time = timestamp() - time;
         *averageLinearSystemTime += time;
     }
-
     *averageLinearSystemTime /= (n + n);
     // 4) Return x.
     //return invertedMatrix the X matrix;
     return X;
 }
 
-RealNumber CalculateResidue(RealNumber **A, RealNumber **invertedA, int n) {
+RealNumber CalculateResidue(RealNumber **A, RealNumber **B, RealNumber **invertedA, int n) {
     RealNumber **multiplication = multiplyMatrixOfEqualSize(A, invertedA, n);
-    RealNumber **identityMatrix = GetIdentityMatrix(n);
-    if (identityMatrix == NULL) {
-        fprintf(stderr, "could not calculate residue: could not allocate identity matrix\n");
-        exit(-1);
-    }
-    RealNumber **R = subtractMatrix(identityMatrix, multiplication, n);
+    RealNumber **R = subtractMatrix(B, multiplication, n);
     RealNumber sum = 0.;
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {

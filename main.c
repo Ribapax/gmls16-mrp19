@@ -84,28 +84,38 @@ int main(int argc, char *argv[]) {
     Time avgLSTime = 0, LUTime = 0;
     RealNumber currentResidueL2Norm = 1 + RESIDUE_THRESHOLD;
 
-    invertedA = InvertMatrix(A, size, &avgLSTime, &LUTime);
+    RealNumber **B = GetIdentityMatrix(size);
+    if (B == NULL) {
+        fprintf(stderr, "could not allocate identity matrix B\n");
+        exit(-1);
+    }
+
+    invertedA = InvertMatrix(A, B, size, &avgLSTime, &LUTime);
     if (invertedA == NULL) {
         fprintf(stderr, "could not invert matrix\n");
         exit(-1);
     }
+
+    printf("\nDEBUG\n");
+    PrintMatrix(stdout, invertedA, size);
+    printf("\nDEBUG\n");
 
 //    residueTimeTemp = timestamp();
 //    currentResidueL2Norm = CalculateResidue(A, invertedA, size);
 //    residueTime += timestamp() - residueTimeTemp;
 //    fprintf(outputFile, "# iter 0: %.15g\n", currentResidueL2Norm);
 
-    RealNumber **ACopy = AllocateLinearSystem(size, PointerToPointer)->A;
-    copyMatrix(A, ACopy, size);
+    //RealNumber **ACopy = AllocateLinearSystem(size, PointerToPointer)->A;
+    //copyMatrix(A, ACopy, size);
     RealNumber lastResidueL2Norm = 1 + RESIDUE_THRESHOLD;
     currentResidueL2Norm = 1 + RESIDUE_THRESHOLD;
     int iteration = 1;
     while (hasNotReachedStoppingCriteria(iteration, iterationsLimit, currentResidueL2Norm, lastResidueL2Norm)) {
         lastResidueL2Norm = currentResidueL2Norm;
-        copyMatrix(ACopy, A, size);
-        invertedA = refineSolution(A, invertedA, size);
+        //copyMatrix(ACopy, A, size);
+        invertedA = refineSolution(A, B, invertedA, size);
         residueTimeTemp = timestamp();
-        currentResidueL2Norm = CalculateResidue(A, invertedA, size);
+        currentResidueL2Norm = CalculateResidue(A, B, invertedA, size);
         residueTime += timestamp() - residueTimeTemp;
         fprintf(outputFile, "# iter %d: %.15g\n", iteration, currentResidueL2Norm);
         iteration++;
