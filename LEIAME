@@ -67,4 +67,6 @@ uma solução genérica o suficiente para que pudesse ser reutilizada também du
 5) O diretório "tests" possui alguns tipos de matrizes que utilizamos durante nossos testes;
 
 6) Preferimos escrever o código e os comentários em inglês por ser a língua da ciência da computação, mas podemos
-traduzir se requisitado.
+traduzir se requisitado;
+
+7) IMPORTANTE: os comentários explicando cada função e seus parâmetros estão nos respectivos arquivos de header (extensão .h);

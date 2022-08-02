@@ -1,7 +1,7 @@
 /*
  * Authors:
  *  Guilherme Morais Lopes dos Santos - GRR20163043
- *  Mateus Ribamar - GRR
+ *  Mateus Ribamar - GRR20190154
  */
 
 #include <stdio.h>
@@ -11,7 +11,6 @@
 #include "linear_system.h"
 #include "lu_factorization.h"
 
-// TODO: error handling
 LinearSystem* AllocateLinearSystem(unsigned int n, MatrixAllocationType type) {
     LinearSystem *SL = (LinearSystem *) malloc(sizeof(LinearSystem));
     if (!SL) {
@@ -131,37 +130,6 @@ int FillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientLi
     } else {
         return -1;
     }
-}
-
-
-LinearSystem *readLinearSystem(MatrixAllocationType type) {
-    unsigned int n;
-    LinearSystem *SL;
-    scanf("%d", &n);
-    SL = AllocateLinearSystem(n, type);
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            scanf("%lg", &SL->A[i][j]);
-        }
-    }
-    for(int i=0; i < n; ++i) {
-        scanf ("%lg", &SL->b[i]);
-    }
-
-    return SL;
-}
-
-
-void printLinearSystem(LinearSystem *SL) {
-    int n = SL->n;
-    for(int i = 0; i < n; ++i) {
-        printf("\n  ");
-        for(int j = 0; j < n; ++j) {
-            printf ("%10g", SL->A[i][j]);
-        }
-        printf ("   |   %g", SL->b[i]);
-    }
-    printf("\n\n");
 }
 
 void printArray(RealNumber *arr, unsigned int n) {

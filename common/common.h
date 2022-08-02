@@ -1,7 +1,7 @@
 /*
  * Authors:
  *  Guilherme Morais Lopes dos Santos - GRR20163043
- *  Mateus Ribamar - GRR
+ *  Mateus Ribamar - GRR20190154
  */
 
 #ifndef COMMON_HEADER
@@ -30,7 +30,20 @@ typedef double Time;
 // Verify if n is power of 2
 #define isPot2(n) ((n) && !((n) & ((n) - 1)))
 
+/* Returns the elapsed time in milliseconds
+ * Usage:
+ * double time;
+ * time = timestamp();
+ * <code snippet>
+ * time = timestamp() - time;
+*/
 double timestamp(void);
+
+/* Generates the string '<baseName>_n'
+ * i.e. if baseName = "ABC" and n = 10,
+ * it returns "ABC_10"
+ * Useful for generating makers for LIKWID.
+*/
 String markerName(String baseName, int n);
 
 #endif // COMMON_HEADER
