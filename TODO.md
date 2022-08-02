@@ -17,6 +17,6 @@ and `exit`;
 - [ ] The solution is changing when the turn on the Partial Pivoting. It should not change;
 - [x] Residue is not getting smaller with the iterations;
 - [x] Program does not return the correct result when doing more than 0 iterations;
-- [ ] Correctly comment all functions, structs and types;
-- [ ] Correctly comment the algorithms;
+- [x] Correctly comment all functions, structs and types;
+- [x] Correctly comment the algorithms;
 - [ ] Debug Refinement to see if it is correct.
