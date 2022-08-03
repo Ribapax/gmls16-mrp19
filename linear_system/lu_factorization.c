@@ -10,16 +10,22 @@
 
 #include "lu_factorization.h"
 #include "linear_system.h"
+#include "../io/io.h"
 
 unsigned int findPivotIndex(double** Matrix, unsigned int columnIndex, unsigned int systemSize) {
-    RealNumber greatestValue = Matrix[columnIndex][columnIndex];
+    RealNumber greatestValue = fabs(Matrix[columnIndex][columnIndex]);
     unsigned int pivotIndex = columnIndex;
-    for (unsigned int i = columnIndex; i < systemSize; i++) {
+    for (unsigned int i = columnIndex + 1; i < systemSize; i++) {
         // FIXME: we probably need a decent float comparison here
-        if (fabs(Matrix[i][columnIndex]) > fabs(greatestValue)) {
-            greatestValue = Matrix[i][columnIndex];
+        RealNumber v = fabs(Matrix[i][columnIndex]);
+        if (v > greatestValue) {
+            greatestValue = v;
             pivotIndex = i;
         }
+//        if (fabs(Matrix[i][columnIndex]) > fabs(greatestValue)) {
+//            greatestValue = Matrix[i][columnIndex];
+//            pivotIndex = i;
+//        }
     }
     return pivotIndex;
 }
@@ -56,7 +62,7 @@ RealNumber **generateMatrixL(RealNumber **A, RealNumber **B, RealNumber **U, int
 
         // Triangularization
         for (int k = i + 1; k < n; k++) {
-            if (U[k][k] == 0) {
+            if (U[i][i] == 0) {
                 fprintf(stderr, "%s\n", "gaussian elimination error: division by zero");
                 return NULL;
             }
@@ -114,44 +120,75 @@ RealNumber **InvertMatrix(
     }
     *LUTime = timestamp() - *LUTime;
 
+    printf("\nL MATRIX\n");
+    PrintMatrix(stdout, L, n);
+    printf("\nL MATRIX\n");
+
+    printf("\nU MATRIX\n");
+    PrintMatrix(stdout, U, n);
+    printf("\nU MATRIX\n");
+    // TODO: calculate times
+
     // 2) Get the y arrays by solving -> Ly = b;
-    *averageLinearSystemTime = 0;
-    for (int i = 0; i < n; ++i) {
-        time = timestamp();
-        for (int k = 0; k < n; k++) { // Iterate over Y columns
-            for (int line = 0; line < n; line++ ) {
-                if (line == 0) {
-                    Y[line][k] = B[line][k];
-                } else {
-                    RealNumber sum = 0.0;
-                    for (int j = 0; j < line; j++) {
-                        sum += Y[j][k] * L[line][j];
-                    }
-                    Y[line][k] = B[line][k] - sum;
-                }
+    for (int k = 0; k < n; ++k) {
+        for (int i = 0; i < n; i++) {
+            Y[i][k] = B[i][k];
+            for (unsigned int j = 0; j < i; j++) {
+                Y[i][k] -= L[i][j] * Y[j][k];
             }
+            Y[i][k] /= L[i][i];
         }
-        time = timestamp() - time;
-        *averageLinearSystemTime += time;
     }
 
+    // Old version of (2) - Ribamar
+//    *averageLinearSystemTime = 0;
+//    for (int i = 0; i < n; ++i) {
+//        time = timestamp();
+//        for (int k = 0; k < n; k++) { // Iterate over Y columns
+//            for (int line = 0; line < n; line++ ) {
+//                if (line == 0) {
+//                    Y[line][k] = B[line][k];
+//                } else {
+//                    RealNumber sum = 0.0;
+//                    for (int j = 0; j < line; j++) {
+//                        sum += Y[j][k] * L[line][j];
+//                    }
+//                    Y[line][k] = B[line][k] - sum;
+//                }
+//            }
+//        }
+//        time = timestamp() - time;
+//        *averageLinearSystemTime += time;
+//    }
+
     // 3) Get the inverted matrix x by solving -> Ux = y for each y.
-    for (int i = 0; i < n; ++i) {
-        time = timestamp();
-        for (int k = n - 1; k >= 0; k--) { // iterates over X columns
-            RealNumber retro;
-            for (int i = n - 1; i >= 0 ; --i) {
-                retro = 0;
-                for (int j = i + 1; j < n; j++) {
-                    retro += U[i][j] * X[j][k];
-                }
-                X[i][k] = (Y[i][k] - retro) / U[i][i];
+    for (int k = 0; k < n; ++k) {
+        for (int i = n - 1; i >= 0; i--) {
+            X[i][k] = Y[i][k];
+            for (unsigned int j = i + 1; j < n; j++) {
+                X[i][k] -= U[i][j] * X[j][k];
             }
+            X[i][k] /= U[i][i];
         }
-        time = timestamp() - time;
-        *averageLinearSystemTime += time;
     }
-    *averageLinearSystemTime /= (n + n);
+
+    // Old version of (3) - Ribamar
+//    for (int i = 0; i < n; ++i) {
+//        time = timestamp();
+//        for (int k = n - 1; k >= 0; k--) { // iterates over X columns
+//            RealNumber retro;
+//            for (int i = n - 1; i >= 0 ; --i) {
+//                retro = 0;
+//                for (int j = i + 1; j < n; j++) {
+//                    retro += U[i][j] * X[j][k];
+//                }
+//                X[i][k] = (Y[i][k] - retro) / U[i][i];
+//            }
+//        }
+//        time = timestamp() - time;
+//        *averageLinearSystemTime += time;
+//    }
+//    *averageLinearSystemTime /= (n + n);
     // 4) Return x.
     //return invertedMatrix the X matrix;
     return X;
