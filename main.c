@@ -100,10 +100,10 @@ int main(int argc, char *argv[]) {
     PrintMatrix(stdout, invertedA, size);
     printf("\nDEBUG\n");
 
-//    residueTimeTemp = timestamp();
-//    currentResidueL2Norm = CalculateResidue(A, invertedA, size);
-//    residueTime += timestamp() - residueTimeTemp;
-//    fprintf(outputFile, "# iter 0: %.15g\n", currentResidueL2Norm);
+    residueTimeTemp = timestamp();
+    currentResidueL2Norm = CalculateResidue(A, B, invertedA, size);
+    residueTime += timestamp() - residueTimeTemp;
+    fprintf(outputFile, "# iter 0: %.15g\n", currentResidueL2Norm);
 
     //RealNumber **ACopy = AllocateLinearSystem(size, PointerToPointer)->A;
     //copyMatrix(A, ACopy, size);

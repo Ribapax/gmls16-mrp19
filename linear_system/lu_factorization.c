@@ -55,10 +55,10 @@ RealNumber **generateMatrixL(RealNumber **A, RealNumber **B, RealNumber **U, int
         L[i][i] = 1;
 
         // Partial pivoting
-        unsigned int pivotIndex = findPivotIndex(U, i, n);
-        if (i != pivotIndex) {
-            replaceLinesWithIdentityMatrix(U, B, i, pivotIndex);
-        }
+//        unsigned int pivotIndex = findPivotIndex(U, i, n);
+//        if (i != pivotIndex) {
+//            replaceLinesWithIdentityMatrix(U, B, i, pivotIndex);
+//        }
 
         // Triangularization
         for (int k = i + 1; k < n; k++) {
@@ -127,7 +127,13 @@ RealNumber **InvertMatrix(
     printf("\nU MATRIX\n");
     PrintMatrix(stdout, U, n);
     printf("\nU MATRIX\n");
+
+    printf("\nB MATRIX\n");
+    PrintMatrix(stdout, B, n);
+    printf("\nB MATRIX\n");
+
     // TODO: calculate times
+
 
     // 2) Get the y arrays by solving -> Ly = b;
     for (int k = 0; k < n; ++k) {
@@ -139,6 +145,9 @@ RealNumber **InvertMatrix(
             Y[i][k] /= L[i][i];
         }
     }
+    printf("\nY MATRIX\n");
+    PrintMatrix(stdout, Y, n);
+    printf("\nY MATRIX\n");
 
     // Old version of (2) - Ribamar
 //    *averageLinearSystemTime = 0;
@@ -161,7 +170,7 @@ RealNumber **InvertMatrix(
 //        *averageLinearSystemTime += time;
 //    }
 
-    // 3) Get the inverted matrix x by solving -> Ux = y for each y.
+    // 3) Get the inverted matrix x by solving -> U=x = y for each y.
     for (int k = 0; k < n; ++k) {
         for (int i = n - 1; i >= 0; i--) {
             X[i][k] = Y[i][k];
@@ -171,6 +180,10 @@ RealNumber **InvertMatrix(
             X[i][k] /= U[i][i];
         }
     }
+
+    printf("\nX MATRIX\n");
+    PrintMatrix(stdout, X, n);
+    printf("\nX MATRIX\n");
 
     // Old version of (3) - Ribamar
 //    for (int i = 0; i < n; ++i) {
