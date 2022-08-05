@@ -18,4 +18,4 @@ io.o: io/io.c io/io.h Makefile
 	$(compiler) -c io/io.c io/io.h 
 
 clean:
-	$(rm) invmat *.o linear_system/*.o linear_system/*.h.gch io/*.o io/*.h.gch common/*.o common/*.h.gch
+	$(rm) invmat *.o linear_system/*.o linear_system/*.h.gch io/*.o io/*.h.gch common/*.o common/*.h.gch lu_factorization/*.o lu_factorization/*.h.gch
