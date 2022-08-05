@@ -37,7 +37,7 @@ void replaceLinesWithIdentityMatrix(
     identityMatrix[pivotIndex] = identityLineToBeReplaced;
 }
 
-RealNumber **LUDecomposition(
+int LUDecomposition(
     RealNumber **A,
     RealNumber **B,
     RealNumber **U,
@@ -60,7 +60,7 @@ RealNumber **LUDecomposition(
         for (int k = i + 1; k < n; k++) {
             if (U[i][i] == 0) {
                 fprintf(stderr, "%s\n", "error: division by zero");
-                return NULL;
+                return -1;
             }
             double m = U[k][i] / U[i][i];
 
@@ -72,8 +72,7 @@ RealNumber **LUDecomposition(
             }
         }
     }
-
-    return L;
+    return 0;
 }
 
 RealNumber **SolveLinearSystems(

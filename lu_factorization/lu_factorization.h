@@ -13,16 +13,17 @@
 
 #define ENABLE_PARTIAL_PIVOTING 0
 
-// Returns the inverted matrix of the matrix `A` of size `n`.
-//  - It also stores the average time of solving the Linear Systems
-//    Ly = b and Ux = y inside `averageLinearSystemTime`;
-//  - And stores the L and U matrix calculation time inside `LUTime`.
-//  - `B` is the identity matrix, that may be changed by the partial pivoting.
-// Algorithm:
-// 1) Get L and U by solving -> L = LUDecomposition(A, B, U, n);
-// 2) Get the y arrays by solving -> Ly = b;
-// 3) Get the inverted matrix x by solving -> Ux = y for each y.
-// 4) Return x.
+/*
+ * Returns the solution of `n` Linear Systems by solving AX = B using the
+ *    matrices L and U, previously calculated by the LU decomposition.
+ * Params:
+ * - B: the independent term's matrix;
+ * - n: the matrices dimension;
+ * - averageLinearSystemTime: pointer to the variable which accumulates the time
+ *   to solve all linear systems in this program;
+ *  - L: Lower matrix from LU decomposition;
+ *  - U: Upper matrix from LU decomposition;
+ */
 RealNumber **SolveLinearSystems(
     RealNumber **B,
     int n,
@@ -31,27 +32,39 @@ RealNumber **SolveLinearSystems(
     RealNumber **U
 );
 
-// Returns the multiplier's matrix L of a matrix `A` of size `n`
-// using Gaussian Elimination with partial pivoting. The partial pivoting should
-// also replace lines in the `B` matrix (identity matrix).
-// Also stores the echelon form of A inside `U`.
-RealNumber **LUDecomposition(RealNumber **A, RealNumber **B, RealNumber **U, RealNumber **L, int n);
+/*
+ *  Decomposes the Matrix A of size n into L (Lower) and U (Upper).
+ *  Params:
+ *  - A: Matrix to be decomposed;
+ *  - B: identity matrix pointer, in case some line is changed by partial pivoting;
+ *  - U: Upper Matrix pointer, should be allocated;
+ *  - L: Lower Matrix pointer, should be allocated;
+ *  - n: matrix dimension;
+ *  Returns:
+ *  - 0 (success);
+ *  - 1 (error);
+ */
+int LUDecomposition(RealNumber **A, RealNumber **B, RealNumber **U, RealNumber **L, int n);
 
-// Returns the L2 Norm of the residue for the current result.
-// R = I - A * A^-1
-// L2Norm = sqrt(sum(R[i][j]^2)), ∀ 1 <= i, j <= n
-// Params:
-// - A: matrix to be inverted;
-// - B: identity matrix;
-// - invertedA: matrix A inverted;
-// - n: matrix dimension.
+/*
+ * Returns the L2 Norm of the residue for the current result.
+ *  R = I - A * A^-1
+ *  L2Norm = sqrt(sum(R[i][j]^2)), ∀ 1 <= i, j <= n
+ * Params:
+ * - A: matrix to be inverted;
+ * - B: identity matrix;
+ * - invertedA: matrix A inverted;
+ * - n: matrix dimension.
+ */
 RealNumber CalculateResidueL2Norm(RealNumber **A, RealNumber **B, RealNumber **invertedA, int n);
 
-// Finds the line index of the pivot element of the given column index.
-// Params:
-// - Matrix: matrix that will be pivoted;
-// - columnIndex: index of the column that will be pivoted;
-// - systemSize: matrix dimension.
+/*
+ * Returns the line index of the pivot element of the given column index.
+ * Params:
+ * - Matrix: matrix that will be pivoted;
+ * - columnIndex: index of the column that will be pivoted;
+ * - systemSize: matrix dimension.
+ */
 unsigned int findPivotIndex(double** Matrix, unsigned int columnIndex, unsigned int systemSize);
 
 // Replaces the line of index 'index' with the line of index 'pivotIndex', and vice versa.

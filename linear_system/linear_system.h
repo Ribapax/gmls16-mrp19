@@ -88,6 +88,10 @@ int MatrixIsInvertible(RealNumber **A, int n);
  *  - A: matrix to be inverted;
  *  - B: identity matrix;
  *  - invertedMatrix: first solution, inverted A;
+ *  - L: Lower matrix from LU decomposition;
+ *  - U: Upper matrix from LU decomposition;
+ *  - averageLinearSystemTime: pointer to the variable which accumulates the time
+ *    to solve all linear systems in this program;
  *  - n: matrix dimension;
  * Returns a matrix of dimension `n` with the refined solution.
  */
