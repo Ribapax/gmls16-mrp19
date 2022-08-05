@@ -1,6 +1,6 @@
 # TODO
 
-- [x] Develop and test `InvertMatrix` function (remember to remove the stub matrix from there);
+- [x] Develop and test `SolveLinearSystems` function (remember to remove the stub matrix from there);
 - [x] Return errors as integer codes, and fail gracefully logging the error in the `stderr`;
 - [x] Return error when the matrix cannot be inverted (determinant = 0). After calculating `U`, we need
     to test if the determinant is zero; just multiply all elements of the main diagonal of the matrix; if its zero, return an error.

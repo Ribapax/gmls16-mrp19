@@ -23,12 +23,10 @@
 // 2) Get the y arrays by solving -> Ly = b;
 // 3) Get the inverted matrix x by solving -> Ux = y for each y.
 // 4) Return x.
-RealNumber **InvertMatrix(
-    RealNumber **A,
+RealNumber **SolveLinearSystems(
     RealNumber **B,
     int n,
     Time *averageLinearSystemTime,
-    Time *LUTime,
     RealNumber **L,
     RealNumber **U
 );

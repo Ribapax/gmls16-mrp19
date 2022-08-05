@@ -97,6 +97,7 @@ RealNumber **RefineSolution(
     RealNumber **invertedMatrix,
     RealNumber **L,
     RealNumber **U,
+    Time *averageLinearSystemTime,
     int n
 );
 

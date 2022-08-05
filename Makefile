@@ -8,8 +8,8 @@ all: main.c common.o io.o linear_system.o lu_factorization.o Makefile
 linear_system.o: linear_system/linear_system.c linear_system/linear_system.h Makefile 
 	$(compiler) -c linear_system/linear_system.c linear_system/linear_system.h 
 
-lu_factorization.o: linear_system/lu_factorization.c linear_system/lu_factorization.h
-	${compiler} -c linear_system/lu_factorization.c linear_system/lu_factorization.h 
+lu_factorization.o: lu_factorization/lu_factorization.c lu_factorization/lu_factorization.h
+	${compiler} -c lu_factorization/lu_factorization.c lu_factorization/lu_factorization.h
 
 common.o: common/common.c common/common.h Makefile
 	$(compiler) -c common/common.c common/common.h 

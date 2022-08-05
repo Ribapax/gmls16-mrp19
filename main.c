@@ -10,7 +10,7 @@
 #include "io/io.h"
 #include "common/common.h"
 #include "linear_system/linear_system.h"
-#include "linear_system/lu_factorization.h"
+#include "lu_factorization/lu_factorization.h"
 
 int main(int argc, char *argv[]) {
     srand(S_RAND_CONST);
@@ -106,7 +106,10 @@ int main(int argc, char *argv[]) {
 
     // Invert the given Matrix
     Time avgLSTime = 0, LUTime = 0, residueTime = 0;
-    RealNumber **invertedA = InvertMatrix(A, B, size, &avgLSTime, &LUTime, L, U);
+    LUTime = GetTimestamp();
+    LUDecomposition(A, B, U, L, size);
+    LUTime = GetTimestamp() - LUTime;
+    RealNumber **invertedA = SolveLinearSystems(B, size, &avgLSTime, L, U);
     if (invertedA == NULL) {
         fprintf(stderr, "could not invert matrix\n");
         exit(-1);
@@ -123,7 +126,7 @@ int main(int argc, char *argv[]) {
     // Start refining the solution until it reaches the stopping criteria
     do {
         lastResidueL2Norm = currentResidueL2Norm;
-        invertedA = RefineSolution(A, B, invertedA, L, U, size);
+        invertedA = RefineSolution(A, B, invertedA, L, U, &avgLSTime, size);
         residueTimeTemp = GetTimestamp();
         currentResidueL2Norm = CalculateResidueL2Norm(A, B, invertedA, size);
         residueTime += GetTimestamp() - residueTimeTemp;

@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "lu_factorization.h"
-#include "linear_system.h"
+#include "../linear_system/linear_system.h"
 
 unsigned int findPivotIndex(double** Matrix, unsigned int columnIndex, unsigned int systemSize) {
     RealNumber greatestValue = fabs(Matrix[columnIndex][columnIndex]);
@@ -76,42 +76,19 @@ RealNumber **LUDecomposition(
     return L;
 }
 
-RealNumber **InvertMatrix(
-    RealNumber **A,
+RealNumber **SolveLinearSystems(
     RealNumber **B,
     int n,
     Time *averageLinearSystemTime,
-    Time *LUTime,
     RealNumber **L,
     RealNumber **U
 ) {
-    RealNumber **invertedMatrix = AllocateLinearSystem(n, PointerToPointer)->A;
-    if (invertedMatrix == NULL) {
-        fprintf(stderr, "could not allocate inverted matrix\n");
-        return NULL;
-    }
-
-    // 1) Get L and U by solving -> L = LUDecomposition(A, B, U, n);
     RealNumber **Y = AllocateLinearSystem(n, PointerToPointer)->A;
     if (Y == NULL) {
         fprintf(stderr, "could not allocate \"Y\" matrix\n");
         return NULL;
     }
-    RealNumber **X = AllocateLinearSystem(n, PointerToPointer)->A;
-    if (X == NULL) {
-        fprintf(stderr, "could not allocate \"X\" matrix\n");
-        return NULL;
-    }
-
-    *LUTime = GetTimestamp();
-    LUDecomposition(A, B, U, L, n);
-    if (L == NULL) {
-        fprintf(stderr, "could not generate \"L\" matrix\n");
-        return NULL;
-    }
-    *LUTime = GetTimestamp() - *LUTime;
-
-    // 2) Get the y arrays by solving -> Ly = b;
+    // 2) Get the Y matrix by solving -> LY = B for each y and b;
     Time linearSystemTime;
     for (int k = 0; k < n; ++k) {
         linearSystemTime = GetTimestamp();
@@ -126,7 +103,12 @@ RealNumber **InvertMatrix(
         *averageLinearSystemTime += linearSystemTime;
     }
 
-    // 3) Get the inverted matrix x by solving -> Ux = y for each y.
+    // 3) Get the inverted matrix X by solving -> UX = Y for each y and x
+    RealNumber **X = AllocateLinearSystem(n, PointerToPointer)->A;
+    if (X == NULL) {
+        fprintf(stderr, "could not allocate \"X\" matrix\n");
+        return NULL;
+    }
     for (int k = 0; k < n; ++k) {
         linearSystemTime = GetTimestamp();
         for (int i = n - 1; i >= 0; i--) {
