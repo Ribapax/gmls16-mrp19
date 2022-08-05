@@ -6,8 +6,6 @@
 
 #include <stdio.h>
 #include <math.h>
-
-
 #include "lu_factorization.h"
 #include "linear_system.h"
 
@@ -78,7 +76,6 @@ RealNumber **LUDecomposition(
     return L;
 }
 
-// TODO: calculate times
 RealNumber **InvertMatrix(
     RealNumber **A,
     RealNumber **B,
@@ -88,7 +85,6 @@ RealNumber **InvertMatrix(
     RealNumber **L,
     RealNumber **U
 ) {
-    Time time; // Stores the time of solving the linear systems
     RealNumber **invertedMatrix = AllocateLinearSystem(n, PointerToPointer)->A;
     if (invertedMatrix == NULL) {
         fprintf(stderr, "could not allocate inverted matrix\n");
@@ -107,16 +103,18 @@ RealNumber **InvertMatrix(
         return NULL;
     }
 
-    *LUTime = timestamp();
+    *LUTime = GetTimestamp();
     LUDecomposition(A, B, U, L, n);
     if (L == NULL) {
         fprintf(stderr, "could not generate \"L\" matrix\n");
         return NULL;
     }
-    *LUTime = timestamp() - *LUTime;
+    *LUTime = GetTimestamp() - *LUTime;
 
     // 2) Get the y arrays by solving -> Ly = b;
+    Time linearSystemTime;
     for (int k = 0; k < n; ++k) {
+        linearSystemTime = GetTimestamp();
         for (int i = 0; i < n; i++) {
             Y[i][k] = B[i][k];
             for (unsigned int j = 0; j < i; j++) {
@@ -124,10 +122,13 @@ RealNumber **InvertMatrix(
             }
             Y[i][k] /= L[i][i];
         }
+        linearSystemTime = GetTimestamp() - linearSystemTime;
+        *averageLinearSystemTime += linearSystemTime;
     }
 
     // 3) Get the inverted matrix x by solving -> Ux = y for each y.
     for (int k = 0; k < n; ++k) {
+        linearSystemTime = GetTimestamp();
         for (int i = n - 1; i >= 0; i--) {
             X[i][k] = Y[i][k];
             for (unsigned int j = i + 1; j < n; j++) {
@@ -135,14 +136,16 @@ RealNumber **InvertMatrix(
             }
             X[i][k] /= U[i][i];
         }
+        linearSystemTime = GetTimestamp() - linearSystemTime;
+        *averageLinearSystemTime += linearSystemTime;
     }
 
     return X;
 }
 
-RealNumber CalculateResidue(RealNumber **A, RealNumber **B, RealNumber **invertedA, int n) {
-    RealNumber **multiplication = multiplyMatrixOfEqualSize(A, invertedA, n);
-    RealNumber **R = subtractMatrix(B, multiplication, n);
+RealNumber CalculateResidueL2Norm(RealNumber **A, RealNumber **B, RealNumber **invertedA, int n) {
+    RealNumber **multiplication = multiplyMatricesOfEqualSize(A, invertedA, n);
+    RealNumber **R = subtractMatrices(B, multiplication, n);
     RealNumber sum = 0.;
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {

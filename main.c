@@ -12,7 +12,6 @@
 #include "linear_system/linear_system.h"
 #include "linear_system/lu_factorization.h"
 
-
 int main(int argc, char *argv[]) {
     srand(S_RAND_CONST);
     int err;
@@ -22,10 +21,11 @@ int main(int argc, char *argv[]) {
             exit(-1);
         }
     }
+    // Read parameters
     int randomMatrixSize = 0;
     int iterationsLimit;
     char *outputFilePath = NULL, *inputFilePath = NULL;
-    err = GetOptions(
+    err = ReadParameters(
         argc,
         argv,
         &randomMatrixSize,
@@ -34,10 +34,11 @@ int main(int argc, char *argv[]) {
         &inputFilePath
     );
     if (err != 0) {
-        fprintf(stderr, "invalid option or missing argument\n");
+        fprintf(stderr, "invalid parameter or missing argument\n");
         exit(-1);
     }
 
+    // Defining where to store or print the results
     FILE *outputFile = stdout;
     if (outputFilePath) {
         outputFile = fopen(outputFilePath, "w+");
@@ -48,10 +49,11 @@ int main(int argc, char *argv[]) {
         printf("\nResults stored in the file \"%s\".\n", outputFilePath);
     }
 
-    // Read input
+    // Reading the input Matrix
     int size;
     RealNumber **A = NULL;
     if (randomMatrixSize) {
+        // Generate a Random Matrix
         LinearSystem *LS = AllocateLinearSystem(randomMatrixSize, PointerToPointer);
         if (LS == NULL) {
             fprintf(stderr, "could not allocate matrix\n");
@@ -65,6 +67,7 @@ int main(int argc, char *argv[]) {
         A = LS->A;
         size = randomMatrixSize;
     } else {
+        // Read the Matrix from `stdin` or from the given file path
         A = ReadMatrix(inputFilePath, &size);
         if (A == NULL) {
             fprintf(stderr, "could not read matrix\n");
@@ -72,6 +75,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // Test if the given Matrix is invertible
     if (!MatrixIsInvertible(A, size)) {
         fprintf(stderr, "matrix is not invertible");
         exit(-1);
@@ -79,24 +83,28 @@ int main(int argc, char *argv[]) {
 
     fprintf(outputFile, "#\n");
 
-    RealNumber **B = GetIdentityMatrix(size);
+    // Generate the Identity Matrix
+    RealNumber **B = GenerateIdentityMatrix(size);
     if (B == NULL) {
         fprintf(stderr, "could not allocate identity matrix B\n");
         exit(-1);
     }
 
+    // Allocate the Upper Matrix
     RealNumber **U = AllocateLinearSystem(size, PointerToPointer)->A;
     if (U == NULL) {
         fprintf(stderr, "could not allocate \"U\" matrix\n");
         exit(-1);
     }
 
+    // Allocate the Lower Matrix
     RealNumber **L = AllocateLinearSystem(size, PointerToPointer)->A;
     if (L == NULL) {
         fprintf(stderr, "could not allocate \"L\" matrix\n");
         exit(-1);
     }
 
+    // Invert the given Matrix
     Time avgLSTime = 0, LUTime = 0, residueTime = 0;
     RealNumber **invertedA = InvertMatrix(A, B, size, &avgLSTime, &LUTime, L, U);
     if (invertedA == NULL) {
@@ -104,33 +112,37 @@ int main(int argc, char *argv[]) {
         exit(-1);
     }
 
-    Time residueTimeTemp = timestamp();
-    RealNumber currentResidueL2Norm = CalculateResidue(A, B, invertedA, size);
-    residueTime += timestamp() - residueTimeTemp;
+    // Calculate the first L2 Norm of the Residue
+    Time residueTimeTemp = GetTimestamp();
+    RealNumber currentResidueL2Norm = CalculateResidueL2Norm(A, B, invertedA, size);
+    residueTime += GetTimestamp() - residueTimeTemp;
     fprintf(outputFile, "# iter 1: %.15g\n", currentResidueL2Norm);
 
     RealNumber lastResidueL2Norm;
     int iteration = 2;
+    // Start refining the solution until it reaches the stopping criteria
     do {
         lastResidueL2Norm = currentResidueL2Norm;
-        invertedA = refineSolution(A, B, invertedA, L, U, size);
-        residueTimeTemp = timestamp();
-        currentResidueL2Norm = CalculateResidue(A, B, invertedA, size);
-        residueTime += timestamp() - residueTimeTemp;
+        invertedA = RefineSolution(A, B, invertedA, L, U, size);
+        residueTimeTemp = GetTimestamp();
+        currentResidueL2Norm = CalculateResidueL2Norm(A, B, invertedA, size);
+        residueTime += GetTimestamp() - residueTimeTemp;
         if (ResidueIsIncreasing(currentResidueL2Norm, lastResidueL2Norm)) {
             continue;
         }
         fprintf(outputFile, "# iter %d: %.15g\n", iteration, currentResidueL2Norm);
         iteration++;
     } while (
-        hasNotReachedStoppingCriteria(iteration, iterationsLimit, currentResidueL2Norm, lastResidueL2Norm)
+        HasNotReachedStoppingCriteria(iteration, iterationsLimit, currentResidueL2Norm, lastResidueL2Norm)
     );
 
+    // Print the final timestamps
     fprintf(outputFile, "# Tempo LU: %.15g\n", LUTime);
     fprintf(outputFile, "# Tempo iter: %.15g\n", avgLSTime);
     fprintf(outputFile, "# Tempo residuo: %.15g\n", residueTime);
     fprintf(outputFile, "#\n");
     fprintf(outputFile, "%d\n", size);
+    // Print the final Inverted Matrix
     PrintMatrix(outputFile, invertedA, size);
 
     return 0;

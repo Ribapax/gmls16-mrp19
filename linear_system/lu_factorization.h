@@ -47,7 +47,7 @@ RealNumber **LUDecomposition(RealNumber **A, RealNumber **B, RealNumber **U, Rea
 // - B: identity matrix;
 // - invertedA: matrix A inverted;
 // - n: matrix dimension.
-RealNumber CalculateResidue(RealNumber **A, RealNumber **B, RealNumber **invertedA, int n);
+RealNumber CalculateResidueL2Norm(RealNumber **A, RealNumber **B, RealNumber **invertedA, int n);
 
 // Finds the line index of the pivot element of the given column index.
 // Params:

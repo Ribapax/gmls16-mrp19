@@ -29,7 +29,7 @@ int ShowHelp(char *name);
  *  - 0 (success);
  *  - -1 (error).
  */
-int GetOptions(int argc, char **argv, int *n, int *iterationsLimit, char **outputFilePath, char **inputFilePath);
+int ReadParameters(int argc, char **argv, int *n, int *iterationsLimit, char **outputFilePath, char **inputFilePath);
 
 /*
  * Prints a matrix `A` of size `n` to `outputFile`.

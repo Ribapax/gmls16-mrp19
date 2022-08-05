@@ -125,7 +125,6 @@ int FillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientLi
     }
 }
 
-
 void copyMatrix(RealNumber **A, RealNumber **B, int n) {
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -134,7 +133,7 @@ void copyMatrix(RealNumber **A, RealNumber **B, int n) {
     }
 }
 
-RealNumber **multiplyMatrixOfEqualSize(RealNumber **A, RealNumber **B, int n) {
+RealNumber **multiplyMatricesOfEqualSize(RealNumber **A, RealNumber **B, int n) {
     RealNumber **Result = AllocateLinearSystem(n, PointerToPointer)->A;
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -146,7 +145,7 @@ RealNumber **multiplyMatrixOfEqualSize(RealNumber **A, RealNumber **B, int n) {
     return Result;
 }
 
-RealNumber **subtractMatrix(RealNumber **A, RealNumber **B, int n) {
+RealNumber **subtractMatrices(RealNumber **A, RealNumber **B, int n) {
     RealNumber **Result = AllocateLinearSystem(n, PointerToPointer)->A;
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -156,8 +155,7 @@ RealNumber **subtractMatrix(RealNumber **A, RealNumber **B, int n) {
     return Result;
 }
 
-
-RealNumber **GetIdentityMatrix(int n) {
+RealNumber **GenerateIdentityMatrix(int n) {
     RealNumber **I = AllocateLinearSystem(n, PointerToPointer)->A;
     if (I == NULL) {
         return NULL;
@@ -185,7 +183,7 @@ int MatrixIsInvertible(RealNumber **A, int n) {
     return 1;
 }
 
-RealNumber **refineSolution(
+RealNumber **RefineSolution(
     RealNumber **A,
     RealNumber **B,
     RealNumber **invertedMatrix,
@@ -195,14 +193,13 @@ RealNumber **refineSolution(
 ) {
     RealNumber **residue;
     // 1) A x A^-1
-    residue = multiplyMatrixOfEqualSize(A, invertedMatrix, n);
+    residue = multiplyMatricesOfEqualSize(A, invertedMatrix, n);
 
     // 2) B - (A x A^-1)
-    residue = subtractMatrix(B, residue, n);
+    residue = subtractMatrices(B, residue, n);
 
     // 3) AW = B - (A x A^-1) -> for each W column
-
-    // 3.1) Get the y arrays by solving -> Ly = B - (A x A^-1);
+    // 3.1) Get the Y matrix by solving -> Ly = B - (A x A^-1); for each y.
     RealNumber **Y = AllocateLinearSystem(n, PointerToPointer)->A;
     if (Y == NULL) {
         fprintf(stderr, "could not allocate \"Y\" matrix\n");
@@ -234,27 +231,24 @@ RealNumber **refineSolution(
         }
     }
 
-    // 4) X(1) + X(i-1)
+    // 4) X(1) = X(0) + W
     RealNumber **refinedSolution = AllocateLinearSystem(n, PointerToPointer)->A;
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            refinedSolution[i][j] = X[i][j] + invertedMatrix[i][j];
+            refinedSolution[i][j] = invertedMatrix[i][j] + X[i][j];
         }
     }
 
     return refinedSolution;
 }
 
-int hasNotReachedStoppingCriteria(
+int HasNotReachedStoppingCriteria(
     int iteration,
     int iterationsLimit,
     RealNumber currentResidueL2Norm,
     RealNumber lastResidueL2Norm
 ) {
-    if (
-        lastResidueL2Norm != 1 + RESIDUE_THRESHOLD &&
-        (currentResidueL2Norm - lastResidueL2Norm) > RESIDUE_THRESHOLD
-    ) {
+    if (ResidueIsIncreasing(currentResidueL2Norm, lastResidueL2Norm)) {
         return 0;
     }
     if (iteration <= iterationsLimit && currentResidueL2Norm > RESIDUE_THRESHOLD) {

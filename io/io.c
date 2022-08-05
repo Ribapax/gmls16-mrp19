@@ -25,7 +25,7 @@ int ShowHelp(char *name) {
     return -1;
 }
 
-int GetOptions(
+int ReadParameters(
     int argc,
     char **argv,
     int *n,

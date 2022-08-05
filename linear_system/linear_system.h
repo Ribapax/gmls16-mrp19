@@ -66,48 +66,21 @@ void freeLinearSystem(LinearSystem *SL);
  */
 int FillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientLimit);
 
-/*
- * Prints an array to stdout. Useful for debugging.
- * Params:
- *  - arr: array to be printed;
- *  - n: array size;
- * Returns nothing.
- */
-void printArray(RealNumber *arr, unsigned int n);
-
 // Copies matrix `A` into matrix `B`, both of dimension `n`.
 void copyMatrix(RealNumber **A, RealNumber **B, int n);
 
 // Multiplies the matrices `A` and `B`, both of dimension `n`.
 // Returns a new matrix of size `n`.
-RealNumber **multiplyMatrixOfEqualSize(RealNumber **A, RealNumber **B, int n);
-
-// Multiplies the matrix `A` with the array `B`, both of dimension `n`.
-// Returns a new array of size `n`.
-RealNumber *multiplyMatrixWithArray(RealNumber **A, const RealNumber *B, int n);
+RealNumber **multiplyMatricesOfEqualSize(RealNumber **A, RealNumber **B, int n);
 
 // Returns the result of `A` - `B`, both of dimension `n`.
-RealNumber **subtractMatrix(RealNumber **A, RealNumber **B, int n);
-
-// Returns the result of `A` - `B`, both of dimension `n`.
-RealNumber *subtractArrays(const RealNumber *A, const RealNumber *B, int n);
+RealNumber **subtractMatrices(RealNumber **A, RealNumber **B, int n);
 
 // Returns the identity matrix of dimension `n`.
-RealNumber **GetIdentityMatrix(int n);
+RealNumber **GenerateIdentityMatrix(int n);
 
 // Returns 1 if the matrix `A` of dimension `n` is invertible, and 0 if not.
 int MatrixIsInvertible(RealNumber **A, int n);
-
-/*
- * Executes a Gaussian Elimination the given linear system.
- * Params:
- *  - A: coefficients matrix;
- *  - B: independent terms;
- *  - n: linear system dimension;
- * Returns an array with the solution of the system.
- * TODO: error handling.
- */
-RealNumber *GaussElimination(RealNumber **A, RealNumber *B, int n);
 
 /*
  * Given a first solution, returns a more refined solution.
@@ -118,7 +91,7 @@ RealNumber *GaussElimination(RealNumber **A, RealNumber *B, int n);
  *  - n: matrix dimension;
  * Returns a matrix of dimension `n` with the refined solution.
  */
-RealNumber **refineSolution(
+RealNumber **RefineSolution(
     RealNumber **A,
     RealNumber **B,
     RealNumber **invertedMatrix,
@@ -140,34 +113,11 @@ RealNumber **refineSolution(
  *  - 1 (yes);
  *  - 0 (no).
  */
-int hasNotReachedStoppingCriteria(
+int HasNotReachedStoppingCriteria(
     int iteration,
     int iterationsLimit,
     RealNumber currentResidueL2Norm,
     RealNumber lastResidueL2Norm
-);
-
-// Executes a forward substitution on the given triangular Linear System.
-// Params:
-// - A: coefficient matrix;
-// - b: independent terms;
-// - x: result array;
-// - n: linear system dimension.
-// Returns nothing.
-void forwardSubstitution(RealNumber **A, const RealNumber *b, RealNumber *x, unsigned int n);
-
-// Replace lines of the matrix and independent terms.
-// Params:
-// - Matrix: coefficient matrix;
-// - independentTerms: array of independent terms;
-// - index: index of the line that will be replaced;
-// - pivotIndex: index of the line replacing.
-// Returns nothing.
-void replaceLines(
-    double **Matrix,
-    double *independentTerms,
-    unsigned int index,
-    unsigned int pivotIndex
 );
 
 int ResidueIsIncreasing(RealNumber currentResidueL2Norm, RealNumber lastResidueL2Norm);

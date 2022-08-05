@@ -35,9 +35,9 @@ typedef double Time;
  * double time;
  * time = timestamp();
  * <code snippet>
- * time = timestamp() - time;
+ * time = GetTimestamp() - time;
 */
-double timestamp(void);
+double GetTimestamp(void);
 
 /* Generates the string '<baseName>_n'
  * i.e. if baseName = "ABC" and n = 10,
