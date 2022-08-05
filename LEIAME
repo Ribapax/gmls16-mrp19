@@ -4,11 +4,11 @@
 
  Universidade Federal do Paraná
 
- Julho de 2022
+ Agosto de 2022
 
  Alunos:
  - Guilherme Morais Lopes dos Santos, GRR20163043
- - Mateus Ribamar, GRR
+ - Mateus Ribamar, GRR20190154
 
 ---------------------------------------------------
 
@@ -31,7 +31,7 @@ Neste programa, utilizamos apenas "GenericMatrix", que é uma matriz genérica.
 
 ## Descrição dos módulos ##
 
-1) common: abarca funcionalidades que são comuns à todos os outros módulos;
+1) common: abarca funcionalidades que são comuns à todos os outros módulos (ex.: timestamp);
 
 2) io: responsável por fazer toda a comunicação entrada e saída do programa (in / out);
 
@@ -48,25 +48,17 @@ com matrizes e vetores.
 0) Ao executar o programa sem nenhuma "flag", ele imprime um tutorial de como utilizar, seguindo a especificação
 do trabalho.
 
-1) Percebemos que o primeiro resíduo calculado (antes do primeiro refinamento) é sempre menor do que o resíduo
-calculado depois do primeiro refinamento. Não sabemos o motivo ainda, então ignoramos o primeiro resíduo e imprimimos
-a partir do primeiro resíduo calculado a partir do primeiro refinamento;
+1)  Dependendo do número de iterações, pode ser que o resíduo comece a aumentar em algum momento, afastando-se
+da solução. Por isso, decidimos incluir o aumento do resíduo no nosso critério de parada.
 
-2)  Percebemos que ao utilizar muitas iterações (ex.: 50), o resultado se afasta do que seria correto, e o resíduo aumenta
-progressivamente; decidimos parar as iterações e imprimir um erro em stderr toda vez que o resíduo começa a aumentar em
-relação ao resíduo da iteração anterior;
+2) Percebemos que ao usar o pivoteamento parcial o programa encontra uma solução levemente distante do esperado.
+Provavelmente é algum problema de implementação, mas não conseguimos entender à tempo da entrega, por isso apenas
+desligamos o pivoteamento parcial, já que sem ele o resultado parece mais preciso; Para ligar o pivoteamento parcial,
+basta setar para 1 a constante "ENABLE_PARTIAL_PIVOTING" no arquivo `lu_factorization.h`.
 
-3) Percebemos que ao usar o pivoteamento parcial, o programa não encontra a solução correta. Provavelment é algum
-problema de implementação, mas que não conseguimos encontrar à tempo da entrega, por isso apenas desligamos o pivoteamento parcial
-por enquanto;
+3) O diretório "tests" possui alguns tipos de matrizes que utilizamos durante nossos testes;
 
-4) No processo de refinamento, usamos a Eliminação de Gauss para resolver os sistemas lineares resultantes do cálculo de
-AW = B - A x A^-1, mas não utilizamos fatoração LU. Pretendíamos utilizar, porém não tivemos tempo o suficiente para implementar
-uma solução genérica o suficiente para que pudesse ser reutilizada também durante a inversão da matriz.
+4) Preferimos escrever os comentários do código em inglês, já que programamos tdo o sistema em inglês também.
+Entretanto, podemos traduzir se requisitado;
 
-5) O diretório "tests" possui alguns tipos de matrizes que utilizamos durante nossos testes;
-
-6) Preferimos escrever o código e os comentários em inglês por ser a língua da ciência da computação, mas podemos
-traduzir se requisitado;
-
-7) IMPORTANTE: os comentários explicando cada função e seus parâmetros estão nos respectivos arquivos de header (extensão .h);
+5) IMPORTANTE: os comentários explicando cada função e seus parâmetros estão nos respectivos arquivos de header (extensão .h);

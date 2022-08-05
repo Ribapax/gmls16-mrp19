@@ -120,6 +120,13 @@ int HasNotReachedStoppingCriteria(
     RealNumber lastResidueL2Norm
 );
 
+// Verifies if the L2 Norm of the Residue has increased based on the last iteration
+// Params:
+// - currentResidueL2Norm: the L2 Norm of the Residue of the current iteration;
+// - lastResidueL2Norm: the L2 Norm of the Residue of the last iteration;
+// Returns:
+// - 1 (true);
+// - 0 (false).
 int ResidueIsIncreasing(RealNumber currentResidueL2Norm, RealNumber lastResidueL2Norm);
 
 #endif
