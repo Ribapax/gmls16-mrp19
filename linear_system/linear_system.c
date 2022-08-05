@@ -125,14 +125,6 @@ int FillLinearSystem(LinearSystem *SL, MatrixType type, RealNumber coefficientLi
     }
 }
 
-void printArray(RealNumber *arr, unsigned int n) {
-    int i;
-    printf ("\n");
-    for(i = 0; i < n; ++i) {
-        printf ("%10g ", arr[i]);
-    }
-    printf ("\n\n");
-}
 
 void copyMatrix(RealNumber **A, RealNumber **B, int n) {
     for (int i = 0; i < n; ++i) {
@@ -164,13 +156,6 @@ RealNumber **subtractMatrix(RealNumber **A, RealNumber **B, int n) {
     return Result;
 }
 
-RealNumber *subtractArrays(const RealNumber *A, const RealNumber *B, int n) {
-    RealNumber *result = malloc(sizeof(RealNumber)*n);
-    for (int i = 0; i < n; ++i){
-        result[i]= A[i] - B[i];
-    }
-    return result;
-}
 
 RealNumber **GetIdentityMatrix(int n) {
     RealNumber **I = AllocateLinearSystem(n, PointerToPointer)->A;
@@ -200,96 +185,63 @@ int MatrixIsInvertible(RealNumber **A, int n) {
     return 1;
 }
 
-void forwardSubstitution(RealNumber **A, const RealNumber *b, RealNumber *x, unsigned int n) {
-    for (int i = n - 1; i >= 0; i--) {
-        x[i] = b[i];
-        for (unsigned int j = i + 1; j < n; j++) {
-            x[i] -= A[i][j] * x[j];
-        }
-        x[i] /= A[i][i];
-    }
-}
-
-void replaceLines(
-    double **Matrix,
-    double *independentTerms,
-    unsigned int index,
-    unsigned int pivotIndex
+RealNumber **refineSolution(
+    RealNumber **A,
+    RealNumber **B,
+    RealNumber **invertedMatrix,
+    RealNumber **L,
+    RealNumber **U,
+    int n
 ) {
-    RealNumber *lineToBeReplaced = Matrix[index];
-    Matrix[index] = Matrix[pivotIndex];
-    Matrix[pivotIndex] = lineToBeReplaced;
-
-    RealNumber termToBeReplaced = independentTerms[index];
-    independentTerms[index] = independentTerms[pivotIndex];
-    independentTerms[pivotIndex] = termToBeReplaced;
-}
-
-RealNumber *GaussElimination(RealNumber **A, RealNumber *B, int n) {
-    for (int i = 0; i < n; i++) {
-        // Partial Pivoting
-//        unsigned int pivotIndex = findPivotIndex(A, i, n);
-//        if (i != pivotIndex) {
-//            replaceLines(A, B, i, pivotIndex);
-//        }
-        for (int k = i + 1; k < n; k++) {
-            if (A[k][k] == 0) {
-                fprintf(stderr, "%s\n", "gaussian elimination error: division by zero");
-                exit(-1);
-            }
-            double m = A[k][i] / A[i][i];
-            A[k][i] = 0.0;
-            for (int j = i + 1; j < n; j++) {
-                A[k][j] -= A[i][j] * m;
-            }
-            B[k] -= B[i] * m;
-        }
-    }
-    RealNumber *x = malloc(sizeof(RealNumber) * n);
-    forwardSubstitution(A, B, x, n);
-    return x;
-}
-
-
-RealNumber *multiplyMatrixWithArray(RealNumber **A, const RealNumber *B, int n) {
-    RealNumber *solution = malloc(sizeof(RealNumber)*n);
-    RealNumber sum = 0.;
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            sum += A[i][j] * B[j];
-        }
-        solution[i] = sum;
-        sum = 0.;
-    }
-    return solution;
-}
-
-RealNumber **refineSolution(RealNumber **A, RealNumber **B, RealNumber **invertedMatrix, int n) {
-    RealNumber **refinedSolutionCOLUMNS = AllocateLinearSystem(n, PointerToPointer)->A;
-    RealNumber **partialRefinedSolution = AllocateLinearSystem(n, PointerToPointer)->A;
-    RealNumber **refinedSolution = AllocateLinearSystem(n, PointerToPointer)->A;
     RealNumber **residue;
     // 1) A x A^-1
     residue = multiplyMatrixOfEqualSize(A, invertedMatrix, n);
+
     // 2) B - (A x A^-1)
     residue = subtractMatrix(B, residue, n);
+
     // 3) AW = B - (A x A^-1) -> for each W column
-    RealNumber **ACopy = AllocateLinearSystem(n, PointerToPointer)->A;
-    copyMatrix(A, ACopy, n);
-    for (int i = 0; i < n; ++i) {
-        refinedSolutionCOLUMNS[i] = GaussElimination(A, residue[i], n);
-        copyMatrix(ACopy, A, n);
-        // Converting lines into columns
-        for (int j = 0; j < n; ++j) {
-            partialRefinedSolution[j][i] = refinedSolutionCOLUMNS[i][j];
+
+    // 3.1) Get the y arrays by solving -> Ly = B - (A x A^-1);
+    RealNumber **Y = AllocateLinearSystem(n, PointerToPointer)->A;
+    if (Y == NULL) {
+        fprintf(stderr, "could not allocate \"Y\" matrix\n");
+        return NULL;
+    }
+    for (int k = 0; k < n; ++k) {
+        for (int i = 0; i < n; i++) {
+            Y[i][k] = residue[i][k];
+            for (unsigned int j = 0; j < i; j++) {
+                Y[i][k] -= L[i][j] * Y[j][k];
+            }
+            Y[i][k] /= L[i][i];
         }
     }
-    // TODO: remove this into a function that returns the sum of two matrices
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            refinedSolution[i][j] = partialRefinedSolution[i][j] + invertedMatrix[i][j];
+
+    // 3.2) Get the inverted matrix X by solving -> Ux = y for each y and x.
+    RealNumber **X = AllocateLinearSystem(n, PointerToPointer)->A;
+    if (X == NULL) {
+        fprintf(stderr, "could not allocate \"X\" matrix\n");
+        return NULL;
+    }
+    for (int k = 0; k < n; ++k) {
+        for (int i = n - 1; i >= 0; i--) {
+            X[i][k] = Y[i][k];
+            for (unsigned int j = i + 1; j < n; j++) {
+                X[i][k] -= U[i][j] * X[j][k];
+            }
+            X[i][k] /= U[i][i];
         }
     }
+
+    // 4) X(1) + X(i-1)
+    RealNumber **refinedSolution = AllocateLinearSystem(n, PointerToPointer)->A;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            refinedSolution[i][j] = X[i][j] + invertedMatrix[i][j];
+        }
+    }
+
     return refinedSolution;
 }
 
@@ -303,13 +255,19 @@ int hasNotReachedStoppingCriteria(
         lastResidueL2Norm != 1 + RESIDUE_THRESHOLD &&
         (currentResidueL2Norm - lastResidueL2Norm) > RESIDUE_THRESHOLD
     ) {
-        fprintf(
-            stderr,
-            "\nerror: residue increasing, solution does not converge, stopping. Try to decrease the number of iterations.\n"
-        );
         return 0;
     }
     if (iteration <= iterationsLimit && currentResidueL2Norm > RESIDUE_THRESHOLD) {
+        return 1;
+    }
+    return 0;
+}
+
+int ResidueIsIncreasing(RealNumber currentResidueL2Norm, RealNumber lastResidueL2Norm) {
+    if (
+        lastResidueL2Norm != 1 + RESIDUE_THRESHOLD &&
+        (currentResidueL2Norm - lastResidueL2Norm) > RESIDUE_THRESHOLD
+    ) {
         return 1;
     }
     return 0;

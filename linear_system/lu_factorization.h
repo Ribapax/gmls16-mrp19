@@ -9,7 +9,9 @@
 
 #include "../common/common.h"
 
-#define RESIDUE_THRESHOLD 0.00000000000001
+#define RESIDUE_THRESHOLD 0.0000000000000001
+
+#define ENABLE_PARTIAL_PIVOTING 0
 
 // Returns the inverted matrix of the matrix `A` of size `n`.
 //  - It also stores the average time of solving the Linear Systems
@@ -17,7 +19,7 @@
 //  - And stores the L and U matrix calculation time inside `LUTime`.
 //  - `B` is the identity matrix, that may be changed by the partial pivoting.
 // Algorithm:
-// 1) Get L and U by solving -> L = generateMatrixL(A, B, U, n);
+// 1) Get L and U by solving -> L = LUDecomposition(A, B, U, n);
 // 2) Get the y arrays by solving -> Ly = b;
 // 3) Get the inverted matrix x by solving -> Ux = y for each y.
 // 4) Return x.
@@ -26,14 +28,16 @@ RealNumber **InvertMatrix(
     RealNumber **B,
     int n,
     Time *averageLinearSystemTime,
-    Time *LUTime
+    Time *LUTime,
+    RealNumber **L,
+    RealNumber **U
 );
 
 // Returns the multiplier's matrix L of a matrix `A` of size `n`
 // using Gaussian Elimination with partial pivoting. The partial pivoting should
 // also replace lines in the `B` matrix (identity matrix).
 // Also stores the echelon form of A inside `U`.
-RealNumber **generateMatrixL(RealNumber **A, RealNumber **B, RealNumber **U, int n);
+RealNumber **LUDecomposition(RealNumber **A, RealNumber **B, RealNumber **U, RealNumber **L, int n);
 
 // Returns the L2 Norm of the residue for the current result.
 // R = I - A * A^-1

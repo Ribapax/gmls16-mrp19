@@ -118,7 +118,14 @@ RealNumber *GaussElimination(RealNumber **A, RealNumber *B, int n);
  *  - n: matrix dimension;
  * Returns a matrix of dimension `n` with the refined solution.
  */
-RealNumber **refineSolution(RealNumber **A, RealNumber **B, RealNumber **invertedMatrix, int n);
+RealNumber **refineSolution(
+    RealNumber **A,
+    RealNumber **B,
+    RealNumber **invertedMatrix,
+    RealNumber **L,
+    RealNumber **U,
+    int n
+);
 
 /*
  * Asserts if the solution has reached the stopping criteria.
@@ -162,6 +169,8 @@ void replaceLines(
     unsigned int index,
     unsigned int pivotIndex
 );
+
+int ResidueIsIncreasing(RealNumber currentResidueL2Norm, RealNumber lastResidueL2Norm);
 
 #endif
 
