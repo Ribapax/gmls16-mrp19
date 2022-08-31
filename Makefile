@@ -1,9 +1,9 @@
-compiler=gcc
+compiler=gcc -std=c11 -g
 rm=rm -rf
-FLAGS=-lm
+FLAGS=-lm -L${LIKWID_LIB} -llikwid
 
 all: main.c common.o io.o linear_system.o lu_factorization.o Makefile
-	$(compiler) -o invmat main.c common.o io.o linear_system.o lu_factorization.o $(FLAGS)
+	$(compiler) -DLIKWID_PERFMON -I${LIKWID_INCLUDE} -o invmat main.c common.o io.o linear_system.o lu_factorization.o $(FLAGS)
 
 linear_system.o: linear_system/linear_system.c linear_system/linear_system.h Makefile 
 	$(compiler) -c linear_system/linear_system.c linear_system/linear_system.h 

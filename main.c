@@ -12,7 +12,25 @@
 #include "linear_system/linear_system.h"
 #include "lu_factorization/lu_factorization.h"
 
+// This block enables to compile the code with and without the LIKWID header in place
+#ifdef LIKWID_PERFMON
+#include <likwid.h>
+#else
+//#define LIKWID_MARKER_INIT
+//#define LIKWID_MARKER_THREADINIT
+//#define LIKWID_MARKER_SWITCH
+//#define LIKWID_MARKER_REGISTER(regionTag)
+//#define LIKWID_MARKER_START(regionTag)
+//#define LIKWID_MARKER_STOP(regionTag)
+//#define LIKWID_MARKER_CLOSE
+//#define LIKWID_MARKER_GET(regionTag, nevents, events, time, count)
+#endif
+
 int main(int argc, char *argv[]) {
+
+    //  LIKWID_MARKER_INIT;
+    //  LIKWID_MARKER_THREADINIT;
+
     srand(S_RAND_CONST);
     int err;
     if (argc < 2) {
@@ -109,7 +127,10 @@ int main(int argc, char *argv[]) {
     LUTime = GetTimestamp();
     LUDecomposition(A, B, U, L, size);
     LUTime = GetTimestamp() - LUTime;
+
+    //LIKWID_MARKER_START("LINEAR_SYSTEM_CALCULATION");
     RealNumber **invertedA = SolveLinearSystems(B, size, &avgLSTime, L, U);
+    //LIKWID_MARKER_STOP("LINEAR_SYSTEM_CALCULATION");
     if (invertedA == NULL) {
         fprintf(stderr, "could not invert matrix\n");
         exit(-1);

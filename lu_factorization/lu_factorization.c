@@ -125,8 +125,10 @@ RealNumber **SolveLinearSystems(
 }
 
 RealNumber CalculateResidueL2Norm(RealNumber **A, RealNumber **B, RealNumber **invertedA, int n) {
+    //LIKWID_MARKER_START("RESIDUE_CALCULATION");
     RealNumber **multiplication = multiplyMatricesOfEqualSize(A, invertedA, n);
     RealNumber **R = subtractMatrices(B, multiplication, n);
+    //LIKWID_MARKER_STOP("RESIDUE_CALCULATION");
     RealNumber sum = 0.;
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
