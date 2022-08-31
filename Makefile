@@ -1,4 +1,4 @@
-compiler=gcc -std=c11 -g
+compiler=gcc -g
 rm=rm -rf
 FLAGS=-lm -L${LIKWID_LIB} -llikwid
 
