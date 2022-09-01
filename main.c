@@ -16,14 +16,14 @@
 #ifdef LIKWID_PERFMON
 #include <likwid.h>
 #else
-//#define LIKWID_MARKER_INIT
-//#define LIKWID_MARKER_THREADINIT
-//#define LIKWID_MARKER_SWITCH
-//#define LIKWID_MARKER_REGISTER(regionTag)
-//#define LIKWID_MARKER_START(regionTag)
-//#define LIKWID_MARKER_STOP(regionTag)
-//#define LIKWID_MARKER_CLOSE
-//#define LIKWID_MARKER_GET(regionTag, nevents, events, time, count)
+#define LIKWID_MARKER_INIT
+#define LIKWID_MARKER_THREADINIT
+#define LIKWID_MARKER_SWITCH
+#define LIKWID_MARKER_REGISTER(regionTag)
+#define LIKWID_MARKER_START(regionTag)
+#define LIKWID_MARKER_STOP(regionTag)
+#define LIKWID_MARKER_CLOSE
+#define LIKWID_MARKER_GET(regionTag, nevents, events, time, count)
 #endif
 
 int main(int argc, char *argv[]) {
@@ -128,9 +128,9 @@ int main(int argc, char *argv[]) {
     LUDecomposition(A, B, U, L, size);
     LUTime = GetTimestamp() - LUTime;
 
-    //LIKWID_MARKER_START("LINEAR_SYSTEM_CALCULATION");
+    LIKWID_MARKER_START("LINEAR_SYSTEM_CALCULATION");
     RealNumber **invertedA = SolveLinearSystems(B, size, &avgLSTime, L, U);
-    //LIKWID_MARKER_STOP("LINEAR_SYSTEM_CALCULATION");
+    LIKWID_MARKER_STOP("LINEAR_SYSTEM_CALCULATION");
     if (invertedA == NULL) {
         fprintf(stderr, "could not invert matrix\n");
         exit(-1);

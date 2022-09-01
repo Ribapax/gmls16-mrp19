@@ -9,6 +9,19 @@
 #include "lu_factorization.h"
 #include "../linear_system/linear_system.h"
 
+#ifdef LIKWID_PERFMON
+#include <likwid.h>
+#else
+#define LIKWID_MARKER_INIT
+#define LIKWID_MARKER_THREADINIT
+#define LIKWID_MARKER_SWITCH
+#define LIKWID_MARKER_REGISTER(regionTag)
+#define LIKWID_MARKER_START(regionTag)
+#define LIKWID_MARKER_STOP(regionTag)
+#define LIKWID_MARKER_CLOSE
+#define LIKWID_MARKER_GET(regionTag, nevents, events, time, count)
+#endif
+
 unsigned int findPivotIndex(double** Matrix, unsigned int columnIndex, unsigned int systemSize) {
     RealNumber greatestValue = fabs(Matrix[columnIndex][columnIndex]);
     unsigned int pivotIndex = columnIndex;
@@ -125,10 +138,10 @@ RealNumber **SolveLinearSystems(
 }
 
 RealNumber CalculateResidueL2Norm(RealNumber **A, RealNumber **B, RealNumber **invertedA, int n) {
-    //LIKWID_MARKER_START("RESIDUE_CALCULATION");
+    LIKWID_MARKER_START("RESIDUE_CALCULATION");
     RealNumber **multiplication = multiplyMatricesOfEqualSize(A, invertedA, n);
     RealNumber **R = subtractMatrices(B, multiplication, n);
-    //LIKWID_MARKER_STOP("RESIDUE_CALCULATION");
+    LIKWID_MARKER_STOP("RESIDUE_CALCULATION");
     RealNumber sum = 0.;
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
