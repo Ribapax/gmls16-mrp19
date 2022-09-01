@@ -9,9 +9,9 @@
 #include "lu_factorization.h"
 #include "../linear_system/linear_system.h"
 
-//#ifdef LIKWID_PERFMON
-//#include <likwid.h>
-//#else
+#ifdef LIKWID_PERFMON
+#include <likwid.h>
+#else
 #define LIKWID_MARKER_INIT
 #define LIKWID_MARKER_THREADINIT
 #define LIKWID_MARKER_SWITCH
@@ -20,7 +20,7 @@
 #define LIKWID_MARKER_STOP(regionTag)
 #define LIKWID_MARKER_CLOSE
 #define LIKWID_MARKER_GET(regionTag, nevents, events, time, count)
-//#endif
+#endif
 
 unsigned int findPivotIndex(double** Matrix, unsigned int columnIndex, unsigned int systemSize) {
     RealNumber greatestValue = fabs(Matrix[columnIndex][columnIndex]);

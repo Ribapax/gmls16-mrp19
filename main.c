@@ -13,9 +13,9 @@
 #include "lu_factorization/lu_factorization.h"
 
 // This block enables to compile the code with and without the LIKWID header in place
-//#ifdef LIKWID_PERFMON
-//#include <likwid.h>
-//#else
+#ifdef LIKWID_PERFMON
+#include <likwid.h>
+#else
 #define LIKWID_MARKER_INIT
 #define LIKWID_MARKER_THREADINIT
 #define LIKWID_MARKER_SWITCH
@@ -24,7 +24,7 @@
 #define LIKWID_MARKER_STOP(regionTag)
 #define LIKWID_MARKER_CLOSE
 #define LIKWID_MARKER_GET(regionTag, nevents, events, time, count)
-//#endif
+#endif
 
 int main(int argc, char *argv[]) {
 
