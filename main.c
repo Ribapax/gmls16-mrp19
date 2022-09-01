@@ -169,5 +169,7 @@ int main(int argc, char *argv[]) {
     // Print the final Inverted Matrix
     PrintMatrix(outputFile, invertedA, size);
 
+    LIKWID_MARKER_CLOSE;
+
     return 0;
 }
