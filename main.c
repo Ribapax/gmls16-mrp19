@@ -28,8 +28,8 @@
 
 int main(int argc, char *argv[]) {
 
-    //  LIKWID_MARKER_INIT;
-    //  LIKWID_MARKER_THREADINIT;
+    LIKWID_MARKER_INIT;
+    LIKWID_MARKER_THREADINIT;
 
     srand(S_RAND_CONST);
     int err;

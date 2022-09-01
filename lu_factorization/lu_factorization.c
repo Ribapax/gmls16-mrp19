@@ -22,6 +22,9 @@
 #define LIKWID_MARKER_GET(regionTag, nevents, events, time, count)
 #endif
 
+LIKWID_MARKER_INIT;
+LIKWID_MARKER_THREADINIT;
+
 unsigned int findPivotIndex(double** Matrix, unsigned int columnIndex, unsigned int systemSize) {
     RealNumber greatestValue = fabs(Matrix[columnIndex][columnIndex]);
     unsigned int pivotIndex = columnIndex;
