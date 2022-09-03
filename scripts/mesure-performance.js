@@ -3,8 +3,6 @@ const { promisify } = require('util')
 
 const exec = promisify(require('child_process').exec)
 
-const MOCK_EXECUTION = true
-
 const csvMock = ``
 
 const ITERATIONS_LIMIT = 10
@@ -50,10 +48,10 @@ const execMock = async (command) => {
     }
 }
 
-const run = async (group, size, parser) => {
+const run = async (group, size, parser, mockExecution) => {
     const command = buildCommand(group, size)
     try {
-        if (MOCK_EXECUTION) {
+        if (mockExecution) {
             const resultMock = await execMock(command)
             return parser(resultMock.stdout)
         }
@@ -74,11 +72,13 @@ function Result(size, indicators) {
 
 const main = async () => {
 
+    let mockExecution = process.argv[2] === 'mock'
+
     const results = await Promise.all(sizes.map(async (size) => {
 
         const indicators = await Promise.all(groups.map(async group => ({
             group: group,
-            value: await run(group, size, parsers[group])
+            value: await run(group, size, parsers[group], mockExecution)
         })))
 
         return new Result(size, indicators)
