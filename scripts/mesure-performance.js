@@ -72,7 +72,7 @@ function Result(size, indicators) {
 
 const main = async () => {
 
-    let mockExecution = process.argv[2] === 'mock'
+    const mockExecution = process.argv[2] === 'mock'
 
     const results = await Promise.all(sizes.map(async (size) => {
 
