@@ -115,8 +115,13 @@ function Result(size, indicators) {
 const main = async () => {
 
     const mockExecution = process.argv[2] === 'mock'
+    const fixedSize = parseInt(process.argv[3])
+    let actualSizes = sizes;
+    if (fixedSize > 0) {
+        actualSizes = [fixedSize]
+    }
 
-    const results = await Promise.all(sizes.map(async (size) => {
+    const results = await Promise.all(actualSizes.map(async (size) => {
 
         const indicators = await Promise.all(groups.map(async group => ({
             size: size,
