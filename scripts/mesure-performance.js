@@ -1,5 +1,7 @@
 
 const { promisify } = require('util')
+const { parse } = require("csv-parse");
+const fs = require('fs');
 
 const exec = promisify(require('child_process').exec)
 
@@ -19,16 +21,56 @@ const FLOPS_DP = 'FLOPS_DP'
 const groups = [L3, L2CACHE, FLOPS_DP]
 const sizes = [64, 100, 128, 1024, 2000, 2048]
 
-const parseL3 = (csv) => {
-    return 123.32
+const getFileContents = async (filepath) => {
+    const data = [];
+    return new Promise(function(resolve, reject) {
+        fs.createReadStream(filepath)
+            .pipe(parse({delimiter: ',', relax_column_count: true}))
+            .on('error', error => reject(error))
+            .on('data', row => data.push(row))
+            .on('end', () => {
+                resolve(data);
+            });
+    });
 }
 
-const parseL2Cache = (csv) => {
-    return 123.32
+const parseL3 = async () => {
+    const data = await getFileContents('test.csv')
+
+    let linearSystemCalculationL3 = 0;
+    let i;
+    for (i = 0; i < data.length; i++) {
+        if (data[i][0] === 'L3 bandwidth [MBytes/s]') {
+            linearSystemCalculationL3 = +(data[i][1])
+            break;
+        }
+    }
+
+    let residueL3 = 0;
+    for (; i < data.length; i++) {
+        if (data[i][0] === 'L3 bandwidth [MBytes/s]') {
+            residueL3 = +(data[i][1])
+        }
+    }
+
+    return {
+        'linearSystem': linearSystemCalculationL3,
+        'residue': residueL3
+    }
 }
 
-const parseFlopsDP = (csv) => {
-    return 123.32
+const parseL2Cache = () => {
+    return {
+        'linearSystem': 123.32,
+        'residue': 123.32,
+    }
+}
+
+const parseFlopsDP = () => {
+    return {
+        'linearSystem': 123.32,
+        'residue': 123.32,
+    }
 }
 
 const parsers = {
@@ -38,7 +80,7 @@ const parsers = {
 }
 
 const buildCommand = (group, size) => {
-    return `${LIKWID_COMMAND} ${FIRST_FLAGS} ${group} ${SECOND_FLAGS} ./${PROGRAM} -r ${size} -i ${ITERATIONS_LIMIT}`
+    return `${LIKWID_COMMAND} ${FIRST_FLAGS} ${group} ${SECOND_FLAGS} ./${PROGRAM} -r ${size} -i ${ITERATIONS_LIMIT} -s output.csv`
 }
 
 const execMock = async (command) => {
@@ -52,14 +94,14 @@ const run = async (group, size, parser, mockExecution) => {
     const command = buildCommand(group, size)
     try {
         if (mockExecution) {
-            const resultMock = await execMock(command)
-            return parser(resultMock.stdout)
+            await execMock(command)
+            return parser()
         }
-        const result = await exec(command)
-        return parser(result.stdout)
+        await exec(command)
+        return parser()
     } catch (e) {
         console.error(e)
-        return parser(e.stdout)
+        return parser()
     }
 }
 
@@ -77,16 +119,43 @@ const main = async () => {
     const results = await Promise.all(sizes.map(async (size) => {
 
         const indicators = await Promise.all(groups.map(async group => ({
+            size: size,
             group: group,
-            value: await run(group, size, parsers[group], mockExecution)
+            values: await run(group, size, parsers[group], mockExecution)
         })))
 
-        return new Result(size, indicators)
+        const linearSystemIndicators = indicators.map(indicator => {
+            return {
+                size: indicator.size,
+                group: indicator.group,
+                value: indicator.values.linearSystem
+            }
+        })
+
+        const residueIndicators = indicators.map(indicator => {
+            return {
+                size: indicator.size,
+                group: indicator.group,
+                value: indicator.values.residue
+            }
+        })
+
+        return {
+            linearSystemResult: new Result(size, linearSystemIndicators),
+            residueResult: new Result(size, residueIndicators),
+        }
     }))
 
-    console.log('\nRESULTS:\n')
+    const linearSystemResults = results.map(result => result.linearSystemResult)
+    const residueResults = results.map(result => result.residueResult)
 
-    console.table(results)
+    console.log('\nLINEAR SYSTEM RESULTS:\n')
+
+    console.table(linearSystemResults)
+
+    console.log('\nRESIDUE RESULTS:\n')
+
+    console.table(residueResults)
 }
 
 main()
