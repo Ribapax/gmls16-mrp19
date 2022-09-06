@@ -86,7 +86,7 @@ const parsers = {
 
 const buildCommand = (group, size) => {
     group = group === 'AVX_FLOPS_DP' ? 'FLOPS_DP' : group // Technical Resource
-    return `${LIKWID_COMMAND} ${FIRST_FLAGS} ${group} ${SECOND_FLAGS} ./${PROGRAM} -r ${size} -i ${ITERATIONS_LIMIT} -s invmat-output > output-${group}.csv`
+    return `${LIKWID_COMMAND} ${FIRST_FLAGS} ${group} ${SECOND_FLAGS} ./${PROGRAM} -r ${size} -i ${ITERATIONS_LIMIT} -s invmat-output > output.csv`
 }
 
 const execMock = async (command) => {
