@@ -85,7 +85,7 @@ const parsers = {
 }
 
 const buildCommand = (group, size) => {
-    return `${LIKWID_COMMAND} ${FIRST_FLAGS} ${group} ${SECOND_FLAGS} ./${PROGRAM} -r ${size} -i ${ITERATIONS_LIMIT} -s output.csv`
+    return `${LIKWID_COMMAND} ${FIRST_FLAGS} ${group} ${SECOND_FLAGS} ./${PROGRAM} -r ${size} -i ${ITERATIONS_LIMIT} -s invmat-output > output.csv`
 }
 
 const execMock = async (command) => {
