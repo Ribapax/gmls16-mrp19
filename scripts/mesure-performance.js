@@ -130,11 +130,18 @@ const main = async () => {
 
     const results = await Promise.all(actualSizes.map(async (size) => {
 
-        const indicators = await Promise.all(groups.map(async group => ({
+        const indicatorsPromises = groups.map(async group => ({
             size: size,
             group: group,
             values: await run(group, size, parsers[group], mockExecution)
-        })))
+        }))
+
+        let indicators = []
+        let i = 0;
+        for (const promise of indicatorsPromises) {
+            indicators[i] = await Promise.resolve(promise)
+            i++
+        }
 
         const linearSystemIndicators = indicators.map(indicator => {
             return {
