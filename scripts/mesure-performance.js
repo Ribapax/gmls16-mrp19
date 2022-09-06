@@ -102,6 +102,7 @@ const run = async (group, size, parser, mockExecution) => {
             await execMock(command)
             return parser()
         }
+        console.log('Executing command: ' + command)
         await exec(command)
         return parser()
     } catch (e) {
