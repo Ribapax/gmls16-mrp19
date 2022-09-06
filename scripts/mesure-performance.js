@@ -128,7 +128,7 @@ const main = async () => {
         actualSizes = [fixedSize]
     }
 
-    const results = await Promise.all(actualSizes.map(async (size) => {
+    const resultsPromises = actualSizes.map(async (size) => {
 
         const indicatorsPromises = groups.map(async group => ({
             size: size,
@@ -163,7 +163,14 @@ const main = async () => {
             linearSystemResult: new Result(size, linearSystemIndicators),
             residueResult: new Result(size, residueIndicators),
         }
-    }))
+    })
+
+    let results = []
+    let i = 0;
+    for (const promise of resultsPromises) {
+        results[i] = await Promise.resolve(promise)
+        i++
+    }
 
     const linearSystemResults = results.map(result => result.linearSystemResult)
     const residueResults = results.map(result => result.residueResult)
