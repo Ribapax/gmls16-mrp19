@@ -17,8 +17,9 @@ const PROGRAM = 'invmat'
 const L3 = 'L3'
 const L2CACHE = 'L2CACHE'
 const FLOPS_DP = 'FLOPS_DP'
+const AVX_FLOPS_DP = 'AVX_FLOPS_DP'
 
-const groups = [L3, L2CACHE, FLOPS_DP]
+const groups = [L3, L2CACHE, FLOPS_DP, AVX_FLOPS_DP]
 const sizes = [64, 100, 128, 1024, 2000, 2048]
 
 const getFileContents = async (filepath) => {
@@ -34,13 +35,14 @@ const getFileContents = async (filepath) => {
     });
 }
 
-const parseL3 = async () => {
-    const data = await getFileContents('test.csv')
+const parseKey = async (key) => {
+    //const data = await getFileContents('test.csv')
+    const data = await getFileContents('output.csv')
 
     let linearSystemCalculationL3 = 0;
     let i;
     for (i = 0; i < data.length; i++) {
-        if (data[i][0] === 'L3 bandwidth [MBytes/s]') {
+        if (data[i][0] === key) {
             linearSystemCalculationL3 = +(data[i][1])
             break;
         }
@@ -48,7 +50,7 @@ const parseL3 = async () => {
 
     let residueL3 = 0;
     for (; i < data.length; i++) {
-        if (data[i][0] === 'L3 bandwidth [MBytes/s]') {
+        if (data[i][0] === key) {
             residueL3 = +(data[i][1])
         }
     }
@@ -59,24 +61,27 @@ const parseL3 = async () => {
     }
 }
 
+const parseL3 = async () => {
+    return parseKey('L3 bandwidth [MBytes/s]')
+}
+
 const parseL2Cache = () => {
-    return {
-        'linearSystem': 123.32,
-        'residue': 123.32,
-    }
+    return parseKey('L2 miss ratio')
 }
 
 const parseFlopsDP = () => {
-    return {
-        'linearSystem': 123.32,
-        'residue': 123.32,
-    }
+    return parseKey('DP MFLOP/s')
+}
+
+const parseAVXFlopsDP = () => {
+    return parseKey('AVX DP MFLOP/s')
 }
 
 const parsers = {
     L3: parseL3,
     L2CACHE: parseL2Cache,
     FLOPS_DP: parseFlopsDP,
+    AVX_FLOPS_DP: parseAVXFlopsDP
 }
 
 const buildCommand = (group, size) => {
