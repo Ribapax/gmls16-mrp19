@@ -26,7 +26,7 @@ const getFileContents = async (filepath) => {
     const data = [];
     return new Promise(function(resolve, reject) {
         fs.createReadStream(filepath)
-            .pipe(parse({delimiter: ',', relax_column_count: true}))
+            .pipe(parse({delimiter: ',', relax_column_count: true, relax_quotes: true}))
             .on('error', error => reject(error))
             .on('data', row => data.push(row))
             .on('end', () => {
