@@ -37,7 +37,7 @@ const getFileContents = async (filepath) => {
 
 const parseKey = async (key) => {
     //const data = await getFileContents('test.csv')
-    const data = await getFileContents('output-L3.csv')
+    const data = await getFileContents('output.csv')
 
     let linearSystemCalculationL3 = 0;
     let i;
