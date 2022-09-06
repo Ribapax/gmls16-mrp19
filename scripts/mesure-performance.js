@@ -17,7 +17,7 @@ const PROGRAM = 'invmat'
 const L3 = 'L3'
 const L2CACHE = 'L2CACHE'
 const FLOPS_DP = 'FLOPS_DP'
-const AVX_FLOPS_DP = 'FLOPS_DP'
+const AVX_FLOPS_DP = 'AVX_FLOPS_DP'
 
 const groups = [L3, L2CACHE, FLOPS_DP, AVX_FLOPS_DP]
 const sizes = [64, 100, 128, 1024, 2000, 2048]
@@ -85,6 +85,7 @@ const parsers = {
 }
 
 const buildCommand = (group, size) => {
+    group = group === 'AVX_FLOPS_DP' ? 'FLOPS_DP' : group // Technical Resource
     return `${LIKWID_COMMAND} ${FIRST_FLAGS} ${group} ${SECOND_FLAGS} ./${PROGRAM} -r ${size} -i ${ITERATIONS_LIMIT} -s invmat-output > output.csv`
 }
 
