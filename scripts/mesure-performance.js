@@ -37,7 +37,7 @@ const getFileContents = async (filepath) => {
 
 const parseKey = async (key) => {
     //const data = await getFileContents('test.csv')
-    const data = await getFileContents('output.csv')
+    const data = await getFileContents('output-L3.csv')
 
     let linearSystemCalculationL3 = 0;
     let i;
@@ -86,7 +86,7 @@ const parsers = {
 
 const buildCommand = (group, size) => {
     group = group === 'AVX_FLOPS_DP' ? 'FLOPS_DP' : group // Technical Resource
-    return `${LIKWID_COMMAND} ${FIRST_FLAGS} ${group} ${SECOND_FLAGS} ./${PROGRAM} -r ${size} -i ${ITERATIONS_LIMIT} -s invmat-output > output.csv`
+    return `${LIKWID_COMMAND} ${FIRST_FLAGS} ${group} ${SECOND_FLAGS} ./${PROGRAM} -r ${size} -i ${ITERATIONS_LIMIT} -s invmat-output > output-${group}.csv`
 }
 
 const execMock = async (command) => {
