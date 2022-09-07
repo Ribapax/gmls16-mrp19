@@ -126,7 +126,7 @@ const main = async () => {
     const fixedSize = parseInt(process.argv[3])
     let actualSizes = sizes;
     if (fixedSize > 0) {
-        actualSizes = [fixedSize]
+        actualSizes = [fixedSize, fixedSize+1, fixedSize+2]
     }
 
     const resultsPromises = actualSizes.map(async (size) => {
@@ -184,16 +184,18 @@ const main = async () => {
 
     console.table(residueResults)
 
-    // Re-shape for plot
+    // Output dataset for plot
 
     groups.forEach(group => {
+        console.log("GROUP: " + group)
         const arr = linearSystemResults.map(result => result[group])
-        console.log("LS: ")
+        console.log("Linear System: ")
         console.log(arr)
 
         const arr2 = residueResults.map(result => result[group])
         console.log("Residue: ")
         console.log(arr2)
+        console.log("\n")
     })
 
 }
