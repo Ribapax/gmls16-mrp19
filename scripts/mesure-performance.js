@@ -183,6 +183,19 @@ const main = async () => {
     console.log('\nRESIDUE RESULTS:\n')
 
     console.table(residueResults)
+
+    // Re-shape for plot
+
+    groups.forEach(group => {
+        const arr = linearSystemResults.map(result => result[group])
+        console.log("LS: ")
+        console.log(arr)
+
+        const arr2 = residueResults.map(result => result[group])
+        console.log("Residue: ")
+        console.log(arr2)
+    })
+
 }
 
 main()
