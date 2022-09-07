@@ -35,9 +35,9 @@ const getFileContents = async (filepath) => {
     });
 }
 
-const parseKey = async (key) => {
+const parseKey = async (key, file) => {
     //const data = await getFileContents('test.csv')
-    const data = await getFileContents('output.csv')
+    const data = await getFileContents(file)
 
     let linearSystemCalculationL3 = 0;
     let i;
@@ -62,19 +62,19 @@ const parseKey = async (key) => {
 }
 
 const parseL3 = async () => {
-    return parseKey('L3 bandwidth [MBytes/s]')
+    return parseKey('L3 bandwidth [MBytes/s]', `output-${L3}.csv`)
 }
 
 const parseL2Cache = () => {
-    return parseKey('L2 miss ratio')
+    return parseKey('L2 miss ratio', `output-${L2CACHE}.csv`)
 }
 
 const parseFlopsDP = () => {
-    return parseKey('DP MFLOP/s')
+    return parseKey('DP MFLOP/s', `output-${FLOPS_DP}.csv`)
 }
 
 const parseAVXFlopsDP = () => {
-    return parseKey('AVX DP MFLOP/s')
+    return parseKey('AVX DP MFLOP/s', `output-${AVX_FLOPS_DP}.csv`)
 }
 
 const parsers = {
@@ -85,8 +85,9 @@ const parsers = {
 }
 
 const buildCommand = (group, size) => {
+    let outputFileName = `output-${group}.csv`
     group = group === 'AVX_FLOPS_DP' ? 'FLOPS_DP' : group // Technical Resource
-    return `${LIKWID_COMMAND} ${FIRST_FLAGS} ${group} ${SECOND_FLAGS} ./${PROGRAM} -r ${size} -i ${ITERATIONS_LIMIT} -s invmat-output > output.csv`
+    return `${LIKWID_COMMAND} ${FIRST_FLAGS} ${group} ${SECOND_FLAGS} ./${PROGRAM} -r ${size} -i ${ITERATIONS_LIMIT} -s invmat-output > ${outputFileName}`
 }
 
 const execMock = async (command) => {
