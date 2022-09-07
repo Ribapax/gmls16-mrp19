@@ -2,6 +2,24 @@
 CMakeLists.txt
 cmake-build-debug
 
+#output files
+output*
+invmat-output
+
+#executable
+invmat
+
+#objects
+*.o
+linear_system/*.o
+linear_system/*.h.gch
+io/*.o
+io/*.h.gch
+common/*.o
+common/*.h.gch
+lu_factorization/*.o
+lu_factorization/*.h.gch
+
 # Prerequisites
 *.d
 
