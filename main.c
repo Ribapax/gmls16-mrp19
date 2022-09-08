@@ -93,11 +93,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // Test if the given Matrix is invertible
-    if (!MatrixIsInvertible(A, size)) {
-        fprintf(stderr, "matrix is not invertible");
-        exit(-1);
-    }
+    
 
     fprintf(outputFile, "#\n");
 
@@ -127,6 +123,12 @@ int main(int argc, char *argv[]) {
     LUTime = GetTimestamp();
     LUDecomposition(A, B, U, L, size);
     LUTime = GetTimestamp() - LUTime;
+
+    // Test if the given Matrix is invertible
+    if (!MatrixIsInvertible(U, size)) {
+        fprintf(stderr, "matrix is not invertible");
+        exit(-1);
+    }
 
     LIKWID_MARKER_START("LINEAR_SYSTEM_CALCULATION");
     RealNumber **invertedA = SolveLinearSystems(B, size, &avgLSTime, L, U);

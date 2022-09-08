@@ -45,9 +45,9 @@ void replaceLinesWithIdentityMatrix(
     Matrix[index] = Matrix[pivotIndex];
     Matrix[pivotIndex] = lineToBeReplaced;
 
-    RealNumber *identityLineToBeReplaced = identityMatrix[index];
-    identityMatrix[index] = identityMatrix[pivotIndex];
-    identityMatrix[pivotIndex] = identityLineToBeReplaced;
+    // RealNumber *identityLineToBeReplaced = identityMatrix[index];
+    // identityMatrix[index] = identityMatrix[pivotIndex];
+    // identityMatrix[pivotIndex] = identityLineToBeReplaced;
 }
 
 int LUDecomposition(
