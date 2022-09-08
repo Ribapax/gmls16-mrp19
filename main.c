@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
 
     // Test if the given Matrix is invertible
     if (!MatrixIsInvertible(U, size)) {
-        fprintf(stderr, "matrix is not invertible");
+        fprintf(stderr, "matrix is not invertible\n");
         exit(-1);
     }
 
