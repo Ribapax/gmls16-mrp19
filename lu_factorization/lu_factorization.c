@@ -45,9 +45,9 @@ void replaceLinesWithIdentityMatrix(
     Matrix[index] = Matrix[pivotIndex];
     Matrix[pivotIndex] = lineToBeReplaced;
 
-    RealNumber *identityLineToBeReplaced = identityMatrix[index];
-    identityMatrix[index] = identityMatrix[pivotIndex];
-    identityMatrix[pivotIndex] = identityLineToBeReplaced;
+    // RealNumber *identityLineToBeReplaced = identityMatrix[index];
+    // identityMatrix[index] = identityMatrix[pivotIndex];
+    // identityMatrix[pivotIndex] = identityLineToBeReplaced;
 }
 
 int LUDecomposition(
@@ -71,7 +71,7 @@ int LUDecomposition(
 
         // Triangularization
         for (int k = i + 1; k < n; k++) {
-            if (U[i][i] == 0) {
+            if (fabs(U[i][i] - 0.0) < RESIDUE_THRESHOLD) {
                 fprintf(stderr, "%s\n", "error: division by zero");
                 return -1;
             }
