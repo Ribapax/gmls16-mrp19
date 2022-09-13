@@ -39,7 +39,7 @@ int ReadParameters(int argc, char **argv, int *n, int *iterationsLimit, char **o
  *  - n: matrix dimension.
  * Returns nothing.
  */
-void PrintMatrix(FILE *outputFile, RealNumber **A, int n);
+void PrintMatrix(FILE *outputFile, RealNumber *A, int n);
 
 /*
  * Reads a matrix of size `n` coming from `fileName`.
@@ -50,6 +50,6 @@ void PrintMatrix(FILE *outputFile, RealNumber **A, int n);
  *  - NULL (some error occurred);
  *  - RealNumber** (a matrix correctly allocated).
  */
-RealNumber **ReadMatrix(char *fileName, int *size);
+RealNumber *ReadMatrix(char *fileName, int *size);
 
 #endif

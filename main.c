@@ -69,20 +69,19 @@ int main(int argc, char *argv[]) {
 
     // Reading the input Matrix
     int size;
-    RealNumber **A = NULL;
+    RealNumber *A = NULL;
     if (randomMatrixSize) {
         // Generate a Random Matrix
-        LinearSystem *LS = AllocateLinearSystem(randomMatrixSize, PointerToPointer);
-        if (LS == NULL) {
+        A = AllocateMatrix(randomMatrixSize);
+        if (A == NULL) {
             fprintf(stderr, "could not allocate matrix\n");
             exit(-1);
         }
-        err = FillLinearSystem(LS, GenericMatrix, COEFFICIENT_LIMIT);
+        err = FillMatrix(A, COEFFICIENT_LIMIT, randomMatrixSize);
         if (err != 0) {
             fprintf(stderr, "could not fill matrix with random values\n");
             exit(-1);
         }
-        A = LS->A;
         size = randomMatrixSize;
     } else {
         // Read the Matrix from `stdin` or from the given file path
@@ -98,21 +97,21 @@ int main(int argc, char *argv[]) {
     fprintf(outputFile, "#\n");
 
     // Generate the Identity Matrix
-    RealNumber **B = GenerateIdentityMatrix(size);
+    RealNumber *B = GenerateIdentityMatrix(size);
     if (B == NULL) {
         fprintf(stderr, "could not allocate identity matrix B\n");
         exit(-1);
     }
 
     // Allocate the Upper Matrix
-    RealNumber **U = AllocateLinearSystem(size, PointerToPointer)->A;
+    RealNumber *U = AllocateMatrix(size);
     if (U == NULL) {
         fprintf(stderr, "could not allocate \"U\" matrix\n");
         exit(-1);
     }
 
     // Allocate the Lower Matrix
-    RealNumber **L = AllocateLinearSystem(size, PointerToPointer)->A;
+    RealNumber *L = AllocateMatrix(size);
     if (L == NULL) {
         fprintf(stderr, "could not allocate \"L\" matrix\n");
         exit(-1);
@@ -121,7 +120,7 @@ int main(int argc, char *argv[]) {
     // Invert the given Matrix
     Time avgLSTime = 0, LUTime = 0, residueTime = 0;
     LUTime = GetTimestamp();
-    LUDecomposition(A, B, U, L, size);
+    LUDecomposition(A, U, L, size);
     LUTime = GetTimestamp() - LUTime;
 
     // Test if the given Matrix is invertible
@@ -131,7 +130,7 @@ int main(int argc, char *argv[]) {
     }
 
     LIKWID_MARKER_START("LINEAR_SYSTEM_CALCULATION");
-    RealNumber **invertedA = SolveLinearSystems(B, size, &avgLSTime, L, U);
+    RealNumber *invertedA = SolveLinearSystems(B, size, &avgLSTime, L, U);
     LIKWID_MARKER_STOP("LINEAR_SYSTEM_CALCULATION");
     if (invertedA == NULL) {
         fprintf(stderr, "could not invert matrix\n");

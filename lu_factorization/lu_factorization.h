@@ -24,12 +24,12 @@
  *  - L: Lower matrix from LU decomposition;
  *  - U: Upper matrix from LU decomposition;
  */
-RealNumber **SolveLinearSystems(
-    RealNumber **B,
+RealNumber *SolveLinearSystems(
+    const RealNumber *B,
     int n,
     Time *averageLinearSystemTime,
-    RealNumber **L,
-    RealNumber **U
+    const RealNumber *L,
+    const RealNumber *U
 );
 
 /*
@@ -44,7 +44,7 @@ RealNumber **SolveLinearSystems(
  *  - 0 (success);
  *  - 1 (error);
  */
-int LUDecomposition(RealNumber **A, RealNumber **B, RealNumber **U, RealNumber **L, int n);
+int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, int n);
 
 /*
  * Returns the L2 Norm of the residue for the current result.
@@ -56,7 +56,7 @@ int LUDecomposition(RealNumber **A, RealNumber **B, RealNumber **U, RealNumber *
  * - invertedA: matrix A inverted;
  * - n: matrix dimension.
  */
-RealNumber CalculateResidueL2Norm(RealNumber **A, RealNumber **B, RealNumber **invertedA, int n);
+RealNumber CalculateResidueL2Norm(RealNumber *A, RealNumber *B, RealNumber *invertedA, int n);
 
 /*
  * Returns the line index of the pivot element of the given column index.
@@ -65,15 +65,14 @@ RealNumber CalculateResidueL2Norm(RealNumber **A, RealNumber **B, RealNumber **i
  * - columnIndex: index of the column that will be pivoted;
  * - systemSize: matrix dimension.
  */
-unsigned int findPivotIndex(double** Matrix, unsigned int columnIndex, unsigned int systemSize);
+unsigned int findPivotIndex(double* Matrix, unsigned int columnIndex, unsigned int systemSize);
 
 // Replaces the line of index 'index' with the line of index 'pivotIndex', and vice versa.
-// This operation is made in both `Matrix` and `identityMatrix`.
 void replaceLinesWithIdentityMatrix(
-    double **Matrix,
-    double **identityMatrix,
+    double *Matrix,
     unsigned int index,
-    unsigned int pivotIndex
+    unsigned int pivotIndex,
+    unsigned int n
 );
 
 #endif
