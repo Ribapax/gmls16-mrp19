@@ -133,14 +133,14 @@ int main(int argc, char *argv[]) {
 
   if (ENABLE_PARTIAL_PIVOTING) {
 
-    fprintf(stdout, "\n%d\n",P->tam);
+    // fprintf(stdout, "\n%d\n",P->tam);
     for (int i = 0; i < P->tam; i++) {
-    fprintf(stdout, "%d %d\n",P->olinha[i], P->plinha[i]);
+    // fprintf(stdout, "%d %d\n",P->olinha[i], P->plinha[i]);
       replaceLinesWithIdentityMatrix(B, P->olinha[i], P->plinha[i], size);
       // fprintf(stdout,"%d %d",P->olinha[i],P->plinha[i]);
     }
-    fprintf(stdout, "\nB - SL\n");
-    PrintMatrix(stdout, B, size);
+    // fprintf(stdout, "\nB - SL\n");
+    // PrintMatrix(stdout, B, size);
   }
 
   LIKWID_MARKER_START("LINEAR_SYSTEM_CALCULATION");
@@ -151,16 +151,16 @@ int main(int argc, char *argv[]) {
     exit(-1);
   }
 
-  fprintf(stdout, "\nA\n");
-  PrintMatrix(outputFile, A, size);
-  fprintf(stdout, "\nU\n");
-  PrintMatrix(outputFile, U, size);
-  fprintf(stdout, "\nL\n");
-  PrintMatrix(outputFile, L, size);
-  fprintf(stdout, "\nB\n");
-  PrintMatrix(outputFile, B, size);
-  fprintf(stdout, "\nInv\n");
-  PrintMatrix(outputFile, invertedA, size);
+  // fprintf(stdout, "\nA\n");
+  // PrintMatrix(outputFile, A, size);
+  // fprintf(stdout, "\nU\n");
+  // PrintMatrix(outputFile, U, size);
+  // fprintf(stdout, "\nL\n");
+  // PrintMatrix(outputFile, L, size);
+  // fprintf(stdout, "\nB\n");
+  // PrintMatrix(outputFile, B, size);
+  // fprintf(stdout, "\nInv\n");
+  // PrintMatrix(outputFile, invertedA, size);
 
   // Calculate the first L2 Norm of the Residue
   Time residueTimeTemp = GetTimestamp();

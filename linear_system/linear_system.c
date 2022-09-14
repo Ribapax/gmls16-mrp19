@@ -95,14 +95,14 @@ RealNumber *RefineSolution(RealNumber *A, RealNumber *B,
 
   if (ENABLE_PARTIAL_PIVOTING) {
 
-    fprintf(stdout, "\n%d\n", P->tam);
+    // fprintf(stdout, "\n%d\n", P->tam);
     for (int i = 0; i < P->tam; i++) {
-      fprintf(stdout, "%d %d\n", P->olinha[i], P->plinha[i]);
+      // fprintf(stdout, "%d %d\n", P->olinha[i], P->plinha[i]);
       replaceLinesWithIdentityMatrix(residue, P->olinha[i], P->plinha[i], n);
       // fprintf(stdout,"%d %d",P->olinha[i],P->plinha[i]);
     }
-    fprintf(stdout, "\nResidue - SL\n");
-    PrintMatrix(stdout, residue, n);
+    // fprintf(stdout, "\nResidue - SL\n");
+    // PrintMatrix(stdout, residue, n);
   }
 
   // 2) B - (A x A^-1)
