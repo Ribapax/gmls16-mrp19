@@ -14,9 +14,9 @@
 #define ENABLE_PARTIAL_PIVOTING 1
 
 typedef struct PivotArray {
-  int *plinha;
-  int *olinha;
-  int tam;
+    int *plinha;
+    int *olinha;
+    int tam;
 } PivotArray;
 
 PivotArray *AllocatePivotamento(unsigned int n);
