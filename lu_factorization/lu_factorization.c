@@ -6,6 +6,7 @@
 
 #include "lu_factorization.h"
 #include "../linear_system/linear_system.h"
+#include <cstdlib>
 #include <math.h>
 #include <stdio.h>
 
@@ -23,7 +24,7 @@
 #endif
 
 PivotArray* AllocatePivotamento(unsigned int n) {
-  PivotArray *aux;
+  PivotArray *aux = malloc(sizeof(PivotArray));
   aux->plinha = (int *)malloc(n * sizeof(int));
   aux->olinha = (int *)malloc(n * sizeof(int));
   aux->tam = 0;
