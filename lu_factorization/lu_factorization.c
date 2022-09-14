@@ -96,7 +96,7 @@ int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, PivotArray *P, 
 }
 
 RealNumber *SolveLinearSystems(
-    RealNumber *B,
+    const RealNumber *B,
     int n,
     Time *averageLinearSystemTime,
     const RealNumber *L,

@@ -35,7 +35,7 @@ void addLineToPivotArray(PivotArray *P, int i, int pivotIndex);
  *  - U: Upper matrix from LU decomposition;
  */
 RealNumber *SolveLinearSystems(
-    RealNumber *B,
+    const RealNumber *B,
     int n,
     Time *averageLinearSystemTime,
     const RealNumber *L,
