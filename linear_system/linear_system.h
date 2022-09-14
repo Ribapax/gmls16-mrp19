@@ -15,7 +15,7 @@
 // Max value of the generated Linear System coefficients
 #define COEFFICIENT_LIMIT 32.0
 
-// TODO
+// TODO: description
 int FillMatrix(RealNumber *A, RealNumber coefficientLimit, unsigned int n);
 
 // Copies matrix `A` into matrix `B`, both of dimension `n`.
@@ -34,10 +34,11 @@ RealNumber *GenerateIdentityMatrix(int n);
 // Returns 1 if the matrix `A` of dimension `n` is invertible, and 0 if not.
 int MatrixIsInvertible(const RealNumber *A, int n);
 
-// TODO
+// TODO: description
 RealNumber* AllocateMatrix(unsigned int n);
 
 
+// TODO: update description
 /*
  * Given a first solution, returns a more refined solution.
  * Params:

@@ -8,7 +8,6 @@
 #include <stdlib.h>
 
 #include "../common/common.h"
-#include "../io/io.h"
 #include "../lu_factorization/lu_factorization.h"
 #include "linear_system.h"
 
@@ -34,8 +33,7 @@ void copyMatrix(const RealNumber *A, RealNumber *B, int n) {
     }
 }
 
-RealNumber *multiplyMatricesOfEqualSize(const RealNumber *A,
-                                        const RealNumber *B, int n) {
+RealNumber *multiplyMatricesOfEqualSize(const RealNumber *A, const RealNumber *B, int n) {
     RealNumber *Result = AllocateMatrix(n);
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -85,51 +83,49 @@ int MatrixIsInvertible(const RealNumber *A, int n) {
     return 1;
 }
 
-RealNumber *RefineSolution(RealNumber *A, RealNumber *B,
-                           RealNumber *invertedMatrix, RealNumber *L,
-                           RealNumber *U, PivotArray *P,
-                           Time *averageLinearSystemTime, int n) {
+RealNumber *RefineSolution(
+    RealNumber *A,
+    RealNumber *B,
+    RealNumber *invertedMatrix,
+    RealNumber *L,
+    RealNumber *U,
+    PivotArray *P,
+    Time *averageLinearSystemTime,
+    int n
+) {
     RealNumber *residue;
     // 1) A x A^-1
     residue = multiplyMatricesOfEqualSize(A, invertedMatrix, n);
 
     if (ENABLE_PARTIAL_PIVOTING) {
-
-        // fprintf(stdout, "\n%d\n", P->tam);
         for (int i = 0; i < P->tam; i++) {
-            // fprintf(stdout, "%d %d\n", P->olinha[i], P->plinha[i]);
             replaceLinesWithIdentityMatrix(residue, P->olinha[i], P->plinha[i], n);
-            // fprintf(stdout,"%d %d",P->olinha[i],P->plinha[i]);
         }
-        // fprintf(stdout, "\nResidue - SL\n");
-        // PrintMatrix(stdout, residue, n);
     }
 
     // 2) B - (A x A^-1)
-
     residue = subtractMatrices(B, residue, n);
 
-
-
     // 3) AW = B - (A x A^-1)
-    RealNumber *X =
-            SolveLinearSystems(residue, n, averageLinearSystemTime, L, P, U);
+    RealNumber *X = SolveLinearSystems(residue, n, averageLinearSystemTime, L, P, U);
 
     // 4) X(1) = X(0) + W
     RealNumber *refinedSolution = AllocateMatrix(n);
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            refinedSolution[Index(i, j, n)] =
-                    invertedMatrix[Index(i, j, n)] + X[Index(i, j, n)];
+            refinedSolution[Index(i, j, n)] = invertedMatrix[Index(i, j, n)] + X[Index(i, j, n)];
         }
     }
 
     return refinedSolution;
 }
 
-int HasNotReachedStoppingCriteria(int iteration, int iterationsLimit,
-                                  RealNumber currentResidueL2Norm,
-                                  RealNumber lastResidueL2Norm) {
+int HasNotReachedStoppingCriteria(
+    int iteration,
+    int iterationsLimit,
+    RealNumber currentResidueL2Norm,
+    RealNumber lastResidueL2Norm
+) {
     if (ResidueIsIncreasing(currentResidueL2Norm, lastResidueL2Norm)) {
         return 0;
     }
@@ -140,8 +136,7 @@ int HasNotReachedStoppingCriteria(int iteration, int iterationsLimit,
     return 0;
 }
 
-int ResidueIsIncreasing(RealNumber currentResidueL2Norm,
-                        RealNumber lastResidueL2Norm) {
+int ResidueIsIncreasing(RealNumber currentResidueL2Norm, RealNumber lastResidueL2Norm) {
     if (lastResidueL2Norm != 1 + RESIDUE_THRESHOLD &&
         (currentResidueL2Norm - lastResidueL2Norm) > RESIDUE_THRESHOLD) {
         return 1;

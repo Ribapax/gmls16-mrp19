@@ -111,11 +111,8 @@ int main(int argc, char *argv[]) {
     }
 
     PivotArray *P = AllocatePivotamento(size);
-    // fprintf(outputFile, "#\n");
-    // fprintf(outputFile, "%d", P->tam);
-    // fprintf(outputFile, "#\n");
     if (P == NULL) {
-        fprintf(stderr, "could not allocate \"P\" matrix\n");
+        fprintf(stderr, "could not allocate \"P\"\n");
         exit(-1);
     }
 
@@ -132,15 +129,9 @@ int main(int argc, char *argv[]) {
     }
 
     if (ENABLE_PARTIAL_PIVOTING) {
-
-        // fprintf(stdout, "\n%d\n",P->tam);
         for (int i = 0; i < P->tam; i++) {
-            // fprintf(stdout, "%d %d\n",P->olinha[i], P->plinha[i]);
             replaceLinesWithIdentityMatrix(B, P->olinha[i], P->plinha[i], size);
-            // fprintf(stdout,"%d %d",P->olinha[i],P->plinha[i]);
         }
-        // fprintf(stdout, "\nB - SL\n");
-        // PrintMatrix(stdout, B, size);
     }
 
     LIKWID_MARKER_START("LINEAR_SYSTEM_CALCULATION");
@@ -150,17 +141,6 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "could not invert matrix\n");
         exit(-1);
     }
-
-    // fprintf(stdout, "\nA\n");
-    // PrintMatrix(outputFile, A, size);
-    // fprintf(stdout, "\nU\n");
-    // PrintMatrix(outputFile, U, size);
-    // fprintf(stdout, "\nL\n");
-    // PrintMatrix(outputFile, L, size);
-    // fprintf(stdout, "\nB\n");
-    // PrintMatrix(outputFile, B, size);
-    // fprintf(stdout, "\nInv\n");
-    // PrintMatrix(outputFile, invertedA, size);
 
     // Calculate the first L2 Norm of the Residue
     Time residueTimeTemp = GetTimestamp();
@@ -183,8 +163,7 @@ int main(int argc, char *argv[]) {
         }
         fprintf(outputFile, "# iter %d: %.15g\n", iteration, currentResidueL2Norm);
         iteration++;
-    } while (HasNotReachedStoppingCriteria(
-            iteration, iterationsLimit, currentResidueL2Norm, lastResidueL2Norm));
+    } while (HasNotReachedStoppingCriteria(iteration, iterationsLimit, currentResidueL2Norm, lastResidueL2Norm));
 
     // Print the final timestamps
     fprintf(outputFile, "#\n");

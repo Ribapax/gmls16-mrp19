@@ -37,10 +37,8 @@ void addLineToPivotArray(PivotArray *P, int i, int pivotIndex) {
     P->tam++;
 }
 
-unsigned int findPivotIndex(double *Matrix, unsigned int columnIndex,
-                            unsigned int systemSize) {
-    RealNumber greatestValue =
-            fabs(Matrix[Index(columnIndex, columnIndex, systemSize)]);
+unsigned int findPivotIndex(double *Matrix, unsigned int columnIndex, unsigned int systemSize) {
+    RealNumber greatestValue = fabs(Matrix[Index(columnIndex, columnIndex, systemSize)]);
     unsigned int pivotIndex = columnIndex;
     for (unsigned int i = columnIndex + 1; i < systemSize; i++) {
         RealNumber v = fabs(Matrix[Index(i, columnIndex, systemSize)]);
@@ -52,8 +50,7 @@ unsigned int findPivotIndex(double *Matrix, unsigned int columnIndex,
     return pivotIndex;
 }
 
-void replaceLinesWithIdentityMatrix(double *Matrix, unsigned int index,
-                                    unsigned int pivotIndex, unsigned int n) {
+void replaceLinesWithIdentityMatrix(double *Matrix, unsigned int index, unsigned int pivotIndex, unsigned int n) {
     double *aux = malloc(n * sizeof(double));
     for (unsigned int i = 0; i < n; ++i) {
         aux[i] = Matrix[Index(index, i, n)];
@@ -65,12 +62,9 @@ void replaceLinesWithIdentityMatrix(double *Matrix, unsigned int index,
     }
 }
 
-int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, PivotArray *P,
-                    int n) {
+int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, PivotArray *P, int n) {
     copyMatrix(A, U, n);
     for (int i = 0; i < n; i++) {
-
-        // Partial pivoting
         if (ENABLE_PARTIAL_PIVOTING) {
             unsigned int pivotIndex = findPivotIndex(U, i, n);
             if (i != pivotIndex) {
@@ -79,12 +73,7 @@ int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, PivotArray *P,
                 addLineToPivotArray(P, i, pivotIndex);
             }
         }
-        /*
-        fprintf(stdout, "\nU\n");
-        PrintMatrix(stdout, U, n);
-        fprintf(stdout, "\nL\n");
-        PrintMatrix(stdout, L, n);
-        */
+
         L[Index(i, i, n)] = 1;
 
         // Triangularization
@@ -103,24 +92,23 @@ int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, PivotArray *P,
             }
         }
     }
-    // for(int i=0;i<P->tam;i++){
-    //   fprintf(stdout,"%d %d",P->olinha[i],P->plinha[i]);
-    // }
     return 0;
 }
 
-RealNumber *SolveLinearSystems(RealNumber *B, int n,
-                               Time *averageLinearSystemTime,
-                               const RealNumber *L, PivotArray *P,
-                               const RealNumber *U) {
-
-
+RealNumber *SolveLinearSystems(
+    RealNumber *B,
+    int n,
+    Time *averageLinearSystemTime,
+    const RealNumber *L,
+    const RealNumber *U
+) {
     RealNumber *Y = AllocateMatrix(n);
     if (Y == NULL) {
         fprintf(stderr, "could not allocate \"Y\" matrix\n");
         return NULL;
     }
-    // 2) Get the Y matrix by solving -> LY = B for each y and b;
+
+    // Get the Y matrix by solving -> LY = B for each y and b;
     Time linearSystemTime;
     for (int k = 0; k < n; ++k) {
         linearSystemTime = GetTimestamp();
@@ -135,7 +123,7 @@ RealNumber *SolveLinearSystems(RealNumber *B, int n,
         *averageLinearSystemTime += linearSystemTime;
     }
 
-    // 3) Get the inverted matrix X by solving -> UX = Y for each y and x
+    //  Get the inverted matrix X by solving -> UX = Y for each y and x
     RealNumber *X = AllocateMatrix(n);
     if (X == NULL) {
         fprintf(stderr, "could not allocate \"X\" matrix\n");
@@ -157,8 +145,12 @@ RealNumber *SolveLinearSystems(RealNumber *B, int n,
     return X;
 }
 
-RealNumber CalculateResidueL2Norm(RealNumber *A, RealNumber *B,
-                                  RealNumber *invertedA, int n) {
+RealNumber CalculateResidueL2Norm(
+    RealNumber *A,
+    RealNumber *B,
+    RealNumber *invertedA,
+    int n
+) {
     LIKWID_MARKER_START("RESIDUE_CALCULATION");
     RealNumber *multiplication = multiplyMatricesOfEqualSize(A, invertedA, n);
     RealNumber *R = subtractMatrices(B, multiplication, n);
