@@ -119,6 +119,8 @@ RealNumber *SolveLinearSystems(RealNumber *B, int n,
       replaceLinesWithIdentityMatrix(B, P->olinha[i], P->plinha[i], n);
       // fprintf(stdout,"%d %d",P->olinha[i],P->plinha[i]);
     }
+    fprintf(stdout, "\nB - SL\n");
+    PrintMatrix(stdout, B, n);
   }
   RealNumber *Y = AllocateMatrix(n);
   if (Y == NULL) {
