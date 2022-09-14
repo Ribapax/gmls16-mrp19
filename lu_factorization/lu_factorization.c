@@ -62,7 +62,7 @@ void replaceLinesWithIdentityMatrix(double *Matrix, unsigned int index,
 int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, int n) {
   copyMatrix(A, U, n);
   for (int i = 0; i < n; i++) {
-    L[Index(i, i, n)] = 1;
+    
 
     // Partial pivoting
     if (ENABLE_PARTIAL_PIVOTING) {
@@ -76,6 +76,8 @@ int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, int n) {
         PrintMatrix(stdout, L, n);
       }
     }
+    
+    L[Index(i, i, n)] = 1;
 
     // Triangularization
     for (int k = i + 1; k < n; k++) {
