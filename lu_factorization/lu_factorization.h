@@ -11,7 +11,7 @@
 
 #define RESIDUE_THRESHOLD 0.0000000000000001
 
-#define ENABLE_PARTIAL_PIVOTING 1
+#define ENABLE_PARTIAL_PIVOTING 0
 
 /*
  * Returns the solution of `n` Linear Systems by solving AX = B using the
