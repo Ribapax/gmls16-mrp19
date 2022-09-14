@@ -135,7 +135,7 @@ int main(int argc, char *argv[]) {
     }
 
     LIKWID_MARKER_START("LINEAR_SYSTEM_CALCULATION");
-    RealNumber *invertedA = SolveLinearSystems(B, size, &avgLSTime, L, P, U);
+    RealNumber *invertedA = SolveLinearSystems(B, size, &avgLSTime, L, U);
     LIKWID_MARKER_STOP("LINEAR_SYSTEM_CALCULATION");
     if (invertedA == NULL) {
         fprintf(stderr, "could not invert matrix\n");
