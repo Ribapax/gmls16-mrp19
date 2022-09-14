@@ -7,6 +7,7 @@
 #include "lu_factorization.h"
 #include "../linear_system/linear_system.h"
 #include <math.h>
+#include "../io/io.h"
 #include <stdio.h>
 
 #ifdef LIKWID_PERFMON
@@ -69,6 +70,10 @@ int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, int n) {
       if (i != pivotIndex) {
         replaceLinesWithIdentityMatrix(U, i, pivotIndex, n);
         replaceLinesWithIdentityMatrix(L, i, pivotIndex, n);
+        fprintf(stdout, "\nU\n");        
+        PrintMatrix(stdout, U, n);
+        fprintf(stdout, "\nL\n");        
+        PrintMatrix(stdout, L, n);
       }
     }
 
