@@ -109,9 +109,17 @@ int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, PivotArray *P,
   return 0;
 }
 
-RealNumber *SolveLinearSystems(const RealNumber *B, int n,
+RealNumber *SolveLinearSystems(RealNumber *B, int n,
                                Time *averageLinearSystemTime,
-                               const RealNumber *L, const RealNumber *U) {
+                               const RealNumber *L, PivotArray *P,
+                               const RealNumber *U) {
+
+  if (ENABLE_PARTIAL_PIVOTING) {
+    for (int i = 0; i < P->tam; i++) {
+      replaceLinesWithIdentityMatrix(B, P->olinha[i], P->plinha[i], n);
+      // fprintf(stdout,"%d %d",P->olinha[i],P->plinha[i]);
+    }
+  }
   RealNumber *Y = AllocateMatrix(n);
   if (Y == NULL) {
     fprintf(stderr, "could not allocate \"Y\" matrix\n");

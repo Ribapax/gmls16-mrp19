@@ -7,6 +7,7 @@
 #ifndef LINEAR_SYSTEM_HEADER
 #define LINEAR_SYSTEM_HEADER
 #include "../common/common.h"
+#include "../lu_factorization/lu_factorization.h"
 
 // Helper to access unidimensional arrays as they were matrices
 #define Index(i, j, n) (((i) * (n)) + (j))
@@ -55,7 +56,8 @@ RealNumber *RefineSolution(
     RealNumber *B,
     RealNumber *invertedMatrix,
     RealNumber *L,
-    RealNumber *U,
+    RealNumber *U, 
+    PivotArray *P,
     Time *averageLinearSystemTime,
     int n
 );

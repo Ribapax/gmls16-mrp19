@@ -91,6 +91,7 @@ RealNumber *RefineSolution(
     RealNumber *invertedMatrix,
     RealNumber *L,
     RealNumber *U,
+    PivotArray *P,
     Time *averageLinearSystemTime,
     int n
 ) {
@@ -102,7 +103,7 @@ RealNumber *RefineSolution(
     residue = subtractMatrices(B, residue, n);
 
     // 3) AW = B - (A x A^-1)
-    RealNumber *X = SolveLinearSystems(residue, n, averageLinearSystemTime, L, U);
+    RealNumber *X = SolveLinearSystems(residue, n, averageLinearSystemTime, L,P, U);
 
     // 4) X(1) = X(0) + W
     RealNumber *refinedSolution = AllocateMatrix(n);

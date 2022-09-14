@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
   // Invert the given Matrix
   Time avgLSTime = 0, LUTime = 0, residueTime = 0;
   LUTime = GetTimestamp();
-  LUDecomposition(A, U, L,P, size);
+  LUDecomposition(A, U, L, P, size);
   LUTime = GetTimestamp() - LUTime;
 
   // Test if the given Matrix is invertible
@@ -132,12 +132,14 @@ int main(int argc, char *argv[]) {
   }
 
   LIKWID_MARKER_START("LINEAR_SYSTEM_CALCULATION");
-  RealNumber *invertedA = SolveLinearSystems(B, size, &avgLSTime, L, U);
+  RealNumber *invertedA = SolveLinearSystems(B, size, &avgLSTime, L, P, U);
   LIKWID_MARKER_STOP("LINEAR_SYSTEM_CALCULATION");
   if (invertedA == NULL) {
     fprintf(stderr, "could not invert matrix\n");
     exit(-1);
   }
+
+  PrintMatrix(outputFile, invertedA, size);
 
   // Calculate the first L2 Norm of the Residue
   Time residueTimeTemp = GetTimestamp();
@@ -151,7 +153,7 @@ int main(int argc, char *argv[]) {
   // Start refining the solution until it reaches the stopping criteria
   do {
     lastResidueL2Norm = currentResidueL2Norm;
-    invertedA = RefineSolution(A, B, invertedA, L, U, &avgLSTime, size);
+    invertedA = RefineSolution(A, B, invertedA, L, U, P, &avgLSTime, size);
     residueTimeTemp = GetTimestamp();
     currentResidueL2Norm = CalculateResidueL2Norm(A, B, invertedA, size);
     residueTime += GetTimestamp() - residueTimeTemp;
