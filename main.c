@@ -139,6 +139,15 @@ int main(int argc, char *argv[]) {
     exit(-1);
   }
 
+fprintf(stdout,"\nA\n");
+  PrintMatrix(outputFile, A, size);
+fprintf(stdout,"\nU\n");
+  PrintMatrix(outputFile, U, size);
+fprintf(stdout,"\nL\n");
+  PrintMatrix(outputFile, L, size);
+fprintf(stdout,"\nB\n");
+  PrintMatrix(outputFile, B, size);
+fprintf(stdout,"\nInv\n");
   PrintMatrix(outputFile, invertedA, size);
 
   // Calculate the first L2 Norm of the Residue
