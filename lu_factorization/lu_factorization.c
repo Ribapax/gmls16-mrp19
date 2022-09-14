@@ -5,9 +5,9 @@
  */
 
 #include "lu_factorization.h"
+#include "../io/io.h"
 #include "../linear_system/linear_system.h"
 #include <math.h>
-#include "../io/io.h"
 #include <stdio.h>
 
 #ifdef LIKWID_PERFMON
@@ -23,7 +23,7 @@
 #define LIKWID_MARKER_GET(regionTag, nevents, events, time, count)
 #endif
 
-PivotArray* AllocatePivotamento(unsigned int n) {
+PivotArray *AllocatePivotamento(unsigned int n) {
   PivotArray *aux = malloc(sizeof(PivotArray));
   aux->plinha = (int *)malloc(n * sizeof(int));
   aux->olinha = (int *)malloc(n * sizeof(int));
@@ -62,7 +62,6 @@ void replaceLinesWithIdentityMatrix(double *Matrix, unsigned int index,
 int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, int n) {
   copyMatrix(A, U, n);
   for (int i = 0; i < n; i++) {
-    
 
     // Partial pivoting
     if (ENABLE_PARTIAL_PIVOTING) {
@@ -70,13 +69,13 @@ int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, int n) {
       if (i != pivotIndex) {
         replaceLinesWithIdentityMatrix(U, i, pivotIndex, n);
         replaceLinesWithIdentityMatrix(L, i, pivotIndex, n);
-        fprintf(stdout, "\nU\n");        
-        PrintMatrix(stdout, U, n);
-        fprintf(stdout, "\nL\n");        
-        PrintMatrix(stdout, L, n);
       }
     }
-    
+    fprintf(stdout, "\nU\n");
+    PrintMatrix(stdout, U, n);
+    fprintf(stdout, "\nL\n");
+    PrintMatrix(stdout, L, n);
+
     L[Index(i, i, n)] = 1;
 
     // Triangularization
