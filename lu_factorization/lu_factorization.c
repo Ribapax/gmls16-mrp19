@@ -31,9 +31,9 @@ PivotArray *AllocatePivotamento(unsigned int n) {
   return aux;
 }
 
-void addLineToPivotArray(PivotArray *P,int i,int pivotIndex){
+void addLineToPivotArray(PivotArray *P, int i, int pivotIndex) {
   P->olinha[P->tam] = i;
-  P->olinha[P->tam] = i;
+  P->plinha[P->tam] = i;
   P->tam++;
 }
 
@@ -65,7 +65,8 @@ void replaceLinesWithIdentityMatrix(double *Matrix, unsigned int index,
   }
 }
 
-int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L,PivotArray *P , int n) {
+int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, PivotArray *P,
+                    int n) {
   copyMatrix(A, U, n);
   for (int i = 0; i < n; i++) {
 
@@ -75,15 +76,15 @@ int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L,PivotArray *P , 
       if (i != pivotIndex) {
         replaceLinesWithIdentityMatrix(U, i, pivotIndex, n);
         replaceLinesWithIdentityMatrix(L, i, pivotIndex, n);
-        addLineToPivotArray(P,i,pivotIndex);
+        addLineToPivotArray(P, i, pivotIndex);
       }
     }
-    
+    /*
     fprintf(stdout, "\nU\n");
     PrintMatrix(stdout, U, n);
     fprintf(stdout, "\nL\n");
     PrintMatrix(stdout, L, n);
-
+    */
     L[Index(i, i, n)] = 1;
 
     // Triangularization
@@ -102,9 +103,9 @@ int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L,PivotArray *P , 
       }
     }
   }
-  for(int i=0;i<P->tam;i++){
-    fprintf(stdout,"%d %d",P->olinha[i],P->plinha[i]);
-  }
+  // for(int i=0;i<P->tam;i++){
+  //   fprintf(stdout,"%d %d",P->olinha[i],P->plinha[i]);
+  // }
   return 0;
 }
 
