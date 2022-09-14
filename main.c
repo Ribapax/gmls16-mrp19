@@ -132,8 +132,11 @@ int main(int argc, char *argv[]) {
   }
 
   if (ENABLE_PARTIAL_PIVOTING) {
+
+    fprintf(stdout, "\n%d\n",P->tam);
     for (int i = 0; i < P->tam; i++) {
-      replaceLinesWithIdentityMatrix(B, P->olinha[i], P->plinha[i], n);
+    fprintf(stdout, "%d %d\n",P->olinha[i], P->plinha[i]);
+      replaceLinesWithIdentityMatrix(B, P->olinha[i], P->plinha[i], size);
       // fprintf(stdout,"%d %d",P->olinha[i],P->plinha[i]);
     }
     fprintf(stdout, "\nB - SL\n");
