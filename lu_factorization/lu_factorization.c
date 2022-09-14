@@ -33,7 +33,7 @@ PivotArray *AllocatePivotamento(unsigned int n) {
 
 void addLineToPivotArray(PivotArray *P, int i, int pivotIndex) {
   P->olinha[P->tam] = i;
-  P->plinha[P->tam] = i;
+  P->plinha[P->tam] = pivotIndex;
   P->tam++;
 }
 
