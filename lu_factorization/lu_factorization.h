@@ -13,6 +13,14 @@
 
 #define ENABLE_PARTIAL_PIVOTING 1
 
+typedef struct PivotArray{
+  int *plinha;
+  int *olinha;
+  int tam;
+} PivotArray;
+
+PivotArray *AllocatePivotamento(unsigned int n);
+
 /*
  * Returns the solution of `n` Linear Systems by solving AX = B using the
  *    matrices L and U, previously calculated by the LU decomposition.

@@ -15,6 +15,8 @@ RealNumber* AllocateMatrix(unsigned int n) {
     return (RealNumber *) calloc(n * n, sizeof(RealNumber));
 }
 
+
+
 int FillMatrix(RealNumber *A, RealNumber coefficientLimit, unsigned int n) {
     RealNumber invRandMax = ((RealNumber) coefficientLimit / (RealNumber) RAND_MAX);
     for (unsigned int i = 0; i < n; ++i) {

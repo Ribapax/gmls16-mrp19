@@ -117,6 +117,13 @@ int main(int argc, char *argv[]) {
         exit(-1);
     }
 
+     if (ENABLE_PARTIAL_PIVOTING) {
+      PivotArray *P = AllocatePivotamento(size);
+      fprintf(outputFile, "#\n");
+      fprintf(outputFile, "%d",P->tam);
+      fprintf(outputFile, "#\n");
+     }
+
     // Invert the given Matrix
     Time avgLSTime = 0, LUTime = 0, residueTime = 0;
     LUTime = GetTimestamp();
@@ -162,6 +169,7 @@ int main(int argc, char *argv[]) {
     );
 
     // Print the final timestamps
+    fprintf(outputFile, "#\n");
     fprintf(outputFile, "# Tempo LU: %.15g\n", LUTime);
     fprintf(outputFile, "# Tempo iter: %.15g\n", avgLSTime);
     fprintf(outputFile, "# Tempo residuo: %.15g\n", residueTime);

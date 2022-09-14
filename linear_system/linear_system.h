@@ -36,6 +36,7 @@ int MatrixIsInvertible(const RealNumber *A, int n);
 // TODO
 RealNumber* AllocateMatrix(unsigned int n);
 
+
 /*
  * Given a first solution, returns a more refined solution.
  * Params:
