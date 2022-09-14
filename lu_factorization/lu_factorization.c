@@ -6,7 +6,6 @@
 
 #include "lu_factorization.h"
 #include "../linear_system/linear_system.h"
-#include <cstdlib>
 #include <math.h>
 #include <stdio.h>
 
