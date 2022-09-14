@@ -131,6 +131,15 @@ int main(int argc, char *argv[]) {
     exit(-1);
   }
 
+  if (ENABLE_PARTIAL_PIVOTING) {
+    for (int i = 0; i < P->tam; i++) {
+      replaceLinesWithIdentityMatrix(B, P->olinha[i], P->plinha[i], n);
+      // fprintf(stdout,"%d %d",P->olinha[i],P->plinha[i]);
+    }
+    fprintf(stdout, "\nB - SL\n");
+    PrintMatrix(stdout, B, size);
+  }
+
   LIKWID_MARKER_START("LINEAR_SYSTEM_CALCULATION");
   RealNumber *invertedA = SolveLinearSystems(B, size, &avgLSTime, L, P, U);
   LIKWID_MARKER_STOP("LINEAR_SYSTEM_CALCULATION");

@@ -114,14 +114,7 @@ RealNumber *SolveLinearSystems(RealNumber *B, int n,
                                const RealNumber *L, PivotArray *P,
                                const RealNumber *U) {
 
-  if (ENABLE_PARTIAL_PIVOTING) {
-    for (int i = 0; i < P->tam; i++) {
-      replaceLinesWithIdentityMatrix(B, P->olinha[i], P->plinha[i], n);
-      // fprintf(stdout,"%d %d",P->olinha[i],P->plinha[i]);
-    }
-    fprintf(stdout, "\nB - SL\n");
-    PrintMatrix(stdout, B, n);
-  }
+  
   RealNumber *Y = AllocateMatrix(n);
   if (Y == NULL) {
     fprintf(stderr, "could not allocate \"Y\" matrix\n");
