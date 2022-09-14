@@ -93,11 +93,6 @@ RealNumber *RefineSolution(RealNumber *A, RealNumber *B,
   // 1) A x A^-1
   residue = multiplyMatricesOfEqualSize(A, invertedMatrix, n);
 
-  // 2) B - (A x A^-1)
-  B = GenerateIdentityMatrix(n);
-
-  residue = subtractMatrices(B, residue, n);
-
   if (ENABLE_PARTIAL_PIVOTING) {
 
     fprintf(stdout, "\n%d\n", P->tam);
@@ -106,9 +101,15 @@ RealNumber *RefineSolution(RealNumber *A, RealNumber *B,
       replaceLinesWithIdentityMatrix(residue, P->olinha[i], P->plinha[i], n);
       // fprintf(stdout,"%d %d",P->olinha[i],P->plinha[i]);
     }
-    fprintf(stdout, "\nB - SL\n");
+    fprintf(stdout, "\nResidue - SL\n");
     PrintMatrix(stdout, residue, n);
   }
+
+  // 2) B - (A x A^-1)
+
+  residue = subtractMatrices(B, residue, n);
+
+  
 
   // 3) AW = B - (A x A^-1)
   RealNumber *X =
