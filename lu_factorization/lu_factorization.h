@@ -21,6 +21,9 @@ typedef struct PivotArray{
 
 PivotArray *AllocatePivotamento(unsigned int n);
 
+void addLineToPivotArray(PivotArray *P,int i,int pivotIndex);
+
+
 /*
  * Returns the solution of `n` Linear Systems by solving AX = B using the
  *    matrices L and U, previously calculated by the LU decomposition.
@@ -52,7 +55,7 @@ RealNumber *SolveLinearSystems(
  *  - 0 (success);
  *  - 1 (error);
  */
-int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, int n);
+int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L,PivotArray *P , int n);
 
 /*
  * Returns the L2 Norm of the residue for the current result.

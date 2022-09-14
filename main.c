@@ -110,22 +110,19 @@ int main(int argc, char *argv[]) {
     exit(-1);
   }
 
-  if (ENABLE_PARTIAL_PIVOTING) {
-
-    PivotArray *P = AllocatePivotamento(size);
-    fprintf(outputFile, "#\n");
-    fprintf(outputFile, "%d", P->tam);
-    fprintf(outputFile, "#\n");
-    if (P == NULL) {
-      fprintf(stderr, "could not allocate \"P\" matrix\n");
-      exit(-1);
-    }
+  PivotArray *P = AllocatePivotamento(size);
+  // fprintf(outputFile, "#\n");
+  // fprintf(outputFile, "%d", P->tam);
+  // fprintf(outputFile, "#\n");
+  if (P == NULL) {
+    fprintf(stderr, "could not allocate \"P\" matrix\n");
+    exit(-1);
   }
 
   // Invert the given Matrix
   Time avgLSTime = 0, LUTime = 0, residueTime = 0;
   LUTime = GetTimestamp();
-  LUDecomposition(A, U, L, size);
+  LUDecomposition(A, U, L,P, size);
   LUTime = GetTimestamp() - LUTime;
 
   // Test if the given Matrix is invertible
