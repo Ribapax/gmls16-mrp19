@@ -37,7 +37,7 @@ void addLineToPivotArray(PivotArray *P, int i, int pivotIndex) {
     P->tam++;
 }
 
-unsigned int findPivotIndex(double *Matrix, unsigned int columnIndex, unsigned int systemSize) {
+unsigned int findPivotIndex(double *restrict Matrix, unsigned int columnIndex, unsigned int systemSize) {
     RealNumber greatestValue = fabs(Matrix[Index(columnIndex, columnIndex, systemSize)]);
     unsigned int pivotIndex = columnIndex;
     for (unsigned int i = columnIndex + 1; i < systemSize; i++) {
@@ -50,7 +50,7 @@ unsigned int findPivotIndex(double *Matrix, unsigned int columnIndex, unsigned i
     return pivotIndex;
 }
 
-void replaceLinesWithIdentityMatrix(double *Matrix, unsigned int index, unsigned int pivotIndex, unsigned int n) {
+void replaceLinesWithIdentityMatrix(double *restrict Matrix, unsigned int index, unsigned int pivotIndex, unsigned int n) {
     double *aux = malloc(n * sizeof(double));
     for (unsigned int i = 0; i < n; ++i) {
         aux[i] = Matrix[Index(index, i, n)];
@@ -96,13 +96,13 @@ int LUDecomposition(RealNumber *restrict A, RealNumber *restrict U, RealNumber *
 }
 
 RealNumber *SolveLinearSystems(
-    const RealNumber *B,
+    const RealNumber *restrict B,
     int n,
     Time *averageLinearSystemTime,
-    const RealNumber *L,
-    const RealNumber *U
+    const RealNumber *restrict L,
+    const RealNumber *restrict U
 ) {
-    RealNumber *Y = AllocateMatrix(n);
+    RealNumber *restrict Y = AllocateMatrix(n);
     if (Y == NULL) {
         fprintf(stderr, "could not allocate \"Y\" matrix\n");
         return NULL;
@@ -124,7 +124,7 @@ RealNumber *SolveLinearSystems(
     }
 
     //  Get the inverted matrix X by solving -> UX = Y for each y and x
-    RealNumber *X = AllocateMatrix(n);
+    RealNumber *restrict X = AllocateMatrix(n);
     if (X == NULL) {
         fprintf(stderr, "could not allocate \"X\" matrix\n");
         return NULL;

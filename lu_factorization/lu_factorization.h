@@ -35,11 +35,11 @@ void addLineToPivotArray(PivotArray *P, int i, int pivotIndex);
  *  - U: Upper matrix from LU decomposition;
  */
 RealNumber *SolveLinearSystems(
-    const RealNumber *B,
+    const RealNumber *restrict B,
     int n,
     Time *averageLinearSystemTime,
-    const RealNumber *L,
-    const RealNumber *U
+    const RealNumber *restrict L,
+    const RealNumber *restrict U
 );
 
 /*
@@ -78,10 +78,10 @@ RealNumber CalculateResidueL2Norm(RealNumber *A, RealNumber *B, RealNumber *inve
  * - columnIndex: index of the column that will be pivoted;
  * - systemSize: matrix dimension.
  */
-unsigned int findPivotIndex(double *Matrix, unsigned int columnIndex, unsigned int systemSize);
+unsigned int findPivotIndex(double *restrict Matrix, unsigned int columnIndex, unsigned int systemSize);
 
 // Replaces the line of index 'index' with the line of index 'pivotIndex', and
 // vice versa.
-void replaceLinesWithIdentityMatrix(double *Matrix, unsigned int index, unsigned int pivotIndex, unsigned int n);
+void replaceLinesWithIdentityMatrix(double *restrict Matrix, unsigned int index, unsigned int pivotIndex, unsigned int n);
 
 #endif

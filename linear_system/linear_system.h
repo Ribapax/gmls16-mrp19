@@ -19,20 +19,20 @@
 int FillMatrix(RealNumber *A, RealNumber coefficientLimit, unsigned int n);
 
 // Copies matrix `A` into matrix `B`, both of dimension `n`.
-void copyMatrix(const RealNumber *A, RealNumber *B, int n);
+void copyMatrix(const RealNumber *restrict A, RealNumber *restrict B, int n) ;
 
 // Multiplies the matrices `A` and `B`, both of dimension `n`.
 // Returns a new matrix of size `n`.
 RealNumber *multiplyMatricesOfEqualSize(const RealNumber *A, const RealNumber *B, int n);
 
 // Returns the result of `A` - `B`, both of dimension `n`.
-RealNumber *subtractMatrices(const RealNumber *A, const RealNumber *B, int n);
+RealNumber *subtractMatrices(const RealNumber *restrict A, const RealNumber *restrict B, int n);
 
 // Returns the identity matrix of dimension `n`.
 RealNumber *GenerateIdentityMatrix(int n);
 
 // Returns 1 if the matrix `A` of dimension `n` is invertible, and 0 if not.
-int MatrixIsInvertible(const RealNumber *A, int n);
+int MatrixIsInvertible(const RealNumber *restrict A, int n);
 
 // TODO: description
 RealNumber* AllocateMatrix(unsigned int n);
