@@ -33,14 +33,14 @@ PivotArray *AllocatePivotamento(unsigned int n) {
     return aux;
 }
 
-void addLineToPivotArray(PivotArray* restrict P, int i, int pivotIndex) {
+void addLineToPivotArray(PivotArray* P, int i, int pivotIndex) {
     P->olinha[P->tam] = i;
     P->plinha[P->tam] = pivotIndex;
     P->tam++;
 }
 
 unsigned int findPivotIndex(
-    RealNumber* restrict Matrix,
+    RealNumber* Matrix,
     unsigned int columnIndex,
     unsigned int systemSize
 ) {
@@ -57,7 +57,7 @@ unsigned int findPivotIndex(
 }
 
 void replaceLinesWithIdentityMatrix(
-    RealNumber* restrict Matrix,
+    RealNumber* Matrix,
     unsigned int index,
     unsigned int pivotIndex,
     unsigned int n
