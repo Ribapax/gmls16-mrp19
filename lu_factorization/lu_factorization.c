@@ -97,7 +97,6 @@ int LUDecomposition(
 }
 
 RealNumber *SolveLinearSystems(
-    RealNumber *restrict Y = AllocateMatrix(n);
     const RealNumber* restrict Identity,
     int n,
     Time *averageLinearSystemTime,
