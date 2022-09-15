@@ -46,7 +46,7 @@ unsigned int findPivotIndex(
 ) {
     RealNumber greatestValue = fabs(Matrix[Index(columnIndex, columnIndex, systemSize)]);
     unsigned int pivotIndex = columnIndex;
-    for (unsigned int i = columnIndex + 1; i < systemSize; i++) {
+    for (int i = columnIndex + 1; i < systemSize; i++) {
         RealNumber v = fabs(Matrix[Index(i, columnIndex, systemSize)]);
         if (v > greatestValue) {
             greatestValue = v;
@@ -63,11 +63,11 @@ void replaceLinesWithIdentityMatrix(
     unsigned int n
 ) {
     double *aux = malloc(n * sizeof(double));
-    for (unsigned int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i) {
         aux[i] = Matrix[Index(index, i, n)];
         Matrix[Index(index, i, n)] = Matrix[Index(pivotIndex, i, n)];
     }
-    for (unsigned int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i) {
         Matrix[Index(pivotIndex, i, n)] = aux[i];
     }
 }
@@ -80,7 +80,7 @@ int LUDecomposition(
     int n
 ) {
     copyMatrix(A, U, n);
-    for (unsigned int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
         if (ENABLE_PARTIAL_PIVOTING) {
             unsigned int pivotIndex = findPivotIndex(U, i, n);
             if (i != pivotIndex) {
@@ -93,7 +93,7 @@ int LUDecomposition(
         L[Index(i, i, n)] = 1;
 
         // Triangularization
-        for (unsigned int k = i + 1; k < n; k++) {
+        for (int k = i + 1; k < n; k++) {
             if (fabs(U[Index(i, i, n)] - 0.0) < RESIDUE_THRESHOLD) {
                 fprintf(stderr, "%s\n", "error: division by zero");
                 return -1;
@@ -126,11 +126,11 @@ RealNumber *SolveLinearSystems(
 
     // Get the Y matrix by solving -> LY = B for each y and b;
     Time linearSystemTime;
-    for (unsigned int k = 0; k < n; ++k) {
+    for (int k = 0; k < n; ++k) {
         linearSystemTime = GetTimestamp();
-        for (unsigned int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             Y[Index(i, k, n)] = B[Index(i, k, n)];
-            for (unsigned int j = 0; j < i; j++) {
+            for (int j = 0; j < i; j++) {
                 Y[Index(i, k, n)] -= L[Index(i, j, n)] * Y[Index(j, k, n)];
             }
             Y[Index(i, k, n)] /= L[Index(i, i, n)];
@@ -145,11 +145,11 @@ RealNumber *SolveLinearSystems(
         fprintf(stderr, "could not allocate \"X\" matrix\n");
         return NULL;
     }
-    for (unsigned int k = 0; k < n; ++k) {
+    for (int k = 0; k < n; ++k) {
         linearSystemTime = GetTimestamp();
-        for (unsigned int i = n - 1; i >= 0; i--) {
+        for (int i = n - 1; i >= 0; i--) {
             X[Index(i, k, n)] = Y[Index(i, k, n)];
-            for (unsigned int j = i + 1; j < n; j++) {
+            for (int j = i + 1; j < n; j++) {
                 X[Index(i, k, n)] -= U[Index(i, j, n)] * X[Index(j, k, n)];
             }
             X[Index(i, k, n)] /= U[Index(i, i, n)];
@@ -172,8 +172,8 @@ RealNumber CalculateResidueL2Norm(
     RealNumber *R = subtractMatrices(B, multiplication, n);
     LIKWID_MARKER_STOP("RESIDUE_CALCULATION");
     RealNumber sum = 0.;
-    for (unsigned int i = 0; i < n; ++i) {
-        for (unsigned int j = 0; j < n; ++j) {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
             sum += R[Index(i, j, n)] * R[Index(i, j, n)];
         }
     }
