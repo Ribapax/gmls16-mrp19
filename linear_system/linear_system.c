@@ -26,8 +26,8 @@ int FillMatrix(RealNumber *A, RealNumber coefficientLimit, unsigned int n) {
 }
 
 void copyMatrix(const RealNumber* A, RealNumber* B, int n) {
-    for (register unsigned int i = 0; i < n; ++i) {
-        for (register unsigned int j = 0; j < n; ++j) {
+    for (unsigned int i = 0; i < n; ++i) {
+        for (unsigned int j = 0; j < n; ++j) {
             B[Index(i, j, n)] = A[Index(i, j, n)];
         }
     }
@@ -35,9 +35,9 @@ void copyMatrix(const RealNumber* A, RealNumber* B, int n) {
 
 RealNumber *multiplyMatricesOfEqualSize(const RealNumber* A, const RealNumber* B, int n) {
     RealNumber *Result = AllocateMatrix(n);
-    for (register unsigned int i = 0; i < n; ++i) {
-        for (register unsigned int j = 0; j < n; ++j) {
-            for (register unsigned int k = 0; k < n; ++k) {
+    for (unsigned int i = 0; i < n; ++i) {
+        for (unsigned int j = 0; j < n; ++j) {
+            for (unsigned int k = 0; k < n; ++k) {
                 Result[Index(i, j, n)] += A[Index(i, k, n)] * B[Index(k, j, n)];
             }
         }
@@ -47,8 +47,8 @@ RealNumber *multiplyMatricesOfEqualSize(const RealNumber* A, const RealNumber* B
 
 RealNumber *subtractMatrices(const RealNumber* A, const RealNumber* B, int n) {
     RealNumber *Result = AllocateMatrix(n);
-    for (register unsigned int i = 0; i < n; ++i) {
-        for (register unsigned int j = 0; j < n; ++j) {
+    for (unsigned int i = 0; i < n; ++i) {
+        for (unsigned int j = 0; j < n; ++j) {
             Result[Index(i, j, n)] = A[Index(i, j, n)] - B[Index(i, j, n)];
         }
     }
@@ -74,7 +74,7 @@ RealNumber *GenerateIdentityMatrix(int n) {
 
 int MatrixIsInvertible(const RealNumber* A, int n) {
     RealNumber acc = 1;
-    for (register unsigned int i = 0; i < n; ++i) {
+    for (unsigned int i = 0; i < n; ++i) {
         acc *= A[Index(i, i, n)];
     }
     if (acc == 0) {
