@@ -52,12 +52,13 @@ RealNumber* AllocateMatrix(unsigned int n);
  *  - n: matrix dimension;
  * Returns a matrix of dimension `n` with the refined solution.
  */
-RealNumber *RefineSolution(
-    RealNumber *A,
-    RealNumber *B,
-    RealNumber *invertedMatrix,
-    RealNumber *L,
-    RealNumber *U, 
+
+ RealNumber * RefineSolution(
+    RealNumber * restrict A,
+    RealNumber * restrict B,
+    RealNumber * restrict invertedMatrix,
+    RealNumber * restrict L,
+    RealNumber * restrict U,
     PivotArray *P,
     Time *averageLinearSystemTime,
     int n

@@ -84,11 +84,11 @@ int MatrixIsInvertible(const RealNumber *A, int n) {
 }
 
 RealNumber *RefineSolution(
-    RealNumber *A,
-    RealNumber *B,
-    RealNumber *invertedMatrix,
-    RealNumber *L,
-    RealNumber *U,
+    RealNumber * restrict A,
+    RealNumber * restrict B,
+    RealNumber * restrict invertedMatrix,
+    RealNumber * restrict L,
+    RealNumber * restrict U,
     PivotArray *P,
     Time *averageLinearSystemTime,
     int n

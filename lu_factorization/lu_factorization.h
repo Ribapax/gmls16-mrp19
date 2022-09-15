@@ -55,7 +55,9 @@ RealNumber *SolveLinearSystems(
  *  - 0 (success);
  *  - 1 (error);
  */
-int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, PivotArray *P, int n);
+int LUDecomposition(RealNumber* restrict A, RealNumber *restrict U, RealNumber *restrict L, PivotArray *restrict P, int n) ;
+
+// int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, PivotArray *P, int n);
 
 /*
  * Returns the L2 Norm of the residue for the current result.

@@ -62,7 +62,7 @@ void replaceLinesWithIdentityMatrix(double *Matrix, unsigned int index, unsigned
     }
 }
 
-int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, PivotArray *P, int n) {
+int LUDecomposition(RealNumber *restrict A, RealNumber *restrict U, RealNumber *restrict L, PivotArray *restrict P, int n) {
     copyMatrix(A, U, n);
     for (int i = 0; i < n; i++) {
         if (ENABLE_PARTIAL_PIVOTING) {
