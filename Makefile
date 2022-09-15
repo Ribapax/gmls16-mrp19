@@ -1,4 +1,4 @@
-compiler=gcc -g -O3 -mavx -march=native -Ofast -ffast-math -fassociative-math
+compiler=gcc -g -O3 -mavx -march=native -Ofast -ffast-math -fassociative-math -ftree-vectorize -fopt-info-vec-optimized -fopenmp -pthread
 rm=rm -rf
 FLAGS=-lm -L${LIKWID_LIB} -llikwid
 
