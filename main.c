@@ -13,10 +13,10 @@
 #include <string.h>
 
 // Autovectorization
-#pragma GCC optimize("O3","unroll-loops","omit-frame-pointer","inline") //Optimization flags
-#pragma GCC option("arch=native","tune=native","no-zero-upper") //Enable AVX
-#pragma GCC target("avx")  //Enable AVX
-#include <x86intrin.h> //AVX/SSE Extensions
+//#pragma GCC optimize("O3","unroll-loops","omit-frame-pointer","inline") //Optimization flags
+//#pragma GCC option("arch=native","tune=native","no-zero-upper") //Enable AVX
+//#pragma GCC target("avx")  //Enable AVX
+//#include <x86intrin.h> //AVX/SSE Extensions
 
 // This block enables to compile the code with and without the LIKWID header in
 // place
@@ -139,9 +139,9 @@ int main(int argc, char *argv[]) {
             replaceLinesWithIdentityMatrix(B, P->olinha[i], P->plinha[i], size);
         }
     }
-    LIKWID_MARKER_START("LINEAR_SYSTEM_CALCULATION"); // ###############################################################
+    LIKWID_MARKER_START("LINEAR_SYSTEM_CALCULATION");
     RealNumber *invertedA = SolveLinearSystems(B, size, &avgLSTime, L, U);
-    LIKWID_MARKER_STOP("LINEAR_SYSTEM_CALCULATION"); // ################################################################
+    LIKWID_MARKER_STOP("LINEAR_SYSTEM_CALCULATION");
     if (invertedA == NULL) {
         fprintf(stderr, "could not invert matrix\n");
         exit(-1);
