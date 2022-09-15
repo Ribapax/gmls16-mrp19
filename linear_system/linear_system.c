@@ -17,8 +17,8 @@ inline RealNumber *AllocateMatrix(unsigned int n) {
 
 int FillMatrix(RealNumber *A, RealNumber coefficientLimit, unsigned int n) {
     RealNumber invRandMax = ((RealNumber) coefficientLimit / (RealNumber) RAND_MAX);
-    for (unsigned int i = 0; i < n; ++i) {
-        for (unsigned int j = 0; j < n; ++j) {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
             A[Index(i, j, n)] = (RealNumber) rand() * invRandMax;
         }
     }
@@ -26,8 +26,8 @@ int FillMatrix(RealNumber *A, RealNumber coefficientLimit, unsigned int n) {
 }
 
 void copyMatrix(const RealNumber* restrict A, RealNumber* restrict B, int n) {
-    for (register unsigned int i = 0; i < n; ++i) {
-        for (register unsigned int j = 0; j < n; ++j) {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
             B[Index(i, j, n)] = A[Index(i, j, n)];
         }
     }
@@ -35,9 +35,9 @@ void copyMatrix(const RealNumber* restrict A, RealNumber* restrict B, int n) {
 
 inline RealNumber *multiplyMatricesOfEqualSize(const RealNumber* restrict A, const RealNumber* restrict B, int n) {
     RealNumber *Result = AllocateMatrix(n);
-    for (register unsigned int i = 0; i < n; ++i) {
-        for (register unsigned int j = 0; j < n; ++j) {
-            for (register unsigned int k = 0; k < n; ++k) {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            for (int k = 0; k < n; ++k) {
                 Result[Index(i, j, n)] += A[Index(i, k, n)] * B[Index(k, j, n)];
             }
         }
@@ -47,8 +47,8 @@ inline RealNumber *multiplyMatricesOfEqualSize(const RealNumber* restrict A, con
 
 inline RealNumber *subtractMatrices(const RealNumber* restrict A, const RealNumber* restrict B, int n) {
     RealNumber *Result = AllocateMatrix(n);
-    for (register unsigned int i = 0; i < n; ++i) {
-        for (register unsigned int j = 0; j < n; ++j) {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
             Result[Index(i, j, n)] = A[Index(i, j, n)] - B[Index(i, j, n)];
         }
     }
@@ -74,7 +74,7 @@ RealNumber *GenerateIdentityMatrix(int n) {
 
 int MatrixIsInvertible(const RealNumber* restrict A, int n) {
     RealNumber acc = 1;
-    for (register unsigned int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i) {
         acc *= A[Index(i, i, n)];
     }
     if (acc == 0) {
