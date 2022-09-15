@@ -112,11 +112,11 @@ int LUDecomposition(
 }
 
 RealNumber *SolveLinearSystems(
-    const RealNumber* restrict Identity,
+    const RealNumber* restrict B,
     int n,
     Time *averageLinearSystemTime,
-    const RealNumber* restrict Lower,
-    const RealNumber* restrict Upper
+    const RealNumber* restrict L,
+    const RealNumber* restrict U
 ) {
     RealNumber *Y = AllocateMatrix(n);
     if (Y == NULL) {
