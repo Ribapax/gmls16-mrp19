@@ -1,4 +1,4 @@
-compiler=gcc -g #-O3 -mavx -march=native
+compiler=gcc -g -O3 -mavx -march=native -Ofast -ffast-math -fassociative-math
 rm=rm -rf
 FLAGS=-lm -L${LIKWID_LIB} -llikwid
 
