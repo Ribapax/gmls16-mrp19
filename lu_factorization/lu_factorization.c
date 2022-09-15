@@ -118,10 +118,6 @@ RealNumber *SolveLinearSystems(
     const RealNumber* restrict Lower,
     const RealNumber* restrict Upper
 ) {
-    const RealNumber* L = __builtin_assume_aligned(Lower, 16);
-    const RealNumber* U = __builtin_assume_aligned(Upper, 16);
-    const RealNumber* B = __builtin_assume_aligned(Identity, 16);
-
     RealNumber *Y = AllocateMatrix(n);
     if (Y == NULL) {
         fprintf(stderr, "could not allocate \"Y\" matrix\n");
