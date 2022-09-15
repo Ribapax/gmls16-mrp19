@@ -25,7 +25,7 @@ int FillMatrix(RealNumber *A, RealNumber coefficientLimit, unsigned int n) {
     return 0;
 }
 
-void copyMatrix(const RealNumber* restrict A, RealNumber* restrict B, int n) {
+void copyMatrix(const RealNumber* A, RealNumber* B, int n) {
     for (register unsigned int i = 0; i < n; ++i) {
         for (register unsigned int j = 0; j < n; ++j) {
             B[Index(i, j, n)] = A[Index(i, j, n)];

@@ -73,10 +73,10 @@ void replaceLinesWithIdentityMatrix(
 }
 
 int LUDecomposition(
-    RealNumber* restrict A,
-    RealNumber* restrict U,
-    RealNumber* restrict L,
-    PivotArray* restrict P,
+    RealNumber* A,
+    RealNumber* U,
+    RealNumber* L,
+    PivotArray* P,
     int n
 ) {
     copyMatrix(A, U, n);
@@ -112,11 +112,11 @@ int LUDecomposition(
 }
 
 RealNumber *SolveLinearSystems(
-    const RealNumber* restrict B,
+    const RealNumber* B,
     int n,
     Time *averageLinearSystemTime,
-    const RealNumber* restrict L,
-    const RealNumber* restrict U
+    const RealNumber* L,
+    const RealNumber* U
 ) {
     RealNumber *Y = AllocateMatrix(n);
     if (Y == NULL) {
@@ -162,9 +162,9 @@ RealNumber *SolveLinearSystems(
 }
 
 RealNumber CalculateResidueL2Norm(
-    RealNumber* restrict A,
-    RealNumber* restrict B,
-    RealNumber* restrict invertedA,
+    RealNumber* A,
+    RealNumber* B,
+    RealNumber* invertedA,
     int n
 ) {
     LIKWID_MARKER_START("RESIDUE_CALCULATION");
