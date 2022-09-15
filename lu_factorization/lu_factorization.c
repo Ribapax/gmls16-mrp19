@@ -161,7 +161,7 @@ RealNumber *SolveLinearSystems(
     return X;
 }
 
-inline RealNumber CalculateResidueL2Norm(
+RealNumber CalculateResidueL2Norm(
     RealNumber* restrict A,
     RealNumber* restrict B,
     RealNumber* restrict invertedA,

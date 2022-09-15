@@ -123,7 +123,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Invert the given Matrix
-    Time avgLSTime = 0, LUTime, residueTime = 0;
+    Time avgLSTime = 0, LUTime = 0, residueTime = 0;
     LUTime = GetTimestamp();
     LUDecomposition(A, U, L, P, size);
     LUTime = GetTimestamp() - LUTime;

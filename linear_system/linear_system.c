@@ -11,7 +11,7 @@
 #include "../lu_factorization/lu_factorization.h"
 #include "linear_system.h"
 
-inline RealNumber *AllocateMatrix(unsigned int n) {
+RealNumber *AllocateMatrix(unsigned int n) {
     return (RealNumber *) calloc(n * n, sizeof(RealNumber));
 }
 
@@ -33,7 +33,7 @@ void copyMatrix(const RealNumber* restrict A, RealNumber* restrict B, int n) {
     }
 }
 
-inline RealNumber *multiplyMatricesOfEqualSize(const RealNumber* restrict A, const RealNumber* restrict B, int n) {
+RealNumber *multiplyMatricesOfEqualSize(const RealNumber* restrict A, const RealNumber* restrict B, int n) {
     RealNumber *Result = AllocateMatrix(n);
     for (register unsigned int i = 0; i < n; ++i) {
         for (register unsigned int j = 0; j < n; ++j) {
@@ -45,7 +45,7 @@ inline RealNumber *multiplyMatricesOfEqualSize(const RealNumber* restrict A, con
     return Result;
 }
 
-inline RealNumber *subtractMatrices(const RealNumber* restrict A, const RealNumber* restrict B, int n) {
+RealNumber *subtractMatrices(const RealNumber* restrict A, const RealNumber* restrict B, int n) {
     RealNumber *Result = AllocateMatrix(n);
     for (register unsigned int i = 0; i < n; ++i) {
         for (register unsigned int j = 0; j < n; ++j) {
