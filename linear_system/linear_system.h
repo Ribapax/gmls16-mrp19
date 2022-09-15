@@ -23,7 +23,7 @@ void copyMatrix(const RealNumber *restrict A, RealNumber *restrict B, int n) ;
 
 // Multiplies the matrices `A` and `B`, both of dimension `n`.
 // Returns a new matrix of size `n`.
-RealNumber *multiplyMatricesOfEqualSize(const RealNumber *A, const RealNumber *B, int n);
+RealNumber *multiplyMatricesOfEqualSize(const RealNumber *restrict A, const RealNumber *restrict B, int n);
 
 // Returns the result of `A` - `B`, both of dimension `n`.
 RealNumber *subtractMatrices(const RealNumber *restrict A, const RealNumber *restrict B, int n);
