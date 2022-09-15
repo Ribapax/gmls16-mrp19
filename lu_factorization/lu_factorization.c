@@ -10,19 +10,6 @@
 #include <math.h>
 #include <stdio.h>
 
-#ifdef LIKWID_PERFMON
-#include <likwid.h>
-#else
-#define LIKWID_MARKER_INIT
-#define LIKWID_MARKER_THREADINIT
-#define LIKWID_MARKER_SWITCH
-#define LIKWID_MARKER_REGISTER(regionTag)
-#define LIKWID_MARKER_START(regionTag)
-#define LIKWID_MARKER_STOP(regionTag)
-#define LIKWID_MARKER_CLOSE
-#define LIKWID_MARKER_GET(regionTag, nevents, events, time, count)
-#endif
-
 PivotArray *AllocatePivotamento(unsigned int n) {
     PivotArray *aux = malloc(sizeof(PivotArray));
     aux->plinha = (int *) malloc(n * sizeof(int));
