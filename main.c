@@ -123,9 +123,6 @@ int main(int argc, char *argv[]) {
     }
 
     // Invert the given Matrix
-
-    LIKWID_MARKER_START("LINEAR_SYSTEM_CALCULATION"); // ###############################################################
-
     Time avgLSTime = 0, LUTime, residueTime = 0;
     LUTime = GetTimestamp();
     LUDecomposition(A, U, L, P, size);
@@ -142,11 +139,9 @@ int main(int argc, char *argv[]) {
             replaceLinesWithIdentityMatrix(B, P->olinha[i], P->plinha[i], size);
         }
     }
-
+    LIKWID_MARKER_START("LINEAR_SYSTEM_CALCULATION"); // ###############################################################
     RealNumber *invertedA = SolveLinearSystems(B, size, &avgLSTime, L, U);
-
     LIKWID_MARKER_STOP("LINEAR_SYSTEM_CALCULATION"); // ################################################################
-
     if (invertedA == NULL) {
         fprintf(stderr, "could not invert matrix\n");
         exit(-1);
