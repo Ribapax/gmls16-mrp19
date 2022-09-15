@@ -13,10 +13,10 @@
 #include <string.h>
 
 // Autovectorization
-//#pragma GCC optimize("O3","unroll-loops","omit-frame-pointer","inline") //Optimization flags
-//#pragma GCC option("arch=native","tune=native","no-zero-upper") //Enable AVX
-//#pragma GCC target("avx")  //Enable AVX
-//#include <x86intrin.h> //AVX/SSE Extensions
+#pragma GCC optimize("O3","unroll-loops","omit-frame-pointer","inline") //Optimization flags
+#pragma GCC option("arch=native","tune=native","no-zero-upper") //Enable AVX
+#pragma GCC target("avx")  //Enable AVX
+#include <x86intrin.h> //AVX/SSE Extensions
 
 // This block enables to compile the code with and without the LIKWID header in
 // place
@@ -123,7 +123,10 @@ int main(int argc, char *argv[]) {
     }
 
     // Invert the given Matrix
-    Time avgLSTime = 0, LUTime = 0, residueTime = 0;
+
+    LIKWID_MARKER_START("LINEAR_SYSTEM_CALCULATION"); // ###############################################################
+
+    Time avgLSTime = 0, LUTime, residueTime = 0;
     LUTime = GetTimestamp();
     LUDecomposition(A, U, L, P, size);
     LUTime = GetTimestamp() - LUTime;
@@ -139,9 +142,11 @@ int main(int argc, char *argv[]) {
             replaceLinesWithIdentityMatrix(B, P->olinha[i], P->plinha[i], size);
         }
     }
-    LIKWID_MARKER_START("LINEAR_SYSTEM_CALCULATION");
+
     RealNumber *invertedA = SolveLinearSystems(B, size, &avgLSTime, L, U);
-    LIKWID_MARKER_STOP("LINEAR_SYSTEM_CALCULATION");
+
+    LIKWID_MARKER_STOP("LINEAR_SYSTEM_CALCULATION"); // ################################################################
+
     if (invertedA == NULL) {
         fprintf(stderr, "could not invert matrix\n");
         exit(-1);
@@ -161,7 +166,11 @@ int main(int argc, char *argv[]) {
         invertedA = RefineSolution(A, B, invertedA, L, U, P, &avgLSTime, size);
         residueTimeTemp = GetTimestamp();
 
+        LIKWID_MARKER_START("RESIDUE_CALCULATION"); // #################################################################
+
         currentResidueL2Norm = CalculateResidueL2Norm(A, B, invertedA, size);
+
+        LIKWID_MARKER_STOP("RESIDUE_CALCULATION"); // ##################################################################
 
         residueTime += GetTimestamp() - residueTimeTemp;
         if (ResidueIsIncreasing(currentResidueL2Norm, lastResidueL2Norm)) {
