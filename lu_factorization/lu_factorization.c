@@ -111,7 +111,7 @@ RealNumber *SolveLinearSystems(
     // Get the Y matrix by solving -> LY = B for each y and b;
     Time linearSystemTime;
     for (int k = 0; k < n; ++k) {
-        linearSystemTime = GetTimestamp();
+        linearSystemTime =  GetTimestamp();
         for (int i = 0; i < n; i++) {
             Y[Index(i, k, n)] = B[Index(i, k, n)];
             for (unsigned int j = 0; j < i; j++) {
