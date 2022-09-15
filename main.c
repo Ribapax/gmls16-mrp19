@@ -166,11 +166,7 @@ int main(int argc, char *argv[]) {
         invertedA = RefineSolution(A, B, invertedA, L, U, P, &avgLSTime, size);
         residueTimeTemp = GetTimestamp();
 
-        LIKWID_MARKER_START("RESIDUE_CALCULATION"); // #################################################################
-
         currentResidueL2Norm = CalculateResidueL2Norm(A, B, invertedA, size);
-
-        LIKWID_MARKER_STOP("RESIDUE_CALCULATION"); // ##################################################################
 
         residueTime += GetTimestamp() - residueTimeTemp;
         if (ResidueIsIncreasing(currentResidueL2Norm, lastResidueL2Norm)) {

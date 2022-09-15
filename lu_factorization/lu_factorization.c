@@ -10,6 +10,21 @@
 #include <math.h>
 #include <stdio.h>
 
+// This block enables to compile the code with and without the LIKWID header in
+// place
+#ifdef LIKWID_PERFMON
+#include <likwid.h>
+#else
+#define LIKWID_MARKER_INIT
+#define LIKWID_MARKER_THREADINIT
+#define LIKWID_MARKER_SWITCH
+#define LIKWID_MARKER_REGISTER(regionTag)
+#define LIKWID_MARKER_START(regionTag)
+#define LIKWID_MARKER_STOP(regionTag)
+#define LIKWID_MARKER_CLOSE
+#define LIKWID_MARKER_GET(regionTag, nevents, events, time, count)
+#endif
+
 PivotArray *AllocatePivotamento(unsigned int n) {
     PivotArray *aux = malloc(sizeof(PivotArray));
     aux->plinha = (int *) malloc(n * sizeof(int));
@@ -156,6 +171,7 @@ inline RealNumber CalculateResidueL2Norm(
     RealNumber* restrict invertedA,
     int n
 ) {
+    LIKWID_MARKER_START("RESIDUE_CALCULATION"); // #################################################################
     RealNumber *multiplication = multiplyMatricesOfEqualSize(A, invertedA, n);
     RealNumber *R = subtractMatrices(B, multiplication, n);
     RealNumber sum = 0.;
@@ -165,4 +181,5 @@ inline RealNumber CalculateResidueL2Norm(
         }
     }
     return sqrt(sum);
+    LIKWID_MARKER_STOP("RESIDUE_CALCULATION"); // ##################################################################
 }
