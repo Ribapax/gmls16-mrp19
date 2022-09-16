@@ -21,7 +21,7 @@ const FLOPS_DP = 'FLOPS_DP'
 const AVX_FLOPS_DP = 'AVX_FLOPS_DP'
 
 const groups = [TIME, L3, L2CACHE, FLOPS_DP, AVX_FLOPS_DP]
-const sizes = [32, 33, 64, 65, 128, 129, 256, 257, 512, 1000, 2000, 4000, 6000, 10000]
+const sizes = [32, 33, 64, 65, 128, 129, 256, 257, 512, 1000, 2000] //4000, 6000, 10000]
 
 const getFileContents = async (filepath) => {
     const data = [];
