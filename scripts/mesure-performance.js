@@ -170,7 +170,9 @@ const main = async () => {
     let i = 0;
     for (const promise of resultsPromises) {
         results[i] = await Promise.resolve(promise)
+        console.log('\nLINEAR SYSTEM PARTIAL RESULT:\n')
         console.table(results[i].linearSystemResult)
+        console.log('\nRESIDUE PARTIAL RESULT:\n')
         console.table(results[i].residueResult)
         i++
     }
