@@ -61,20 +61,20 @@ const parseKey = async (key, file) => {
     }
 }
 
-const parseL3 = async () => {
-    return parseKey('L3 bandwidth [MBytes/s]', `output-${L3}.csv`)
+const parseL3 = async (size) => {
+    return parseKey('L3 bandwidth [MBytes/s]', `output-${L3}-${size}.csv`)
 }
 
-const parseL2Cache = () => {
-    return parseKey('L2 miss ratio', `output-${L2CACHE}.csv`)
+const parseL2Cache = (size) => {
+    return parseKey('L2 miss ratio', `output-${L2CACHE}-${size}.csv`)
 }
 
-const parseFlopsDP = () => {
-    return parseKey('DP MFLOP/s', `output-${FLOPS_DP}.csv`)
+const parseFlopsDP = (size) => {
+    return parseKey('DP MFLOP/s', `output-${FLOPS_DP}-${size}.csv`)
 }
 
-const parseAVXFlopsDP = () => {
-    return parseKey('AVX DP MFLOP/s', `output-${AVX_FLOPS_DP}.csv`)
+const parseAVXFlopsDP = (size) => {
+    return parseKey('AVX DP MFLOP/s', `output-${AVX_FLOPS_DP}-${size}.csv`)
 }
 
 const parsers = {
@@ -102,14 +102,14 @@ const run = async (group, size, parser, mockExecution) => {
     try {
         if (mockExecution) {
             await execMock(command)
-            return parser()
+            return parser(size)
         }
         console.log('Executing command: ' + command)
         await exec(command)
-        return parser()
+        return parser(size)
     } catch (e) {
         console.error(e)
-        return parser()
+        return parser(size)
     }
 }
 
