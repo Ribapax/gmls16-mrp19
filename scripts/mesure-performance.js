@@ -43,7 +43,6 @@ const parseKey = async (key, file) => {
     if (key === "TIME") {
         let lsTime = 0, resTime = 0;
         for (let i = 0; i < data.length; i++) {
-            console.log(data[i][0])
             if (data[i][0].search('Tempo iter') !== -1) {
                 lsTime = +(data[i][0].substring(data[i][0].indexOf(':')+1))
                 resTime = +(data[i+1][0].substring(data[i+1][0].indexOf(':')+1))
@@ -109,7 +108,7 @@ const parsers = {
 const buildCommand = (group, size) => {
     let outputFileName = `output-${group}-${size}.csv`
     group = group === 'AVX_FLOPS_DP' || "TIME" ? 'FLOPS_DP' : group // Technical Resource
-    return `${LIKWID_COMMAND} ${FIRST_FLAGS} ${group} ${SECOND_FLAGS} ./${PROGRAM} -r ${size} -i ${ITERATIONS_LIMIT} -s invmat-output > ${outputFileName}`
+    return `${LIKWID_COMMAND} ${FIRST_FLAGS} ${group} ${SECOND_FLAGS} ./${PROGRAM} -r ${size} -i ${ITERATIONS_LIMIT} > ${outputFileName}`
 }
 
 const execMock = async (command) => {
