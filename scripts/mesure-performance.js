@@ -14,13 +14,14 @@ const FIRST_FLAGS = '-O -C 1 -g'
 const SECOND_FLAGS = '-m'
 const PROGRAM = 'invmat'
 
+const TIME = 'TIME'
 const L3 = 'L3'
 const L2CACHE = 'L2CACHE'
 const FLOPS_DP = 'FLOPS_DP'
 const AVX_FLOPS_DP = 'AVX_FLOPS_DP'
 
-const groups = [L3, L2CACHE, FLOPS_DP, AVX_FLOPS_DP]
-const sizes = [64, 100, 128, 1024, 2000, 2048]
+const groups = [TIME, L3, L2CACHE, FLOPS_DP, AVX_FLOPS_DP]
+const sizes = [32, 33, 64, 65, 128, 129, 256, 257, 512, 1000, 2000] //4000, 6000, 10000]
 
 const getFileContents = async (filepath) => {
     const data = [];
@@ -36,8 +37,23 @@ const getFileContents = async (filepath) => {
 }
 
 const parseKey = async (key, file) => {
-    //const data = await getFileContents('test.csv')
+
     const data = await getFileContents(file)
+
+    if (key === "TIME") {
+        let lsTime = 0, resTime = 0;
+        for (let i = 0; i < data.length; i++) {
+            if (data[i][0].search('Tempo iter') !== -1) {
+                lsTime = +(data[i][0].substring(data[i][0].indexOf(':')+1))
+                resTime = +(data[i+1][0].substring(data[i+1][0].indexOf(':')+1))
+                break;
+            }
+        }
+        return {
+            'linearSystem': lsTime,
+            'residue': resTime
+        }
+    }
 
     let linearSystemCalculationL3 = 0;
     let i;
@@ -61,33 +77,39 @@ const parseKey = async (key, file) => {
     }
 }
 
-const parseL3 = async () => {
-    return parseKey('L3 bandwidth [MBytes/s]', `output-${L3}.csv`)
+const parseTime = async (size) => {
+    return parseKey('TIME', `output-${TIME}-${size}.csv`)
 }
 
-const parseL2Cache = () => {
-    return parseKey('L2 miss ratio', `output-${L2CACHE}.csv`)
+const parseL3 = async (size) => {
+    return parseKey('L3 bandwidth [MBytes/s]', `output-${L3}-${size}.csv`)
 }
 
-const parseFlopsDP = () => {
-    return parseKey('DP MFLOP/s', `output-${FLOPS_DP}.csv`)
+const parseL2Cache = (size) => {
+    return parseKey('L2 miss ratio', `output-${L2CACHE}-${size}.csv`)
 }
 
-const parseAVXFlopsDP = () => {
-    return parseKey('AVX DP MFLOP/s', `output-${AVX_FLOPS_DP}.csv`)
+const parseFlopsDP = (size) => {
+    return parseKey('DP MFLOP/s', `output-${FLOPS_DP}-${size}.csv`)
+}
+
+const parseAVXFlopsDP = (size) => {
+    return parseKey('AVX DP MFLOP/s', `output-${AVX_FLOPS_DP}-${size}.csv`)
 }
 
 const parsers = {
     L3: parseL3,
     L2CACHE: parseL2Cache,
     FLOPS_DP: parseFlopsDP,
-    AVX_FLOPS_DP: parseAVXFlopsDP
+    AVX_FLOPS_DP: parseAVXFlopsDP,
+    TIME: parseTime,
 }
 
 const buildCommand = (group, size) => {
-    let outputFileName = `output-${group}.csv`
+    let outputFileName = `output-${group}-${size}.csv`
     group = group === 'AVX_FLOPS_DP' ? 'FLOPS_DP' : group // Technical Resource
-    return `${LIKWID_COMMAND} ${FIRST_FLAGS} ${group} ${SECOND_FLAGS} ./${PROGRAM} -r ${size} -i ${ITERATIONS_LIMIT} -s invmat-output > ${outputFileName}`
+    group = group === 'TIME' ? 'FLOPS_DP' : group // Technical Resource
+    return `${LIKWID_COMMAND} ${FIRST_FLAGS} ${group} ${SECOND_FLAGS} ./${PROGRAM} -r ${size} -i ${ITERATIONS_LIMIT} > ${outputFileName}`
 }
 
 const execMock = async (command) => {
@@ -102,14 +124,14 @@ const run = async (group, size, parser, mockExecution) => {
     try {
         if (mockExecution) {
             await execMock(command)
-            return parser()
+            return parser(size)
         }
         console.log('Executing command: ' + command)
         await exec(command)
-        return parser()
+        return parser(size)
     } catch (e) {
         console.error(e)
-        return parser()
+        return parser(size)
     }
 }
 
@@ -126,7 +148,7 @@ const main = async () => {
     const fixedSize = parseInt(process.argv[3])
     let actualSizes = sizes;
     if (fixedSize > 0) {
-        actualSizes = [fixedSize, fixedSize+1, fixedSize+2]
+        actualSizes = [fixedSize]
     }
 
     const resultsPromises = actualSizes.map(async (size) => {
@@ -170,8 +192,14 @@ const main = async () => {
     let i = 0;
     for (const promise of resultsPromises) {
         results[i] = await Promise.resolve(promise)
+        console.log('\nLINEAR SYSTEM PARTIAL RESULT:\n')
+        console.table(results[i].linearSystemResult)
+        console.log('\nRESIDUE PARTIAL RESULT:\n')
+        console.table(results[i].residueResult)
         i++
     }
+
+    console.log('\n============== FINAL RESULTS ==================\n')
 
     const linearSystemResults = results.map(result => result.linearSystemResult)
     const residueResults = results.map(result => result.residueResult)
