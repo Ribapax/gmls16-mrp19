@@ -129,7 +129,7 @@ RealNumber *SolveLinearSystems(
     }
 
     //  Get the inverted matrix X by solving -> UX = Y for each y and x
-    RealNumber *X = AllocateMatrix(n);
+    RealNumber* restrict X = AllocateMatrix(n);
     if (X == NULL) {
         fprintf(stderr, "could not allocate \"X\" matrix\n");
         return NULL;
