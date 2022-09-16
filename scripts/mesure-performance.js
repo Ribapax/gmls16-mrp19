@@ -20,7 +20,7 @@ const FLOPS_DP = 'FLOPS_DP'
 const AVX_FLOPS_DP = 'AVX_FLOPS_DP'
 
 const groups = [L3, L2CACHE, FLOPS_DP, AVX_FLOPS_DP]
-const sizes = [64, 100, 128, 1024, 2000, 2048]
+const sizes = [32, 33, 64, 65, 128, 129, 256, 257, 512, 1000, 2000, 4000, 6000, 10000]
 
 const getFileContents = async (filepath) => {
     const data = [];
@@ -126,7 +126,7 @@ const main = async () => {
     const fixedSize = parseInt(process.argv[3])
     let actualSizes = sizes;
     if (fixedSize > 0) {
-        actualSizes = [fixedSize, fixedSize+1, fixedSize+2]
+        actualSizes = [fixedSize]
     }
 
     const resultsPromises = actualSizes.map(async (size) => {
@@ -170,8 +170,12 @@ const main = async () => {
     let i = 0;
     for (const promise of resultsPromises) {
         results[i] = await Promise.resolve(promise)
+        console.log(results[i].linearSystemResult)
+        console.log(results[i].residueResult)
         i++
     }
+
+    console.log('\n============== FINAL RESULTS ==================\n')
 
     const linearSystemResults = results.map(result => result.linearSystemResult)
     const residueResults = results.map(result => result.residueResult)
