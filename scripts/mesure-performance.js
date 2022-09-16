@@ -170,8 +170,8 @@ const main = async () => {
     let i = 0;
     for (const promise of resultsPromises) {
         results[i] = await Promise.resolve(promise)
-        console.log(results[i].linearSystemResult)
-        console.log(results[i].residueResult)
+        console.table(results[i].linearSystemResult)
+        console.table(results[i].residueResult)
         i++
     }
 
