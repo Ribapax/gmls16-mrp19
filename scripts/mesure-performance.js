@@ -107,7 +107,8 @@ const parsers = {
 
 const buildCommand = (group, size) => {
     let outputFileName = `output-${group}-${size}.csv`
-    group = group === 'AVX_FLOPS_DP' || "TIME" ? 'FLOPS_DP' : group // Technical Resource
+    group = group === 'AVX_FLOPS_DP' ? 'FLOPS_DP' : group // Technical Resource
+    group = group === 'TIME' ? 'FLOPS_DP' : group // Technical Resource
     return `${LIKWID_COMMAND} ${FIRST_FLAGS} ${group} ${SECOND_FLAGS} ./${PROGRAM} -r ${size} -i ${ITERATIONS_LIMIT} > ${outputFileName}`
 }
 
