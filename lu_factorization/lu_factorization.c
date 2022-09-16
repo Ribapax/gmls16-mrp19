@@ -4,11 +4,10 @@
  *  Mateus Ribamar - GRR20190154
  */
 
-#include "lu_factorization.h"
-#include "../io/io.h"
-#include "../linear_system/linear_system.h"
-#include <math.h>
 #include <stdio.h>
+#include <math.h>
+#include "lu_factorization.h"
+#include "../linear_system/linear_system.h"
 
 #ifdef LIKWID_PERFMON
 #include <likwid.h>
@@ -23,25 +22,11 @@
 #define LIKWID_MARKER_GET(regionTag, nevents, events, time, count)
 #endif
 
-PivotArray *AllocatePivotamento(unsigned int n) {
-    PivotArray *aux = malloc(sizeof(PivotArray));
-    aux->plinha = (int *) malloc(n * sizeof(int));
-    aux->olinha = (int *) malloc(n * sizeof(int));
-    aux->tam = 0;
-    return aux;
-}
-
-void addLineToPivotArray(PivotArray *P, int i, int pivotIndex) {
-    P->olinha[P->tam] = i;
-    P->plinha[P->tam] = pivotIndex;
-    P->tam++;
-}
-
-unsigned int findPivotIndex(double *Matrix, unsigned int columnIndex, unsigned int systemSize) {
-    RealNumber greatestValue = fabs(Matrix[Index(columnIndex, columnIndex, systemSize)]);
+unsigned int findPivotIndex(double** Matrix, unsigned int columnIndex, unsigned int systemSize) {
+    RealNumber greatestValue = fabs(Matrix[columnIndex][columnIndex]);
     unsigned int pivotIndex = columnIndex;
     for (unsigned int i = columnIndex + 1; i < systemSize; i++) {
-        RealNumber v = fabs(Matrix[Index(i, columnIndex, systemSize)]);
+        RealNumber v = fabs(Matrix[i][columnIndex]);
         if (v > greatestValue) {
             greatestValue = v;
             pivotIndex = i;
@@ -50,81 +35,88 @@ unsigned int findPivotIndex(double *Matrix, unsigned int columnIndex, unsigned i
     return pivotIndex;
 }
 
-void replaceLinesWithIdentityMatrix(double *Matrix, unsigned int index, unsigned int pivotIndex, unsigned int n) {
-    double *aux = malloc(n * sizeof(double));
-    for (unsigned int i = 0; i < n; ++i) {
-        aux[i] = Matrix[Index(index, i, n)];
-        Matrix[Index(index, i, n)] = Matrix[Index(pivotIndex, i, n)];
-    }
+void replaceLinesWithIdentityMatrix(
+    double **Matrix,
+    double **identityMatrix,
+    unsigned int index,
+    unsigned int pivotIndex
+) {
+    RealNumber *lineToBeReplaced = Matrix[index];
+    Matrix[index] = Matrix[pivotIndex];
+    Matrix[pivotIndex] = lineToBeReplaced;
 
-    for (unsigned int i = 0; i < n; ++i) {
-        Matrix[Index(pivotIndex, i, n)] = aux[i];
-    }
+    // RealNumber *identityLineToBeReplaced = identityMatrix[index];
+    // identityMatrix[index] = identityMatrix[pivotIndex];
+    // identityMatrix[pivotIndex] = identityLineToBeReplaced;
 }
 
-int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, PivotArray *P, int n) {
+int LUDecomposition(
+    RealNumber **A,
+    RealNumber **B,
+    RealNumber **U,
+    RealNumber **L,
+    int n
+) {
     copyMatrix(A, U, n);
     for (int i = 0; i < n; i++) {
+        L[i][i] = 1;
+
+        // Partial pivoting
         if (ENABLE_PARTIAL_PIVOTING) {
             unsigned int pivotIndex = findPivotIndex(U, i, n);
             if (i != pivotIndex) {
-                replaceLinesWithIdentityMatrix(U, i, pivotIndex, n);
-                replaceLinesWithIdentityMatrix(L, i, pivotIndex, n);
-                addLineToPivotArray(P, i, pivotIndex);
+                replaceLinesWithIdentityMatrix(U, B, i, pivotIndex);
             }
         }
 
-        L[Index(i, i, n)] = 1;
-
         // Triangularization
         for (int k = i + 1; k < n; k++) {
-            if (fabs(U[Index(i, i, n)] - 0.0) < RESIDUE_THRESHOLD) {
+            if (fabs(U[i][i] - 0.0) < RESIDUE_THRESHOLD) {
                 fprintf(stderr, "%s\n", "error: division by zero");
                 return -1;
             }
-            double m = U[Index(k, i, n)] / U[Index(i, i, n)];
+            double m = U[k][i] / U[i][i];
 
-            L[Index(k, i, n)] = m; // Filling multiplier's matrix
+            L[k][i] = m; // Filling multiplier's matrix
 
-            U[Index(k, i, n)] = 0.0;
+            U[k][i] = 0.0;
             for (int j = i + 1; j < n; j++) {
-                U[Index(k, j, n)] -= U[Index(i, j, n)] * m;
+                U[k][j] -= U[i][j] * m;
             }
         }
     }
     return 0;
 }
 
-RealNumber *SolveLinearSystems(
-    const RealNumber *B,
+RealNumber **SolveLinearSystems(
+    RealNumber **B,
     int n,
     Time *averageLinearSystemTime,
-    const RealNumber *L,
-    const RealNumber *U
+    RealNumber **L,
+    RealNumber **U
 ) {
-    RealNumber *Y = AllocateMatrix(n);
+    RealNumber **Y = AllocateLinearSystem(n, PointerToPointer)->A;
     if (Y == NULL) {
         fprintf(stderr, "could not allocate \"Y\" matrix\n");
         return NULL;
     }
-
-    // Get the Y matrix by solving -> LY = B for each y and b;
+    // 2) Get the Y matrix by solving -> LY = B for each y and b;
     Time linearSystemTime;
     for (int k = 0; k < n; ++k) {
         linearSystemTime = GetTimestamp();
         for (int i = 0; i < n; i++) {
-            Y[Index(i, k, n)] = B[Index(i, k, n)];
+            Y[i][k] = B[i][k];
             for (unsigned int j = 0; j < i; j++) {
-                Y[Index(i, k, n)] -= L[Index(i, j, n)] * Y[Index(j, k, n)];
+                Y[i][k] -= L[i][j] * Y[j][k];
             }
-            Y[Index(i, k, n)] /= L[Index(i, i, n)];
+            Y[i][k] /= L[i][i];
         }
         linearSystemTime = GetTimestamp() - linearSystemTime;
         *averageLinearSystemTime += linearSystemTime;
     }
 
-    //  Get the inverted matrix X by solving -> UX = Y for each y and x
-    RealNumber *X = AllocateMatrix(n);
+    // 3) Get the inverted matrix X by solving -> UX = Y for each y and x
+    RealNumber **X = AllocateLinearSystem(n, PointerToPointer)->A;
     if (X == NULL) {
         fprintf(stderr, "could not allocate \"X\" matrix\n");
         return NULL;
@@ -132,11 +124,11 @@ RealNumber *SolveLinearSystems(
     for (int k = 0; k < n; ++k) {
         linearSystemTime = GetTimestamp();
         for (int i = n - 1; i >= 0; i--) {
-            X[Index(i, k, n)] = Y[Index(i, k, n)];
+            X[i][k] = Y[i][k];
             for (unsigned int j = i + 1; j < n; j++) {
-                X[Index(i, k, n)] -= U[Index(i, j, n)] * X[Index(j, k, n)];
+                X[i][k] -= U[i][j] * X[j][k];
             }
-            X[Index(i, k, n)] /= U[Index(i, i, n)];
+            X[i][k] /= U[i][i];
         }
         linearSystemTime = GetTimestamp() - linearSystemTime;
         *averageLinearSystemTime += linearSystemTime;
@@ -145,20 +137,15 @@ RealNumber *SolveLinearSystems(
     return X;
 }
 
-RealNumber CalculateResidueL2Norm(
-    RealNumber *A,
-    RealNumber *B,
-    RealNumber *invertedA,
-    int n
-) {
+RealNumber CalculateResidueL2Norm(RealNumber **A, RealNumber **B, RealNumber **invertedA, int n) {
     LIKWID_MARKER_START("RESIDUE_CALCULATION");
-    RealNumber *multiplication = multiplyMatricesOfEqualSize(A, invertedA, n);
-    RealNumber *R = subtractMatrices(B, multiplication, n);
+    RealNumber **multiplication = multiplyMatricesOfEqualSize(A, invertedA, n);
+    RealNumber **R = subtractMatrices(B, multiplication, n);
     LIKWID_MARKER_STOP("RESIDUE_CALCULATION");
     RealNumber sum = 0.;
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            sum += pow(R[Index(i, j, n)], 2);
+            sum += pow(R[i][j], 2);
         }
     }
     return sqrt(sum);

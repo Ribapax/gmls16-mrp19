@@ -13,16 +13,6 @@
 
 #define ENABLE_PARTIAL_PIVOTING 1
 
-typedef struct PivotArray {
-    int *plinha;
-    int *olinha;
-    int tam;
-} PivotArray;
-
-PivotArray *AllocatePivotamento(unsigned int n);
-
-void addLineToPivotArray(PivotArray *P, int i, int pivotIndex);
-
 /*
  * Returns the solution of `n` Linear Systems by solving AX = B using the
  *    matrices L and U, previously calculated by the LU decomposition.
@@ -34,20 +24,19 @@ void addLineToPivotArray(PivotArray *P, int i, int pivotIndex);
  *  - L: Lower matrix from LU decomposition;
  *  - U: Upper matrix from LU decomposition;
  */
-RealNumber *SolveLinearSystems(
-    const RealNumber *B,
+RealNumber **SolveLinearSystems(
+    RealNumber **B,
     int n,
     Time *averageLinearSystemTime,
-    const RealNumber *L,
-    const RealNumber *U
+    RealNumber **L,
+    RealNumber **U
 );
 
 /*
  *  Decomposes the Matrix A of size n into L (Lower) and U (Upper).
  *  Params:
  *  - A: Matrix to be decomposed;
- *  - B: identity matrix pointer, in case some line is changed by partial
- * pivoting;
+ *  - B: identity matrix pointer, in case some line is changed by partial pivoting;
  *  - U: Upper Matrix pointer, should be allocated;
  *  - L: Lower Matrix pointer, should be allocated;
  *  - n: matrix dimension;
@@ -55,7 +44,7 @@ RealNumber *SolveLinearSystems(
  *  - 0 (success);
  *  - 1 (error);
  */
-int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, PivotArray *P, int n);
+int LUDecomposition(RealNumber **A, RealNumber **B, RealNumber **U, RealNumber **L, int n);
 
 /*
  * Returns the L2 Norm of the residue for the current result.
@@ -67,7 +56,7 @@ int LUDecomposition(RealNumber *A, RealNumber *U, RealNumber *L, PivotArray *P, 
  * - invertedA: matrix A inverted;
  * - n: matrix dimension.
  */
-RealNumber CalculateResidueL2Norm(RealNumber *A, RealNumber *B, RealNumber *invertedA, int n);
+RealNumber CalculateResidueL2Norm(RealNumber **A, RealNumber **B, RealNumber **invertedA, int n);
 
 /*
  * Returns the line index of the pivot element of the given column index.
@@ -76,10 +65,15 @@ RealNumber CalculateResidueL2Norm(RealNumber *A, RealNumber *B, RealNumber *inve
  * - columnIndex: index of the column that will be pivoted;
  * - systemSize: matrix dimension.
  */
-unsigned int findPivotIndex(double *Matrix, unsigned int columnIndex, unsigned int systemSize);
+unsigned int findPivotIndex(double** Matrix, unsigned int columnIndex, unsigned int systemSize);
 
-// Replaces the line of index 'index' with the line of index 'pivotIndex', and
-// vice versa.
-void replaceLinesWithIdentityMatrix(double *Matrix, unsigned int index, unsigned int pivotIndex, unsigned int n);
+// Replaces the line of index 'index' with the line of index 'pivotIndex', and vice versa.
+// This operation is made in both `Matrix` and `identityMatrix`.
+void replaceLinesWithIdentityMatrix(
+    double **Matrix,
+    double **identityMatrix,
+    unsigned int index,
+    unsigned int pivotIndex
+);
 
 #endif

@@ -69,16 +69,16 @@ int ReadParameters(
     return 0;
 }
 
-void PrintMatrix(FILE *outputFile, RealNumber *A, int n) {
+void PrintMatrix(FILE *outputFile, RealNumber **A, int n) {
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            fprintf(outputFile, "%.15g ", A[Index(i, j, n)]);
+            fprintf(outputFile, "%.15g ", A[i][j]);
         }
         fprintf(outputFile, "\n");
     }
 }
 
-RealNumber *ReadMatrix(char *fileName, int *size) {
+RealNumber **ReadMatrix(char *fileName, int *size) {
     FILE *file = stdin;
     if (fileName) {
         file = fopen(fileName, "r");
@@ -90,14 +90,14 @@ RealNumber *ReadMatrix(char *fileName, int *size) {
     int n;
     fscanf(file, "%d", &n);
     *size = n;
-    RealNumber *A = AllocateMatrix(n);
+    RealNumber **A = AllocateLinearSystem(n, PointerToPointer)->A;
     if (A == NULL) {
         fprintf(stderr, "could not allocate matrix\n");
         return NULL;
     }
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            fscanf(file, "%lf", &A[Index(i, j, n)]);
+            fscanf(file, "%lf", &A[i][j]);
         }
     }
     fclose(file);
