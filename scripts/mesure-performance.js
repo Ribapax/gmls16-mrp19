@@ -14,12 +14,13 @@ const FIRST_FLAGS = '-O -C 1 -g'
 const SECOND_FLAGS = '-m'
 const PROGRAM = 'invmat'
 
+const TIME = 'TIME'
 const L3 = 'L3'
 const L2CACHE = 'L2CACHE'
 const FLOPS_DP = 'FLOPS_DP'
 const AVX_FLOPS_DP = 'AVX_FLOPS_DP'
 
-const groups = [L3, L2CACHE, FLOPS_DP, AVX_FLOPS_DP]
+const groups = [TIME, L3, L2CACHE, FLOPS_DP, AVX_FLOPS_DP]
 const sizes = [32, 33, 64, 65, 128, 129, 256, 257, 512, 1000, 2000, 4000, 6000, 10000]
 
 const getFileContents = async (filepath) => {
@@ -36,8 +37,23 @@ const getFileContents = async (filepath) => {
 }
 
 const parseKey = async (key, file) => {
-    //const data = await getFileContents('test.csv')
+
     const data = await getFileContents(file)
+
+    if (key === "TIME") {
+        let lsTime, resTime = 0;
+        for (i = 0; i < data.length; i++) {
+            if (data[i][0].search('Tempo iter') !== -1) {
+                lsTime = +(data[i][0].substring(data[i][0].indexOf(':')+1))
+                resTime = +(data[i+1][0].substring(data[i][0].indexOf(':')+1))
+                break;
+            }
+        }
+        return {
+            'linearSystem': lsTime,
+            'residue': resTime
+        }
+    }
 
     let linearSystemCalculationL3 = 0;
     let i;
@@ -61,6 +77,10 @@ const parseKey = async (key, file) => {
     }
 }
 
+const parseTime = async (size) => {
+    return parseKey('TIME', `output-${TIME}-${size}.csv`)
+}
+
 const parseL3 = async (size) => {
     return parseKey('L3 bandwidth [MBytes/s]', `output-${L3}-${size}.csv`)
 }
@@ -81,12 +101,13 @@ const parsers = {
     L3: parseL3,
     L2CACHE: parseL2Cache,
     FLOPS_DP: parseFlopsDP,
-    AVX_FLOPS_DP: parseAVXFlopsDP
+    AVX_FLOPS_DP: parseAVXFlopsDP,
+    TIME: parseTime,
 }
 
 const buildCommand = (group, size) => {
     let outputFileName = `output-${group}-${size}.csv`
-    group = group === 'AVX_FLOPS_DP' ? 'FLOPS_DP' : group // Technical Resource
+    group = group === 'AVX_FLOPS_DP' || "TIME" ? 'FLOPS_DP' : group // Technical Resource
     return `${LIKWID_COMMAND} ${FIRST_FLAGS} ${group} ${SECOND_FLAGS} ./${PROGRAM} -r ${size} -i ${ITERATIONS_LIMIT} -s invmat-output > ${outputFileName}`
 }
 
