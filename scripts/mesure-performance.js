@@ -42,7 +42,7 @@ const parseKey = async (key, file) => {
 
     if (key === "TIME") {
         let lsTime, resTime = 0;
-        for (i = 0; i < data.length; i++) {
+        for (let i = 0; i < data.length; i++) {
             if (data[i][0].search('Tempo iter') !== -1) {
                 lsTime = +(data[i][0].substring(data[i][0].indexOf(':')+1))
                 resTime = +(data[i+1][0].substring(data[i][0].indexOf(':')+1))
